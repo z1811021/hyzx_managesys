@@ -19,8 +19,8 @@
     data(){
       return{
         data:{
-          account:'123456789',
-          password:'123456'
+          account:this.account,
+          password:this.password
         }
       }
     },
@@ -36,15 +36,16 @@
           url: userLogin(),
           data: this.data
         }).then( (res) =>{
-          console.log(res)
-          if(res.data.system == null){
+          if(res.data.msg == '1'){
             this.$Message.error('该用户不存在!');
+          }else if(res.data.msg == '2'){
+            this.$Message.error('密码不正确!');
           }else{
             this.$Message.success('登陆成功');
             sessionStorage.setItem('authToken',res.data.authToken);
             sessionStorage.setItem('isLogin','1');
-            sessionStorage.setItem('isSystem',res.data.system);
-            sessionStorage.setItem('storeId',res.data.storeId);
+            sessionStorage.setItem('isSystem',true);
+            sessionStorage.setItem('storeId','');
             sessionStorage.setItem('reData',JSON.stringify(res.data));
             this.$router.push({name: 'main'});
           }

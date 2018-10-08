@@ -1,13 +1,13 @@
 /**
  * Created by Benson on 2017/12/27.
  */
-const host = 'http://116.62.201.135:8080';
+const host = 'http://localhost:9001';
 //const host = 'http://9.112.48.21:8080';
 //const host = 'http://localhost:8080';
 
 //门店列表
 export const findStoreList = function () {
-  const URL = '/app/api/store/findStoreList';
+  const URL = '/store/page/';
   const API = host + URL;
   return API;
 };
@@ -37,7 +37,7 @@ export const extendBrandInfo = function () {
   return API;
 };
 export const userLogin = function () {
-  const URL = '/app/api/user/login';
+  const URL = '/customer/login';
   const API = host + URL;
   return API;
 };

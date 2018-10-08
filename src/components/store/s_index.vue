@@ -617,23 +617,11 @@
         columns1: [
           {
             title: '编号',
-            key: 'code'
+            key: 'id'
           },
           {
             title: '门店名称',
             key: 'storeName'
-          },
-          {
-            title: '省',
-            key: 'provinceName'
-          },
-          {
-            title: '市',
-            key: 'cityName'
-          },
-          {
-            title: '区',
-            key: 'area'
           },
           {
             title: '地址',
@@ -646,6 +634,14 @@
           {
             title: '门店电话',
             key: 'telephone'
+          },
+          {
+            title: '门店类型',
+            key: 'storeType'
+          },
+          {
+            title: '经营业态',
+            key: 'operationMode'
           },
           {
             title: '管理周期',
@@ -721,24 +717,6 @@
                     }
                   }
                 }, '管理'),
-              /*  h('Button', {
-                  props: {
-                    type: 'primary',
-                    size: 'small',
-                    disabled: params.row.status==3?true:false,
-                  },
-                  style: {
-                    marginRight: '5px'
-                  },
-                  on: {
-                    click: () => {
-                      if(params.row.status ==3 ){
-                        this.$Message.error('该门店已经放弃了管理');
-                      }
-                      this.Delete(params.row.id);
-                    }
-                  }
-                }, '删除'),*/
               ]);
             }
           }
@@ -765,88 +743,6 @@
       new PCAS("province","city","area");
     },
     methods: {
-      newStoret() {
-        if(this.storeVal.staffName ==''|| this.storeVal.phoneNumber ==''|| this.storeVal.storeName ==''|| this.storeVal.address ==''|| this.storeVal.telephone ==''|| this.storeVal.managementCycle ==''|| this.storeVal.storeType ==''|| this.storeVal.operationMode ==''|| this.storeVal.provinceName=='请选择' || this.storeVal.provinceName==''|| this.storeVal.cityName=='' || this.storeVal.area==''){
-          this.$Message.warning('请填写完整信息');
-          return false;
-        }
-        let URL;
-        if(this.store == '编辑门店') {
-          URL = editStore();
-          if(this.tempPhone != this.storeVal.phoneNumber){
-            this.$ajax({
-              method:'GET',
-              url:checkStorePhone()+'?phoneNumber='+this.storeVal.phoneNumber + '&provinceName='+this.provinceName+'&cityName=' + this.cityName + '&area=' +this.area + '&address=' + this.address
-            }).then( (res)=>{
-              if(res.data.success){
-                this.$Message.error('联系人电话已被注册！');
-                return false;
-              } else {
-                this.$ajax({
-                  method: 'POST',
-                  dataType: 'JSON',
-                  contentType: 'application/json;charset=UTF-8',
-                  headers: {
-                    "authToken": sessionStorage.getItem('authToken')
-                  },
-                  data: this.storeVal,
-                  url: URL,
-                }).then((res) => {
-                  this.$Message.success('操作成功');
-                  this.getData();
-                  this.storeFlag = false;
-                }).catch((error) => {
-                });
-              }
-            }).catch((error) => {
-            });
-          } else {
-            this.$ajax({
-              method: 'POST',
-              dataType: 'JSON',
-              contentType: 'application/json;charset=UTF-8',
-              headers: {
-                "authToken": sessionStorage.getItem('authToken')
-              },
-              data: this.storeVal,
-              url: URL,
-            }).then((res) => {
-              this.$Message.success('操作成功');
-              this.getData();
-              this.storeFlag = false;
-            }).catch((error) => {
-            });
-          }
-        }else{
-          URL = newStore();
-          this.$ajax({
-            method:'GET',
-            url:checkStorePhone()+'?phoneNumber='+this.storeVal.phoneNumber + '&provinceName='+this.storeVal.provinceName+'&cityName=' + this.storeVal.cityName + '&area=' +this.storeVal.area + '&address=' + this.storeVal.address
-          }).then( (res)=>{
-            if(res.data.success){
-              this.$Message.error(res.data.message);
-              return false;
-            } else {
-              this.$ajax({
-                method: 'POST',
-                dataType: 'JSON',
-                contentType: 'application/json;charset=UTF-8',
-                headers: {
-                  "authToken": sessionStorage.getItem('authToken')
-                },
-                data: this.storeVal,
-                url: URL,
-              }).then((res) => {
-                this.$Message.success('操作成功');
-                this.getData();
-                this.storeFlag = false;
-              }).catch((error) => {
-              });
-            }
-          }).catch( (err)=>{
-          })
-        }
-      },
       getData(){
         this.tag = 1;
         if(this.isSystem == 'true'){
@@ -857,7 +753,7 @@
       },
       getList(name,page,pagesize) {
         if(name==''||name==null){
-          var URL = findStoreList()+'?page='+page+'&pageSize='+pagesize;
+          var URL = findStoreList()+page;
         }else{
           URL = findStoreList()+'?id='+name+'&page='+page+'&pageSize='+pagesize;
         }
@@ -870,8 +766,7 @@
           },
           url:URL,
         }).then((res) => {
-          this.data1 = res.data.results;
-          this.pages = res.data.pages;
+          this.data1 = res.data.content;
         }).catch((error) => {
         });
       },
