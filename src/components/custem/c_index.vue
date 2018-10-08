@@ -23,35 +23,23 @@
     </div>
   <div class="content">
       <Row>
-        <h3 class="title">顾客到店员工护理顺序</h3>
+        <h3 class="title">直接到店顾客员工护理顺序</h3>
         <Col span="24">
           <span>第一规则：</span>
-          <Select style="width:100px" v-model="RA">
-            <Option value="1" :key="1">指定技师</Option>
-            <Option value="2" :key="2">上次服务者</Option>
-            <Option value="3" :key="3">服务最多者</Option>
-            <Option value="4" :key="4">店长指定</Option>
+          <Select style="width:100px" v-model="RA" @on-change="selectFirst">
+              <Option v-for="item in firstRule" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
           <span>第二规则：</span>
-          <Select style="width:100px" v-model="RB">
-            <Option value="1" :key="1">指定技师</Option>
-            <Option value="2" :key="2">上次服务者</Option>
-            <Option value="3" :key="3">服务最多者</Option>
-            <Option value="4" :key="4">店长指定</Option>
+          <Select style="width:100px" v-model="RB" @on-change="selectSecond">
+              <Option v-for="item in secondRule" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
           <span>第三规则：</span>
-          <Select style="width:100px" v-model="RC">
-            <Option value="1" :key="1">指定技师</Option>
-            <Option value="2" :key="2">上次服务者</Option>
-            <Option value="3" :key="3">服务最多者</Option>
-            <Option value="4" :key="4">店长指定</Option>
+          <Select style="width:100px" v-model="RC" @on-change="selectThird">
+              <Option v-for="item in thirdRule" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
           <span>第四规则：</span>
-          <Select style="width:100px"  v-model="RD">
-            <Option value="1" :key="1">指定技师</Option>
-            <Option value="2" :key="2">上次服务者</Option>
-            <Option value="3" :key="3">服务最多者</Option>
-            <Option value="4" :key="4">店长指定</Option>
+          <Select style="width:100px" v-model="RD" @on-change="selectFourth">
+              <Option v-for="item in fourthRule" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
         </Col>
       </Row>
@@ -127,6 +115,77 @@
     components: {m_index_info_gl},
     data(){
       return {
+        firstRule: [
+            {
+                value: 'designated',
+                label: '指定技师',
+            },
+            {
+                value: 'lastTime',
+                label: '上次服务者',
+            },
+            {
+                value: 'mostServe',
+                label: '服务最多者',
+            },
+            {
+                value: 'masterDesign',
+                label: '店长指定',
+            }
+        ],
+        secondRule:[
+            {
+                value: 'designated',
+                label: '指定技师',
+            },
+            {
+                value: 'lastTime',
+                label: '上次服务者',
+            },
+            {
+                value: 'mostServe',
+                label: '服务最多者',
+            },
+            {
+                value: 'masterDesign',
+                label: '店长指定',
+            }
+            ],
+        thirdRule:[
+            {
+                value: 'designated',
+                label: '指定技师',
+            },
+            {
+                value: 'lastTime',
+                label: '上次服务者',
+            },
+            {
+                value: 'mostServe',
+                label: '服务最多者',
+            },
+            {
+                value: 'masterDesign',
+                label: '店长指定',
+            }
+            ],
+        fourthRule:[
+            {
+                value: 'designated',
+                label: '指定技师',
+            },
+            {
+                value: 'lastTime',
+                label: '上次服务者',
+            },
+            {
+                value: 'mostServe',
+                label: '服务最多者',
+            },
+            {
+                value: 'masterDesign',
+                label: '店长指定',
+            }],
         RA: '',
         RB: '',
         RC: '',
@@ -171,7 +230,11 @@
           body: false,
           internalCause: false,
           externalcause: false,
-          advisorDesignation: []
+          advisorDesignation: [],
+          currentFirst : '',
+          currentSecond : '',
+          currentThird : '',
+          currentFourth : ''
         }
       };
     },
@@ -179,6 +242,74 @@
       this.findStore();
     },
     methods: {
+      selectFirst(item){
+          if(item == this.RB){
+            this.RB = this.currentFirst;
+            this.currentSecond = this.currentFirst;
+            this.currentFirst = item;
+          }else if(item == this.RC){
+            this.RC = this.currentFirst;
+            this.currentThird = this.currentFirst;
+            this.currentFirst = item;
+          }else if(item == this.RD){
+            this.RD = this.currentFirst;
+            this.currentFourth = this.currentFirst;
+            this.currentFirst = item;
+          }else{
+            this.currentFirst = item;
+          }
+      },
+      selectSecond(item){
+          if(item == this.RA){
+            this.RA = this.currentSecond;
+            this.currentFirst = this.currentSecond;
+            this.currentSecond = item;
+          }else if(item == this.RC){
+            this.RC = this.currentSecond;
+            this.currentThird = this.currentSecond;
+            this.currentSecond = item;
+          }else if(item == this.RD){
+            this.RD = this.currentSecond;
+            this.currentFourth = this.currentSecond;
+            this.currentSecond = item;
+          }else{
+            this.currentSecond = item;
+          }
+      },
+      selectThird(item){
+          if(item == this.RA){
+            this.RA = this.currentThird;
+            this.currentSecond = this.currentThird;
+            this.currentThird = item;
+          }else if(item == this.RB){
+            this.RB = this.currentThird;
+            this.currentSecond = this.currentThird;
+            this.currentThird = item;
+          }else if(item == this.RD){
+            this.RD = this.currentThird;
+            this.currentFourth = this.currentThird;
+            this.currentThird = item;
+          }else{
+            this.currentThird = item;
+          }
+      },
+      selectFourth(item){
+          if(item == this.RA){
+            this.RA = this.currentFourth;
+            this.currentFirst = this.currentFourth;
+            this.currentFourth = item;
+          }else if(item == this.RB){
+            this.RB = this.currentFourth;
+            this.currentSecond = this.currentFourth;
+            this.currentFourth = item;
+          }else if(item == this.RC){
+            this.RC = this.currentFourth;
+            this.currentThird = this.currentFourth;
+            this.currentFourth = item;
+          }else{
+            this.currentFourth = item;
+          }
+      },
       findStore() {
         this.$ajax({
           method: 'GET',
