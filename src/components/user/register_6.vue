@@ -2,7 +2,7 @@
   <div class="register">
     <div >
       <div class="layout-logo-left">项目表</div>
-      <Input  v-model="cardNameInput" placeholder="项目名称" style="width: 85px;float:left;margin-left:120px;"/>
+      <Input  v-model="cardNameInput" placeholder="项目名称" style="width: 85px;float:left;margin-left:15%;"/>
       <Input  v-model="cardPriceInput" placeholder="价格区间" style="width: 85px;float:left;margin-left:10px;"/>
       <Input  v-model="cardStyleInput" placeholder="次数" style="width: 85px;float:left;margin-left:10px;"/>
       <Button class="hy_btn" @click="addCard" style="float:left;margin-left:10px;">增加</Button>
@@ -30,17 +30,17 @@
     </div>
     <br/>
     <br/>
-     <label style="margin-left:120px;float:left;height: 32px;line-height: 32px;" for="Name">拓客卡：</label><Input  placeholder="拓客卡" style="width: 185px;float:left;margin-left:10px;"/>
+     <label style="margin-left:15%;float:left;height: 32px;line-height: 32px;" for="Name">拓客卡：</label><Input  placeholder="拓客卡" style="width: 185px;float:left;margin-left:10px;"/>
     <br/>
     <br/>
     <br/>
     <br/>
-    <label style="margin-left:120px;float:left;height: 32px;line-height: 32px;" for="Name">留客卡：</label><Input  placeholder="留客卡" style="width: 185px;float:left;margin-left:10px;"/>
+    <label style="margin-left:15%;float:left;height: 32px;line-height: 32px;" for="Name">留客卡：</label><Input  placeholder="留客卡" style="width: 185px;float:left;margin-left:10px;"/>
     <br/>
     <br/>
       <div >
       <div class="layout-logo-left">近六个月拓客方式</div>
-      <Select v-model="customerCardSel" style="width:150px;float:left;margin-left:120px;" placeholder="主要拓客方式">
+      <Select v-model="customerCardSel" style="width:150px;float:left;margin-left:15%;" placeholder="主要拓客方式">
           <Option value="1">团购</Option>
           <Option value="2">微信</Option>
           <Option value="3">微博</Option>
@@ -364,6 +364,11 @@
   },
   nextPage(){
     this.$router.push({name: 'register_5'});
+    // this.$ajax({
+    //   method: 'post',
+    //   url: ,
+    //   data:
+    // })
   },
   priviousPage(){
     this.$router.push({name: 'register_3'});
