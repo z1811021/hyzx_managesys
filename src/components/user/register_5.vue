@@ -52,24 +52,40 @@
     methods:{
     nextPage(){
 	  // this.$router.push({name: 'register_6'});
+    this.modifyKey()
+    let {keys} = Object;
+      for (let key of keys(this.currentSalary)) {
+        if (key.includes('currentSalary')) {
+          delete this.currentSalary[key]
+        }
+      }
+    const params =  {
+      storeId: sessionStorage['storeId'],
+      salary: Object.assign({desc: this.desc}, this.currentSalary, {storeId: sessionStorage['storeId']}),
+    } 
     this.$ajax({
       method: 'post',
       url: extendSalaryInfo(),
-      data: {
-        stored: 19,
-        salary: Object.assign({desc: this.desc}, this.currentSalary, {stored: 19}),
-      }
+      data: params,
+      withCredentials: true,
     }).then((res) => {
+      console.log(res)
       this.$Message.success({content:'提交成功'});
-      this.$router.push({name: 'register_6'});
+      this.$router.push({name: 'register_6', params: params});
       this.$emit('changeActivename','register_6')
     }).catch((error) =>{
       this.$Message.error({content: '提交失败'});
     })
 	},
 	priviousPage(){
-	  this.$router.push({name: 'register_4'});
+	  this.$router.push({name: 'register_4', params: params});
 	},
+  modifyKey() {
+    const month = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
+    for (let i =0; i<12; i++) {
+      this.currentSalary[month[i]] = Object.values(this.currentSalary)[i];
+    }
+  }
     },
     created() {
       console.log(this.currentSalary)

@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import { extendWaterInfo } from '../../interface';
 export default{
   name: 'register_3',
   data(){
@@ -180,6 +181,7 @@ export default{
   },
   methods:{
     nextPage(name){
+    this.modifyKey();
     //   this.$refs[name].validate((valid) => {
     //     if (valid) {
     //         this.$Message.success('Success!');
@@ -189,22 +191,55 @@ export default{
     //         this.$Message.error('无法进入下一步');
     //     }
     // })
-    this.$Message.success('Success!');
-    this.$router.push({name: 'register_4', params:{currentAccountCash: this.currentAccountCash, currentOperation: this.currentOperation, currentFlow: this.currentFlow, currentProductPerform:this.currentProductPerform}});
-    this.$emit('changeActivename','register_4')
+    let {keys} = Object;
+    const arrObj = [this.currentAccountCash, this.currentOperation, this.currentFlow, this.currentProductPerform]
+    const arrObjStr = ['currentAccountCash', 'currentOperation', 'currentFlow', 'currentProductPerform']
+    for (let val of arrObj.entries()){
+      for (let key of keys(val[1])) {
+        if (key.includes(arrObjStr[val[0]])) {
+          delete val[1][key]
+        }
+      }  
+    }
+    const waterInfos = [Object.assign({type:1},this.currentAccountCash,{storeId:sessionStorage['storeId']}), Object.assign({type:2}, this.currentOperation, {storeId:sessionStorage['storeId']}),  Object.assign({type:3}, this.currentFlow, {storeId:sessionStorage['storeId']}), Object.assign({type:4}, this.currentProductPerform, {storeId:sessionStorage['storeId']})];
+    const params = {
+      storeId: sessionStorage['storeId'],
+      waterInfos: waterInfos
+    }
+    this.$ajax({
+      method: 'POST',
+      url: extendWaterInfo(),
+      data: {
+        storeId: sessionStorage['storeId'],
+        waterInfos: waterInfos
+      },
+      withCredentials: true,
+    }).then((res) => {
+      console.log(res)
+      this.$Message.success('Success!');
+      this.$router.push({name: 'register_4', params: params});
+      this.$emit('changeActivename','register_4')
+    }).catch((error) =>{
+      this.$Message.error({content: '提交失败'});
+    })
     },
     priviousPage(){
       this.$router.push({name: 'register_2'});
       this.$emit('changeActivename','register_2')
     },
+    modifyKey() {
+      const month = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
+      for (let i =0; i<12; i++) {
+        this.currentAccountCash[month[i]] = Object.values(this.currentAccountCash)[i];
+        this.currentOperation[month[i]] = Object.values(this.currentOperation)[i];
+        this.currentFlow[month[i]] = Object.values(this.currentFlow)[i];
+        this.currentProductPerform[month[i]] = Object.values(this.currentProductPerform)[i];
+      }
+    }
   },
-  // updated() {
-  //   console.log(this.currentAccountCash)
-  //   console.log(this.currentProductPerform)
-  // }
   created() {
     this.$emit('changeActivename','register_3')
-  }
+  },
 }
 </script>
 

@@ -59,9 +59,18 @@
 </template>
 
 <script>
+  import { extendRoom } from '../../interface';
   export default{
     name: 'register_2',
     data(){
+      const valueEqualNumber = (rule, value, callback) => {
+      const valueInt = Number(value)
+      if (!Number.isInteger(valueInt) && value.length !== 0) {
+        callback(new Error('所填必须为数字'));
+        } else {
+          callback();
+        }
+      };
       let temArr = [{lableName: '仅淋浴', count:''}, {lableName: '仅坐便', count:''}, {lableName: '仅泡浴', count:''}, {lableName: '淋浴+坐便', count:''}, {lableName: '泡浴+坐便', count:''}, {lableName: '淋浴+泡浴', count:''}, {lableName: '淋浴+坐便+泡浴', count:''}]
       //let [[...singleRoomArr], [...doubleRoomArr], [...tribleRoomArr], [...aboveTribleRoomArr]] = [temArr, temArr, temArr, temArr]
       let singleRoomArr = JSON.parse(JSON.stringify(temArr))
@@ -85,25 +94,66 @@
         },
         ruleValidate: {
           roomSize: [
-            { required: true, message: '店平方数不能为空', trigger: 'blur' }
+            { validator: valueEqualNumber, trigger: 'blur' }
           ],
           annualRent: [
-            { required: true, message: '年租房不能为空', trigger: 'blur' }
+            { validator: valueEqualNumber, trigger: 'blur' }
           ]
         }
       }
     },
     methods:{
       nextPage(name){
-        this.$refs[name].validate((valid) => {
-            if (valid) {
-                this.$Message.success('Success!');
-                this.$router.push({name: 'register_3', params:{register2Info: this.roomVal}});
-                this.$emit('changeActivename','register_3')
-            } else {
-                this.$Message.error('无法进入下一步');
-            }
+        const roomTypes = [];
+        const arrRule = ['onlyShower', 'onlyToilet', 'onlyBubble', 'showerAndToilet', 'bubbleAndToilet', 'showerAndBubble', 'showerAndToiletAndBubble']
+        const room = ['singleRoom', 'doubleRoom', 'tribleRoom', 'aboveTribleRoom']
+        let num =1;
+        for (let val of room){
+          let obj1 ={}
+          for (let i=0; i<this.roomVal[val].length; i++){
+          let obj2 ={}
+          let obj2Key = arrRule[i];
+          obj2[obj2Key] = this.roomVal[val][i].count;
+          obj1 = Object.assign(obj1, obj2)
+          }
+          obj1 = Object.assign({type:num}, obj1, {storeId: sessionStorage['storeId']})
+          roomTypes.push(obj1)
+          num+=1;
+        }
+        const params = {
+          storeId: sessionStorage['storeId'],
+          roomTypes: roomTypes,
+          room: Object.assign({area: this.roomVal.roomSize}, {rent: this.roomVal.annualRent}, {storeId: sessionStorage['storeId']}),
+          member: {
+            cosmeTologist: this.roomVal.cosmetologist,
+            therapist: this.roomVal.Therapist,
+            nurse: this.roomVal.nurse,
+            physicalTherapist: this.roomVal.physicalTherapist,
+            pedicure: this.roomVal.pedicure,
+            storeId: sessionStorage['storeId']}
+          }
+        this.$ajax({
+          method: 'POST',
+          url: extendRoom(),
+          data: params,
+          withCredentials: true,
+        }).then((res) => {
+          console.log(res)
+          this.$Message.success('Success!');
+          this.$router.push({name: 'register_3', params: params});
+          this.$emit('changeActivename','register_3')
+        }).catch((error) =>{
+          this.$Message.error({content: '提交失败'});
         })
+        // this.$refs[name].validate((valid) => {
+        //     if (valid) {
+        //         this.$Message.success('Success!');
+        //         this.$router.push({name: 'register_3', params:{register2Info: this.roomVal}});
+        //         this.$emit('changeActivename','register_3')
+        //     } else {
+        //         this.$Message.error('无法进入下一步');
+        //     }
+        // })
         // this.$router.push({name: 'register_3', params:{register2Info: this.roomVal}});
         // this.$emit('changeActivename','register_3')
 	    },
@@ -169,5 +219,6 @@
 .container1 {
   display: flex;
   flex-wrap: wrap;
+  margin: 0 auto;
 }
 </style>

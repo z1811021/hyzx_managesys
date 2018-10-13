@@ -2,7 +2,7 @@
  * Created by Benson on 2017/12/27.
  */
 const host = 'http://116.62.201.135:8080';
-//const host = 'http://9.112.48.21:8080';
+//const host = 'http://9.112.49.16:8080';
 //const host = 'http://localhost:8080';
 
 //门店列表
@@ -33,6 +33,27 @@ export const deleteStore = function () {
 };
 export const extendBrandInfo = function () {
   const URL = '/store/extendBrandInfo';
+  const API = host + URL;
+  return API;
+};
+export const extendRoom = function () {
+  const URL = '/store/extendRoom';
+  const API = host + URL;
+  return API;
+};
+
+export const extendItemInfo = function () {
+  const URL = '/store/extendItemInfo';
+  const API = host + URL;
+  return API;
+};
+export const extendClientInfo = function () {
+  const URL = '/store/extendClientInfo';
+  const API = host + URL;
+  return API;
+};
+export const extendWaterInfo = function () {
+  const URL = '/store/extendWaterInfo';
   const API = host + URL;
   return API;
 };
@@ -67,7 +88,7 @@ export const extendSalaryInfo = function () {
   return API;
 };
 export const extendProblemInfo = function () {
-  const URL = '/store/extendSalaryInfo';
+  const URL = '/store/extendProblemInfo';
   const API = host + URL;
   return API;
 };

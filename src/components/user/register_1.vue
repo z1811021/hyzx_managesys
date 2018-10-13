@@ -22,7 +22,8 @@
     <Form ref="formValidate2" :model="storeVal" :rules="ruleValidate" :label-width="100" :class="footer2">
       <div class="container2">
         <FormItem label="门店品牌 ：" prop="storeName"  class="formItemStyle2" >
-              <Select v-model="storeVal.storeName" style="width:150px" placeholder="门店品牌">
+              <Input v-model="storeVal.storeName" placeholder="门店品牌"></Input>
+              <Select v-model="storeVal.franchType" style="width:150px" placeholder="类型">
                 <Option value="1">直营</Option>
                 <Option value="2">加盟</Option>
                 <Option value="3">总部</Option>
@@ -106,6 +107,7 @@
     };
       return{
         storeVal: {
+          franchType: '',
           storeName: '',
           telephone: '',
           operationMode: '',
@@ -140,7 +142,7 @@
             phoneNumber: [
                 { validator: validatePhoneNumber, trigger: 'blur', required: true }
             ],
-            storeName: [
+            franchType: [
                 { required: true, message: '门店名称不能为空', trigger: 'blur' }
             ],
             provinceId: [
@@ -161,6 +163,9 @@
             operationMode: [
                 { required: true, message: '经营方式不能为空', trigger: 'change' }
             ],
+            storeName: [
+             { required: true, message: '类型不能为空', trigger: 'change' }
+            ]
           }
         }
       },
@@ -266,7 +271,7 @@
       },
       handleSubmit (name) {
         this.$refs[name].validate((valid) => {
-          const customer  = {account: this.validatePhoneVal.phoneNumber, name: this.validatePhoneVal.staffName}
+          const customer  = {account: this.validatePhoneVal.phoneNumber, name: this.validatePhoneVal.staffName, role: '1'}
           const store = this.storeVal
             if (valid) {
               console.log(customer, store)
@@ -289,14 +294,14 @@
                   data: {customer: customer, store: store},
                   withCredentials: true,
                 }).then((res) =>{
-                  console.log(res)
+                  sessionStorage['storeId'] = res.data.storeId
                   this.$Modal.confirm({
                     title: '注册',
                     content: '<p>恭喜您注册成功，如果想填写详细信息请点击下一步，退回到登录页面点击返回</p>',
                     okText: '下一步',
                     cancelText: '返回',
                     onOk: () => {
-                        this.$Message.info('Clicked ok');
+                        this.$Message.info('进行下一步填写');
                         this.$router.push({name: 'register_2', params:{loginInfo: this.storeVal}});
                         this.$emit('changeActivename','register_2')
                     },

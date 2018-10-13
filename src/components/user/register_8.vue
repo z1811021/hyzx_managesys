@@ -23,16 +23,19 @@
     methods:{
       nextPage(){
         // this.$router.push({name: 'register_6'});
+        const params = {
+          storeId: sessionStorage['storeId'],
+          problem: Object.assign({desc: this.problem}, {storeId: sessionStorage['storeId']}),
+        }
         this.$ajax({
           method: 'post',
           url: extendProblemInfo(),
-          data: {
-            stored: 19,
-            problem: Object.assign({desc: this.problem}, {stored: 19}),
-          }
+          data: params,
+          withCredentials: true,
         }).then((res) => {
+          console.log(res)
           this.$Message.success({content:'提交成功'});
-          this.$router.push({name: 'login'});
+          this.$router.push({name: 'login', params: params});
         }).catch((error) =>{
           this.$Message.error({content: '提交失败'});
         })

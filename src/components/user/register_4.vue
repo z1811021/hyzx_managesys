@@ -89,9 +89,9 @@
     name: 'register_4',
       data() {    
         return {      
-          instrumentsForm: [{effect:"", name:"", storeId:19}],
-          brandsJJForm: [{name:"", storeId:19}],
-          brandsYHForm: [{name:"", storeId:19}],
+          instrumentsForm: [{effect:"", name:"", storeId:sessionStorage['storeId']}],
+          brandsJJForm: [{type:2, name:"", storeId:sessionStorage['storeId']}],
+          brandsYHForm: [{type:1, name:"", storeId:sessionStorage['storeId']}],
           brandsInput: "",
           instrumentYQInput: "",
           instrumentPPInput: "",
@@ -106,13 +106,13 @@
       if(this.instrumentsForm[0].effect == ""){
         this.instrumentsForm = [];
         this.instrumentsForm.push({ 
-            effect:this.instrumentYQInput, name:this.instrumentPPInput, storeId:19
+            effect:this.instrumentYQInput, name:this.instrumentPPInput, storeId:sessionStorage['storeId']
         })  
         this.instrumentYQInput = "";
         this.instrumentPPInput = "";
       } else{
         this.instrumentsForm.push({ 
-            effect:this.instrumentYQInput, name:this.instrumentPPInput, storeId:19
+            effect:this.instrumentYQInput, name:this.instrumentPPInput, storeId:sessionStorage['storeId']
         })   
         this.instrumentYQInput = "";
         this.instrumentPPInput = "";
@@ -121,7 +121,7 @@
   },    
   deleteInstrumentsItem(index) {
     if(this.instrumentsForm.length == 1){
-       this.instrumentsForm = [{effect:"", name:"", storeId:19}];
+       this.instrumentsForm = [{effect:"", name:"", storeId:sessionStorage['storeId']}];
     }else{
       this.instrumentsForm.splice(index,1);
     }      
@@ -147,13 +147,13 @@
     if(this.brandsYHForm[0].name == ""){
       this.brandsYHForm = [];
       this.brandsYHForm.push({ 
-           type:1, name:this.brandsInput, storeId:19
+           type:1, name:this.brandsInput, storeId:sessionStorage['storeId']
       })  
       this.brandsSelect = "";
       this.brandsInput = "";
     } else{
       this.brandsYHForm.push({ 
-           type:1, name:this.brandsInput, storeId:19
+           type:1, name:this.brandsInput, storeId:sessionStorage['storeId']
       })
       this.brandsSelect = "";   
       this.brandsInput = "";
@@ -161,7 +161,7 @@
   },    
   deleteBrandsYHItem(index) {      
     if(this.brandsYHForm.length == 1){
-       this.brandsYHForm = [{name:"", storeId:19}];
+       this.brandsYHForm = [{type:1, name:"", storeId:sessionStorage['storeId']}];
     }else{
       this.brandsYHForm.splice(index, 1);
     }   
@@ -172,11 +172,11 @@
     if(this.brandsJJForm[0].name == ""){
       this.brandsJJForm = [];
       this.brandsJJForm.push({ 
-          type:2, name:this.brandsInput, storeId:19
+          type:2, name:this.brandsInput, storeId:sessionStorage['storeId']
       })  
     } else{
       this.brandsJJForm.push({ 
-           type:2, name:this.brandsInput, storeId:19
+           type:2, name:this.brandsInput, storeId:sessionStorage['storeId']
       })   
       this.brandsSelect = "";
       this.brandsInput = "";
@@ -184,28 +184,32 @@
   },  
   deleteBrandsJJItem(index) {      
     if(this.brandsJJForm.length == 1){
-       this.brandsJJForm = [{name:"", storeId:19}];
+       this.brandsJJForm = [{type:2, name:"", storeId:sessionStorage['storeId']}];
     }else{
       this.brandsJJForm.splice(index, 1);
     }   
   },
   nextPage(){
 	  // this.$router.push({name: 'register_5'});
-    this.$ajax({
-      method: 'post',
-      url: extendBrandInfo(),
-      data: {
-        storeId: 19,
-        brands: [...this.brandsJJForm, ...this.brandsYHForm],
-        instruments: this.instrumentsForm
-      }
-    }).then((res) => {
-      this.$Message.success({content:'提交成功'});
-      this.$router.push({name: 'register_5'});
-      this.$emit('changeActivename','register_5')
-    }).catch((error) =>{
-      this.$Message.error({content: '提交失败'});
-    })
+    const params = {
+      storeId: sessionStorage['storeId'],
+      brands: [...this.brandsJJForm, ...this.brandsYHForm],
+      instruments: this.instrumentsForm
+    }
+    console.log(params)
+    // this.$ajax({
+    //   method: 'post',
+    //   url: extendBrandInfo(),
+    //   data: params,
+    //   withCredentials: true,
+    // }).then((res) => {
+    //   console.log(res)
+    //   this.$Message.success({content:'提交成功'});
+    //   this.$router.push({name: 'register_5', params:params});
+    //   this.$emit('changeActivename','register_5')
+    // }).catch((error) =>{
+    //   this.$Message.error({content: '提交失败'});
+    // })
 	},
 	priviousPage(){
 	  this.$router.push({name: 'register_3'});
