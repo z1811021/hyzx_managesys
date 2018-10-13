@@ -19,17 +19,38 @@
         工作流程：<Input v-model="job.workflow" placeholder="第一步：  ，第二步：  " style="width: 300px"/>
       </div>
       <div class="com">
-        员工类型：<Select v-model="job.employeeType"  placeholder="员工类型" style="width:300px" :transfer=true>
-        <Option value="1" >技师</Option>
-        <Option value="2" >顾问</Option>
-        <Option value="3" >店长</Option>
-      </Select>
+          员工等级：<Select v-model="employeeLevelInput"  placeholder="员工等级" style="width:80px" :transfer=true>
+          <Option value="1" >一级</Option>
+          <Option value="2" >二级</Option>
+          <Option value="3" >三级</Option>
+          <Option value="4" >四级</Option>
+          <Option value="5" >五级</Option>
+        </Select>
+        <Input v-model="employeeNameInput" placeholder="名称" style="width: 160px"/>
+        <Button class="hy_btn" @click="addEmployee">添加</Button>
       </div>
-      <div class="com">
-        员工等级：<Select v-model="job.employeeRank"  placeholder="员工等级" style="width:300px" :transfer=true>
-        <Option value="1" >一级</Option>
-        <Option value="2" >二级</Option>
-      </Select>
+      <div class="comTable">
+        <table>
+          <thead>
+            <tr>
+              <th>级别</th>
+              <th>名称</th>
+              <th style="width:10%;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item,index) in employeeForm">
+              <td >{{item.level}}}</td>
+              <td >{{item.name}}</td>
+              <td ><Button class="ep_btn" @click="deleteEmployee(index)">移除</Button></td>
+            </tr> 
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr> 
+          </tbody>
+        </table>
       </div>
       <div class="com">
         员工排名：<Select v-model="job.checkWorkAttendance" :transfer=true style="width:300px">
@@ -100,6 +121,9 @@
       return {
         storeFlag: false,
         store: '',
+        employeeForm:[],
+        employeeLevelInput:'',
+        employeeNameInput:'',
         job: {
           id : '',
           storeId: '',
@@ -232,6 +256,20 @@
         this.store = '修改';
         this.job = JSON.parse(JSON.stringify(data));
       },
+      addEmployee(){
+      if(this.employeeLevelInput == "" || this.employeeNameInput == ""){
+        alert("请完整输入级别和名称后添加！");
+      }else{
+          this.employeeForm.push({ 
+              level:this.employeeLevelInput, name:this.employeeNameInput, storeId:19
+          })  
+          this.employeeLevelInput = "";
+          this.employeeNameInput = "";
+      }
+    }, 
+      deleteEmployee(index) {
+        this.employeeForm.splice(index,1);  
+    },
       Delete(data){
         this.$ajax({
           method: 'GET',
@@ -269,4 +307,30 @@
   .ivu-checkbox-group-item{
     margin: 3% 0 1% 2%;
   }
+  .ep_btn{
+    width:2px;
+  }
+  table{           
+   border-collapse: collapse;            
+   margin: 0 auto;            
+   text-align: center;  
+   margin-left:123px;;  
+  } 
+  table td, table th{            
+      border: 1px solid #cad9ea;            
+      color: #666;            
+      height: 30px;        
+    }        
+  table thead th{            
+      background-color: #CCE8EB;            
+      width: 135px;        
+    }        
+  table tr:nth-child(odd)        
+    {            
+      background: #fff;        
+    }        
+  table tr:nth-child(even)        
+    {            
+      background: #F5FAFA;        
+    }
 </style>
