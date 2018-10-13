@@ -8,22 +8,16 @@
     </Row>
     <Table :columns="columns" :data="data"></Table>
 
-    <Modal  v-model="storeFlag" :mask-closable="false" :title="store" @on-ok="optai">
+    <Modal  class="modalEmployee" v-model="storeFlag" :mask-closable="false" :title="store" @on-ok="optai">
       <div class="com">
-        岗位名称：<Input v-model="job.postName" placeholder="岗位名称" style="width: 300px"/>
+        职位名称：<Input v-model="job.postName" placeholder="岗位名称" style="width: 300px"/>
       </div>
       <div class="com">
-        岗位职责：<Input v-model="job.postDuties" placeholder="岗位职责" style="width: 300px"/>
+        职责内容：<Input v-model="job.postDuties" placeholder="岗位职责" style="width: 300px"/>
       </div>
       <div class="com">
         工作流程：<Input v-model="job.workflow" placeholder="第一步：  ，第二步：  " style="width: 300px"/>
       </div>
-      <!--<div class="com">-->
-        <!--行为绩效与评分：<Input v-model="job.achievements" placeholder="行为绩效与评分" style="width: 264px"/>-->
-      <!--</div>-->
-      <!--<div class="com">-->
-        <!--技术考核：<Input v-model="job.technicalExamination" placeholder="技术考核" style="width: 300px"/>-->
-      <!--</div>-->
       <div class="com">
         员工类型：<Select v-model="job.employeeType"  placeholder="员工类型" style="width:300px" :transfer=true>
         <Option value="1" >技师</Option>
@@ -38,37 +32,58 @@
       </Select>
       </div>
       <div class="com">
-        员工考勤：<Select v-model="job.checkWorkAttendance" :transfer=true style="width:300px">
-          <Option value="是" >是</Option>
-          <Option value="否" >否</Option>
+        员工排名：<Select v-model="job.checkWorkAttendance" :transfer=true style="width:300px">
+          <Option value="1" >年</Option>
+          <Option value="2" >半年</Option>
+          <Option value="3" >季度</Option>
+          <Option value="4" >两个月</Option>
+          <Option value="5" >单月</Option>
+        </Select>
+        <br/>
+        <Checkbox-group class="employeeCheck">
+          <Checkbox label="现金"></Checkbox>
+          <Checkbox label="客流"></Checkbox>
+          <Checkbox label="实操"></Checkbox>
+          <Checkbox label="产品"></Checkbox>
+          <Checkbox label="消耗"></Checkbox>
+        </Checkbox-group>
+      </div>
+      <div class="com">
+        分红管理：<Select v-model="job.dataRankings" :transfer=true style="width:300px">
+          <Option value="年" >年</Option>
+          <Option value="半年" >半年</Option>
+          <Option value="季度" >季度</Option>
+          <Option value="月" >月</Option>
         </Select>
       </div>
       <div class="com">
-        员工数据排名：<Select v-model="job.dataRankings" :transfer=true style="width:274px">
-          <Option value="单月现金" >单月现金</Option>
-          <Option value="多月现金" >多月现金</Option>
-          <Option value="客流" >客流</Option>
-          <Option value="实操" >实操</Option>
-        </Select>
+        <div style="float: left;margin-left: 64px;">股权设置：</div>
+        <br/>
+        <RadioGroup v-model="stock" style="margin-top:2%;">
+            <Radio label="原始股" style="float:left;">
+                <span>原始股</span>
+            </Radio>
+            <Input v-model="job.workflow" placeholder="每股金额" style="width: 240px;float:right;margin-top: -5px;"/>
+            <br/>
+            <br/>
+            <Radio label="实股" style="float:left;">
+                <span>实股</span>
+            </Radio>
+            <Input v-model="job.workflow" placeholder="每股金额" style="width: 240px;float:right;margin-top: -5px;"/>
+            <br/>
+            <br/>
+            <Radio label="干股" style="float:left;">
+                <span>干股</span>
+            </Radio>
+            <Input v-model="job.workflow" placeholder="每股金额" style="width: 240px;float:right;margin-top: -5px;"/>
+            <br/>
+            <br/>
+            <Radio label="分红股" style="float:left;">
+                <span>分红股</span>
+            </Radio>
+            <Input v-model="job.workflow" placeholder="每股金额" style="width: 240px;float:right;margin-top: -5px;"/>
+        </RadioGroup>
       </div>
-      <div class="com" v-if="job.dataRankings == '多月现金'">
-        多月现金：<Input v-model="job.multiMonthCash" placeholder="统计月单位" style="width: 300px"  @on-keyup="job.multiMonthCash=check2(job.multiMonthCash)" ng-pattern="/[^a-zA-Z]/"/>
-      </div>
-      <div class="com">
-        入股金额：<Input v-model="job.shareAmount" placeholder="入股金额" style="width: 300px" @on-keyup="job.shareAmount=check2(job.shareAmount)" ng-pattern="/[^a-zA-Z]/"/>
-      </div>
-      <div class="com">
-        分红管理：<Input v-model="job.dividendManagement" placeholder="分红管理" style="width: 300px"/>
-      </div>
-      <div class="com">
-        股权性质：
-        <Select v-model="job.natureOfEquity" :transfer=true style="width:297px">
-          <Option value="干股" >干股</Option>
-          <Option value="实股" >实股</Option>
-        </Select>
-      </div>
-      <br/>
-      <br/>
     </Modal>
   </div>
 </template>
@@ -199,7 +214,7 @@
       },
       newEm() {
         this.storeFlag = true;
-        this.store = '新建';
+        this.store = '新建岗位设置';
         this.job = {
           id : '',
             postName: '',
@@ -242,9 +257,18 @@
     }
   };
 </script>
-
+<style>
+  .ivu-modal{margin-top:-4%;}
+</style>
 <style scoped>
   .com{
     margin: 10px 0;
+  }
+  .modalEmployee{
+    margin: 0 auto;            
+    text-align: center;      
+  }
+  .ivu-checkbox-group-item{
+    margin: 3% 0 1% 2%;
   }
 </style>
