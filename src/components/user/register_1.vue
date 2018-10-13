@@ -55,6 +55,7 @@
             <Option value="6">产后修复</Option>
             <Option value="7">减肥馆</Option>
             <Option value="8">祛痘馆</Option>
+            <Option value="9">整骨小颜</Option>
           </Select>
         </FormItem>
         <FormItem label="经营业态 ：" prop="operationMode"  class="formItemStyle2" >

@@ -20,65 +20,75 @@
 
 
     <Modal  footer-hide v-model="storeFlag" :title="store" :mask-closable="false" >
-      联系人：<Input v-model="storeVal.staffName" placeholder="联系人" style="width: 310px"/>
-      <br/>
-      <br/>
-      联系人电话：<Input v-model="storeVal.phoneNumber" @on-keyup="storeVal.phoneNumber=check1(storeVal.phoneNumber)" placeholder="联系人电话" style="width: 290px"/>
-      <br/>
-      <br/>
-      门店名称：<Input v-model="storeVal.storeName" placeholder="门店名称" style="width: 300px"/>
-      <br/>
-      <br/>
-      门店省市：<select id="s_province" name="province" class="sus" v-model="storeVal.provinceName" placeholder="门店所在省" ></select>&nbsp;&nbsp;
-      <select id="s_city" name="city" v-model="storeVal.cityName" class="sus" ></select>&nbsp;&nbsp;
-      <select id="s_county" name="area"  v-model="storeVal.area" class="sus"></select>
-      <br/>
-      <br/>
-      门店地址：<Input v-model="storeVal.address" placeholder="门店地址" style="width: 300px"/>
-      <br/>
-      <br/>
-      门店电话：<Input v-model="storeVal.telephone" @on-keyup="storeVal.telephone=check1(storeVal.telephone)"  placeholder="门店电话" style="width: 300px"/>
-      <br/>
-      <br/>
-      管理周期：<Input v-model="storeVal.managementCycle" @on-keyup="storeVal.managementCycle=check1(storeVal.managementCycle)" placeholder="管理周期" style="width: 300px"/>
-      <br/>
-      <br/>
-      门店类型：<Select v-model="storeVal.storeType" style="width:300px" :transfer=true  placeholder="门店类型">
-        <Option value="1">美容院</Option>
-        <Option value="2">皮肤管理</Option>
-      </Select>
-      <br/>
-      <br/>
-      经营方式：<Select v-model="storeVal.operationMode" style="width:300px" :transfer=true  placeholder="经营方式">
-        <Option value="1">单店</Option>
-        <Option value="2">连锁</Option>
-      </Select>
-      <br/>
-      <br/>
-      <RadioGroup v-model="storeVal.storeStatus" type="button" v-show="store=='编辑门店'">
-        <Radio label="1">正在管理</Radio>
-        <Radio label="2">经营不善</Radio>
-        <Radio label="3">不再管理</Radio>
-      </RadioGroup>
-
-      <div slot="footer">
-        <Button type="error" size="large" long @click="newStoret">提交</Button>
+      <div class="modalInsideForm">
+        联系人：<Input v-model="storeVal.staffName" placeholder="联系人" style="width: 310px"/>
+        <br/>
+        <br/>
+        联系人电话：<Input v-model="storeVal.phoneNumber" @on-keyup="storeVal.phoneNumber=check1(storeVal.phoneNumber)" placeholder="联系人电话" style="width: 290px"/>
+        <br/>
+        <br/>
+        门店品牌：<Input v-model="storeVal.storeName" placeholder="门店品牌" style="width: 300px"/>
+        <br/>
+        <br/>
+        门店省市：<select id="s_province" name="province" class="sus" v-model="storeVal.provinceName" placeholder="门店所在省" ></select>&nbsp;&nbsp;
+        <select id="s_city" name="city" v-model="storeVal.cityName" class="sus" ></select>&nbsp;&nbsp;
+        <select id="s_county" name="area"  v-model="storeVal.area" class="sus"></select>
+        <br/>
+        <br/>
+        门店地址：<Input v-model="storeVal.address" placeholder="门店地址" style="width: 300px"/>
+        <br/>
+        <br/>
+        门店电话：<Input v-model="storeVal.telephone" @on-keyup="storeVal.telephone=check1(storeVal.telephone)"  placeholder="门店电话" style="width: 300px"/>
+        <br/>
+        <br/>
+        管理周期：<Input v-model="storeVal.managementCycle" @on-keyup="storeVal.managementCycle=check1(storeVal.managementCycle)" placeholder="管理周期" style="width: 300px"/>
+        <br/>
+        <br/>
+        门店类型：<Select v-model="storeVal.storeType" style="width:300px" :transfer=true  placeholder="门店类型">
+          <Option value="1">美容院</Option>
+          <Option value="2">皮肤管理</Option>
+          <Option value="3">SPA会所</Option>
+          <Option value="4">养发</Option>
+          <Option value="5">理疗</Option>
+          <Option value="6">产后修复</Option>
+          <Option value="7">减肥馆</Option>
+          <Option value="8">祛痘馆</Option>
+          <Option value="9">整骨小颜</Option>
+        </Select>
+        <br/>
+        <br/>
+        经营业态：<Select v-model="storeVal.operationMode" style="width:300px" :transfer=true  placeholder="经营业态">
+          <Option value="1">单店</Option>
+          <Option value="2">连锁</Option>
+        </Select>
+        <br/>
+        <br/>
+        <RadioGroup v-model="storeVal.storeStatus" type="button" v-show="store=='编辑门店'">
+          <Radio label="1">正在管理</Radio>
+          <Radio label="2">经营不善</Radio>
+          <Radio label="3">不再管理</Radio>
+        </RadioGroup> 
+        <br/>
+        <br/>
+        <div slot="footer">
+          <Button type="error" size="large" long @click="newStoret">提交</Button>
+        </div>
       </div>
      </Modal>
      <Modal  footer-hide v-model="questionFlag" :mask-closable="false" width="60%" >
-     <div><Button size="large"  v-bind:class="{ active: isRoomActive }" @click="goRoom" style="margin-left: 30px;margin-top: 18px;">房间床位</Button>
-     <Button size="large"  style="margin-top: 18px;" v-bind:class="{ active: isYearActive }" @click="goYear">年流水</Button>
-     <Button size="large"  style="margin-top: 18px;" v-bind:class="{ active: isBrandActive }" @click="goBrand">品牌仪器</Button>
-     <Button size="large"  style="margin-top: 18px;" v-bind:class="{ active: isSalaryActive }" @click="goSalary">薪资制度</Button>
-     <Button size="large"  style="margin-top: 18px;" v-bind:class="{ active: isProjectActive }" @click="goProject">项目/卡</Button>
-     <Button size="large"  style="margin-top: 18px;" v-bind:class="{ active: isCustomerActive }" @click="goCustomer">顾客流量</Button>
-     <Button size="large"  style="margin-top: 18px;" v-bind:class="{ active: isProblemActive }" @click="goProblem">经营问题</Button>
+     <div class="modalNav"><Button size="large"  v-bind:class="{ active: isRoomActive }" @click="goRoom">房间床位</Button>
+     <Button size="large"  v-bind:class="{ active: isYearActive }" @click="goYear">年流水</Button>
+     <Button size="large"  v-bind:class="{ active: isBrandActive }" @click="goBrand">品牌仪器</Button>
+     <Button size="large"  v-bind:class="{ active: isSalaryActive }" @click="goSalary">薪资制度</Button>
+     <Button size="large"  v-bind:class="{ active: isProjectActive }" @click="goProject">项目/卡</Button>
+     <Button size="large"  v-bind:class="{ active: isCustomerActive }" @click="goCustomer">顾客流量</Button>
+     <Button size="large"  v-bind:class="{ active: isProblemActive }" @click="goProblem">经营问题</Button>
      <br/>
      <br/>
      </div> 
-     <section v-show="isRoomShow" style="margin-left: 30px;">
-     <div style="display: flex;margin-top:10px;"><div >店平方数：<Input v-model="question.shopSquare" style="width: 128px" disabled/></div>
-      <div style="margin-left:55px;">年房租：<Input v-model="question.annualRent" style="width: 128px" disabled/></div><div style="margin-left:55px;">床位数：<Input v-model="question.annualRent" style="width: 128px" disabled/></div></div>
+     <section v-show="isRoomShow">
+     <div class="modalInputs"><div style="margin-left:14%;">店平方数：<Input v-model="question.shopSquare" style="width: 88px" disabled/></div>
+      <div style="margin: 0 auto;">年房租：<Input v-model="question.annualRent" style="width: 88px" disabled/></div><div style="margin-right:14%;">床位数：<Input v-model="question.annualRent" style="width: 88px" disabled/></div></div>
       <br/>
       <table border="1">
         <thead>
@@ -164,7 +174,7 @@
       </div>
       <br/>
       </section>
-      <section v-show="isYearShow" style="margin-left: 50px;">
+      <section v-show="isYearShow" style="margin-left: 50px;" id="twentySection">
       <br/>
       <Button size="large"  @click="showLs" style="background: #CCE8EB;height:60px;width:200px;margin-left: 60px;">连续十二个月店内现金流水</Button>
       <Button size="large"  @click="showSc" style="background: #CCE8EB;height:60px;width:200px;margin-left: 60px;">连续十二个月店内实操</Button>
@@ -177,7 +187,7 @@
       </section>
       <section v-show="isBrandShow" >
       <div style="width:100%;"><div style="float:left;width:50%;margin:0 auto;" align="center">直营产品品牌：       <br/>
-  <table border="1">
+  <table border="1" style="margin-left:22%;width:70%;margin-top:2%;">
     <thead>
     <tr>
       <th>院护</th>
@@ -202,8 +212,8 @@
     </tr>
   </table>
 </div>
-      <div style="float:right;width:50%;margin:0 auto;" align="center">仪器：<br/>
-  <table border="1">
+<div style="float:right;width:50%;margin:0 auto;" align="center">仪器：<br/>
+  <table border="1" style="margin-right:22%;width:70%;margin-top:2%;">
     <thead>
     <tr>
       <th>功效</th>
@@ -240,159 +250,165 @@
      <br/>
 </div>
       </section>
-      <section v-show="isSalaryShow">
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;薪资制度：<br/><br/><div class="ivu-input-wrapper ivu-input-type" style="width: 90%;margin-left: 30px;"><textarea autocomplete="off" spellcheck="false" rows="2" class="ivu-input" style="height: 130px;margin-top: -10px;" wrap="soft" disabled></textarea></div>
+      <section v-show="isSalaryShow" id="salarySection">
+      <br/><br/><div class="ivu-input-wrapper ivu-input-type"><textarea autocomplete="off" spellcheck="false" rows="2" class="ivu-input" style="height: 230px;margin-top: -10px;" wrap="soft" disabled></textarea></div>
       <br/>
       <br/>
       
-      <Button size="large" style="margin-left: 30px;background: #CCE8EB;" @click="showYgxs">员工12个月薪资</Button>
+      <Button size="large" style="margin-left: 10%;background: #CCE8EB; margin-bottom:3%;" @click="showYgxs">员工12个月薪资</Button>
       </section>
-      <section v-show="isProjectShow">
-      <div style="width:100%;"><div style="float:left;width:50%;margin:0 auto;" align="center">项目价格单：       <br/>
-  <table border="1">
-    <thead>
-    <tr>
-      <th>项目</th>
-      <th>价格</th>
-    </tr>
-  </thead>
-    <tr>
-      <td>XXX</td>
-      <td>1000 元</td>
-    </tr>
-    <tr>
-      <td>XXX</td>
-      <td>1000 元</td>
-    </tr>
-    <tr>
-      <td>XXX</td>
-      <td>1000 元</td>
-    </tr>
-    <tr>
-      <td>XXX</td>
-      <td>1000 元</td>
-    </tr>
-  </table>
-</div>
-      <div style="float:right;width:50%;margin:0 auto;" align="center">卡项：<br/>
-  <table border="1">
-    <thead>
-    <tr>
-      <th>项目</th>
-      <th>价格</th>
-      <th>营销方式</th>
-    </tr>
-  </thead>
-    <tr>
-      <td>XXX</td>
-      <td>1000 元</td>
-      <td>XXX</td>
-    </tr>
-    <tr>
-      <td>XXX</td>
-      <td>1000 元</td>
-      <td>XXX</td>
-    </tr>
-    <tr>
-      <td>XXX</td>
-      <td>1000 元</td>
-      <td>XXX</td>
-    </tr>
-    <tr>
-      <td>XXX</td>
-      <td>1000 元</td>
-      <td>XXX</td>
-    </tr>
-    <tr>
-      <td>XXX</td>
-      <td>1000 元</td>
-      <td>XXX</td>
-    </tr>
-    <tr>
-      <td>XXX</td>
-      <td>1000 元</td>
-      <td>XXX</td>
-    </tr>
-  </table>
-     </div>
-     <div class="clearfloat"></div>
-</div>
-<br/>
-      <div style="width:100%;"><div style="float:left;width:50%;margin:0 auto;" align="center">拓客卡：<br/>
-  <table border="1">
-    <thead>
-    <tr>
-      <th>项目</th>
-      <th>价格</th>
-      <th>营销方式</th>
-    </tr>
-  </thead>
-    <tr>
-      <td>XXX</td>
-      <td>1000 元</td>
-      <td>XXX</td>
-    </tr>
-    <tr>
-      <td>XXX</td>
-      <td>1000 元</td>
-      <td>XXX</td>
-    </tr>
-  </table>
-</div>
-      <div style="float:right;width:50%;margin:0 auto;" align="center">留客卡：<br/>
-  <table border="1">
-    <thead>
-    <tr>
-      <th>项目</th>
-      <th>价格</th>
-      <th>营销方式</th>
-    </tr>
-  </thead>
-    <tr>
-      <td>XXX</td>
-      <td>1000 元</td>
-      <td>XXX</td>
-    </tr>
-    <tr>
-      <td>XXX</td>
-      <td>1000 元</td>
-      <td>XXX</td>
-    </tr>
-  </table>
-     </div>
-     <div class="clearfloat"></div>
-</div>
-<div>
-            <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;主要拓客方式：      <div style="display: flex;margin-top:20px;margin-left:30px;"><div class="crack-button">团购</div><div  class="crack-button">微信</div><div  class="crack-button">微博</div><div  class="crack-button">APP</div><div  class="crack-button">地推</div><div  class="crack-button">异业联盟</div><div <div  class="crack-button">会议营销</div><div <div  class="crack-button">社区合作</div><div  class="crack-button">行业合作</div></div><br/>
-       </div>
+  <section v-show="isProjectShow">
+      <div style="width:100%;">
+        <div style="float:left;width:42%;margin:0 auto;" align="center">项目价格单：<br/>
+        <table border="1" style="margin-left: 30%;margin-top:1%;">
+          <thead>
+          <tr>
+            <th>项目</th>
+            <th>价格</th>
+          </tr>
+          </thead>
+          <tr>
+            <td>XXX</td>
+            <td>1000 元</td>
+          </tr>
+          <tr>
+            <td>XXX</td>
+            <td>1000 元</td>
+          </tr>
+          <tr>
+            <td>XXX</td>
+            <td>1000 元</td>
+          </tr>
+          <tr>
+            <td>XXX</td>
+            <td>1000 元</td>
+          </tr>
+        </table>
+    </div>
+    <div style="float:right;width:58%;margin:0 auto;" align="center">卡项：<br/>
+      <table border="1" style="margin-right: 20%;margin-top:1%;">
+        <thead>
+        <tr>
+          <th>项目</th>
+          <th>价格</th>
+          <th>营销方式</th>
+        </tr>
+      </thead>
+        <tr>
+          <td>XXX</td>
+          <td>1000 元</td>
+          <td>XXX</td>
+        </tr>
+        <tr>
+          <td>XXX</td>
+          <td>1000 元</td>
+          <td>XXX</td>
+        </tr>
+        <tr>
+          <td>XXX</td>
+          <td>1000 元</td>
+          <td>XXX</td>
+        </tr>
+        <tr>
+          <td>XXX</td>
+          <td>1000 元</td>
+          <td>XXX</td>
+        </tr>
+        <tr>
+          <td>XXX</td>
+          <td>1000 元</td>
+          <td>XXX</td>
+        </tr>
+        <tr>
+          <td>XXX</td>
+          <td>1000 元</td>
+          <td>XXX</td>
+        </tr>
+      </table>
+        </div>
+      <div class="clearfloat"></div>
+    </div>
+      <div style="width:100%;margin-top:4%;"><div style="float:left;width:50%;margin:0 auto;" align="center">拓客卡：<Input v-model="question.shopSquare" style="width: 88px" disabled/>
+      </div>
+      <div style="float:right;width:50%;margin:0 auto;" align="center">留客卡：<Input v-model="question.shopSquare" style="width: 88px" disabled/>
+      </div>
+           <div class="clearfloat"></div>
+      </div>
+      <br/>
+      <div style="width:80%;margin:0 auto;margin-top:2%;margin-bottom:5%;" align="center">
+        <table border="1">
+          <thead>
+          <tr>
+            <th></th>
+            <th>团购</th>
+            <th>微信</th>
+            <th>微博</th>
+            <th>APP</th>
+            <th>地推</th>
+            <th>异业联盟</th>
+            <th>会议营销</th>
+            <th>社区合作</th>
+            <th>行业合作</th>
+          </tr>
+        </thead>
+          <tr>
+            <td>拓进人数</td>
+            <td>223</td>
+            <td>123</td>
+            <td>223</td>
+            <td>123</td>
+            <td>223</td>
+            <td>123</td>
+            <td>223</td>
+            <td>123</td>
+            <td>123</td>
+          </tr>
+          <tr>
+            <td>成交人数</td>
+            <td>223</td>
+            <td>123</td>
+            <td>223</td>
+            <td>123</td>
+            <td>223</td>
+            <td>123</td>
+            <td>223</td>
+            <td>123</td>
+            <td>123</td>
+          </tr>
+        </table>
+      </div>
       </section>
-      <section v-show="isCustomerShow" style="margin-left: 30px;">
-     店内注册顾客数量：<Input v-model="question.newCustomers" style="width: 216px" disabled/>
+      <section v-show="isCustomerShow" style="width: 80%;margin: 0 auto;text-align: center;">
+     店内注册顾客数量：<Input v-model="question.newCustomers" style="width: 85px" disabled/>
       <br/>
       <br/>
-      两个月至少到店一次的顾客数量：<Input v-model="question.numberOfTransactions" style="width: 144px" disabled/>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;一个月至少到店一次的顾客数量：<Input v-model="question.numberOfTransactions" style="width: 144px" disabled/>
+      两个月至少到店一次的顾客数量：<Input v-model="question.numberOfTransactions" style="width: 85px" disabled/>
       <br/>
       <br/>
-     一个月至少到店两次的顾客数量：<Input v-model="question.numberOfTransactions" style="width: 144px" disabled/>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 一个月至少到店三次的顾客数量：<Input v-model="question.numberOfTransactions" style="width: 144px" disabled/>
+      一个月至少到店一次的顾客数量：<Input v-model="question.numberOfTransactions" style="width: 85px" disabled/>
       <br/>
       <br/>
-     一个月到店三次以上的顾客数量：<Input v-model="question.numberOfTransactions" style="width: 144px" disabled/>
+     一个月至少到店两次的顾客数量：<Input v-model="question.numberOfTransactions" style="width: 85px" disabled/>
       <br/>
       <br/>
-       每个月的月均业绩：&nbsp;&nbsp;&nbsp;<Input v-model="question.numberOfTransactions" style="width: 188px" disabled/>
+     一个月至少到店三次的顾客数量：<Input v-model="question.numberOfTransactions" style="width: 85px" disabled/>
       <br/>
       <br/>
-      月均新顾客成交业绩：<Input v-model="question.numberOfTransactions" style="width: 188px" disabled/>
+     一个月到店三次以上的顾客数量：<Input v-model="question.numberOfTransactions" style="width: 85px" disabled/>
       <br/>
       <br/>
-       月均老顾客成交业绩：<Input v-model="question.numberOfTransactions" style="width: 188px" disabled/>
+       每个月的月均业绩：<Input v-model="question.numberOfTransactions" style="width: 85px" disabled/>
+      <br/>
+      <br/>
+      月均新顾客成交业绩：<Input v-model="question.numberOfTransactions" style="width: 85px" disabled/>
+      <br/>
+      <br/>
+       月均老顾客成交业绩：<Input v-model="question.numberOfTransactions" style="width: 85px" disabled/>
       <br/>
       <br/>
       </section>
-      <section style="width: 100%;" v-show="isProblemShow">
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目前自己认为经营的最大问题是什么？：      <br/><br/><div class="ivu-input-wrapper ivu-input-type" style="width: 90%;margin-left: 30px;"><textarea autocomplete="off" spellcheck="false" rows="2" class="ivu-input" style="height: 130px;" wrap="soft" disabled></textarea></div>
+      <section style="width: 80%;margin: 0 auto;text-align: center;" v-show="isProblemShow">
+      <div style="margin-left:-65%;margin-top:1%;">目前自己认为经营的最大问题是什么？：</div><br/><div class="ivu-input-wrapper ivu-input-type"><textarea autocomplete="off" spellcheck="false" rows="2" class="ivu-input" style="height: 230px;margin-bottom:2%;" wrap="soft" disabled></textarea></div>
       <br/>
       <br/>
       </section>
@@ -401,24 +417,24 @@
        <br/>
        <br/>
        <div style="margin-left: 30px;">
-    1月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 2月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;3月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    1月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 2月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;3月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
        <br/>
        <br/>
-    4月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 5月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;6月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    4月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 5月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;6月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
        <br/>
        <br/>
-    7月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 8月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;9月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    7月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 8月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;9月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
        <br/>
        <br/>
-    10月: &nbsp;<Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 11月:&nbsp;<Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;12月:&nbsp;<Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    10月: &nbsp;<Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 11月:&nbsp;<Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;12月:&nbsp;<Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
        <br/>
        <br/>
         </div>
@@ -427,24 +443,24 @@
        <br/>
        <br/>
        <div style="margin-left: 30px;">
-    1月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 2月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;3月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    1月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 2月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;3月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
        <br/>
        <br/>
-    4月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 5月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;6月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    4月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 5月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;6月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
        <br/>
        <br/>
-    7月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 8月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;9月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    7月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 8月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;9月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
        <br/>
        <br/>
-    10月: &nbsp;<Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 11月:&nbsp;<Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;12月:&nbsp;<Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    10月: &nbsp;<Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 11月:&nbsp;<Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;12月:&nbsp;<Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
        <br/>
        <br/>
         </div>
@@ -501,7 +517,7 @@
        <br/>
         </div>
 </Modal>
-     <Modal footer-hide v-model="yearYgxsFlag" height="20%" width="48%" class-name="my-modal" >员工12个月薪资
+    <Modal footer-hide v-model="yearYgxsFlag" height="20%" width="48%" class-name="my-modal" >员工12个月薪资
        <br/>
        <br/>
        <div style="margin-left: 30px;">
@@ -525,7 +541,7 @@
     &nbsp;&nbsp;&nbsp;12月:&nbsp;<Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
        <br/>
        <br/>
-        </div>
+      </div>
   </Modal>
   </div>
 </template>
@@ -617,23 +633,11 @@
         columns1: [
           {
             title: '编号',
-            key: 'code'
+            key: 'id'
           },
           {
             title: '门店名称',
             key: 'storeName'
-          },
-          {
-            title: '省',
-            key: 'provinceName'
-          },
-          {
-            title: '市',
-            key: 'cityName'
-          },
-          {
-            title: '区',
-            key: 'area'
           },
           {
             title: '地址',
@@ -646,6 +650,14 @@
           {
             title: '门店电话',
             key: 'telephone'
+          },
+          {
+            title: '门店类型',
+            key: 'storeType'
+          },
+          {
+            title: '经营业态',
+            key: 'operationMode'
           },
           {
             title: '管理周期',
@@ -721,24 +733,6 @@
                     }
                   }
                 }, '管理'),
-              /*  h('Button', {
-                  props: {
-                    type: 'primary',
-                    size: 'small',
-                    disabled: params.row.status==3?true:false,
-                  },
-                  style: {
-                    marginRight: '5px'
-                  },
-                  on: {
-                    click: () => {
-                      if(params.row.status ==3 ){
-                        this.$Message.error('该门店已经放弃了管理');
-                      }
-                      this.Delete(params.row.id);
-                    }
-                  }
-                }, '删除'),*/
               ]);
             }
           }
@@ -765,88 +759,6 @@
       new PCAS("province","city","area");
     },
     methods: {
-      newStoret() {
-        if(this.storeVal.staffName ==''|| this.storeVal.phoneNumber ==''|| this.storeVal.storeName ==''|| this.storeVal.address ==''|| this.storeVal.telephone ==''|| this.storeVal.managementCycle ==''|| this.storeVal.storeType ==''|| this.storeVal.operationMode ==''|| this.storeVal.provinceName=='请选择' || this.storeVal.provinceName==''|| this.storeVal.cityName=='' || this.storeVal.area==''){
-          this.$Message.warning('请填写完整信息');
-          return false;
-        }
-        let URL;
-        if(this.store == '编辑门店') {
-          URL = editStore();
-          if(this.tempPhone != this.storeVal.phoneNumber){
-            this.$ajax({
-              method:'GET',
-              url:checkStorePhone()+'?phoneNumber='+this.storeVal.phoneNumber + '&provinceName='+this.provinceName+'&cityName=' + this.cityName + '&area=' +this.area + '&address=' + this.address
-            }).then( (res)=>{
-              if(res.data.success){
-                this.$Message.error('联系人电话已被注册！');
-                return false;
-              } else {
-                this.$ajax({
-                  method: 'POST',
-                  dataType: 'JSON',
-                  contentType: 'application/json;charset=UTF-8',
-                  headers: {
-                    "authToken": sessionStorage.getItem('authToken')
-                  },
-                  data: this.storeVal,
-                  url: URL,
-                }).then((res) => {
-                  this.$Message.success('操作成功');
-                  this.getData();
-                  this.storeFlag = false;
-                }).catch((error) => {
-                });
-              }
-            }).catch((error) => {
-            });
-          } else {
-            this.$ajax({
-              method: 'POST',
-              dataType: 'JSON',
-              contentType: 'application/json;charset=UTF-8',
-              headers: {
-                "authToken": sessionStorage.getItem('authToken')
-              },
-              data: this.storeVal,
-              url: URL,
-            }).then((res) => {
-              this.$Message.success('操作成功');
-              this.getData();
-              this.storeFlag = false;
-            }).catch((error) => {
-            });
-          }
-        }else{
-          URL = newStore();
-          this.$ajax({
-            method:'GET',
-            url:checkStorePhone()+'?phoneNumber='+this.storeVal.phoneNumber + '&provinceName='+this.storeVal.provinceName+'&cityName=' + this.storeVal.cityName + '&area=' +this.storeVal.area + '&address=' + this.storeVal.address
-          }).then( (res)=>{
-            if(res.data.success){
-              this.$Message.error(res.data.message);
-              return false;
-            } else {
-              this.$ajax({
-                method: 'POST',
-                dataType: 'JSON',
-                contentType: 'application/json;charset=UTF-8',
-                headers: {
-                  "authToken": sessionStorage.getItem('authToken')
-                },
-                data: this.storeVal,
-                url: URL,
-              }).then((res) => {
-                this.$Message.success('操作成功');
-                this.getData();
-                this.storeFlag = false;
-              }).catch((error) => {
-              });
-            }
-          }).catch( (err)=>{
-          })
-        }
-      },
       getData(){
         this.tag = 1;
         if(this.isSystem == 'true'){
@@ -857,7 +769,7 @@
       },
       getList(name,page,pagesize) {
         if(name==''||name==null){
-          var URL = findStoreList()+'?page='+page+'&pageSize='+pagesize;
+          var URL = findStoreList()+page;
         }else{
           URL = findStoreList()+'?id='+name+'&page='+page+'&pageSize='+pagesize;
         }
@@ -870,8 +782,7 @@
           },
           url:URL,
         }).then((res) => {
-          this.data1 = res.data.results;
-          this.pages = res.data.pages;
+          this.data1 = res.data.content;
         }).catch((error) => {
         });
       },
@@ -1151,7 +1062,14 @@
     },
   };
 </script>
-
+<style>
+  .ivu-modal{top:5%;}
+  #salarySection .ivu-input-wrapper{margin: 0 auto;width:80%;display: block;}
+  .modalMonthInput{width:128px;display:inline-block;}
+  .modalInsideForm{    
+    margin: 0 auto;            
+    text-align: center;}
+</style>
 <style scoped>
   .serc{
     cursor: pointer;
@@ -1171,8 +1089,18 @@
  .active{
     background: #DDDDFF;
  }
+.modalNav{
+    margin: 0 auto;            
+    text-align: center;
+    margin-top: 20px;
+}
+.modalInputs{
+  display: flex;
+  margin: 0 auto;            
+  text-align: center;
+  margin-top:10px;
+}
 .my-modal{z-index:1002;}
-.ivu-modal{margin-top: -20px;}
 table th{width:20%}
 .crack-button{width:auto; display:inline-block !important; display:inline; height:22px;background: #CCE8EB;margin-left:20px;border:1px solid;
 border-radius:5px;padding-top: 2px;padding-left: 4px;padding-right: 4px;padding-right: 2px;cursor: not-allowed;}
