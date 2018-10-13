@@ -75,7 +75,7 @@
         </div>
       </div>
      </Modal>
-     <Modal  footer-hide v-model="questionFlag" :mask-closable="false" width="60%" >
+     <Modal  footer-hide v-model="questionFlag" :mask-closable="false" width="60%" @on-cancel="cancelQuestion">
      <div class="modalNav"><Button size="large"  v-bind:class="{ active: isRoomActive }" @click="goRoom">房间床位</Button>
      <Button size="large"  v-bind:class="{ active: isYearActive }" @click="goYear">年流水</Button>
      <Button size="large"  v-bind:class="{ active: isBrandActive }" @click="goBrand">品牌仪器</Button>
@@ -87,90 +87,14 @@
      <br/>
      </div> 
      <section v-show="isRoomShow">
-     <div class="modalInputs"><div style="margin-left:14%;">店平方数：<Input v-model="question.shopSquare" style="width: 88px" disabled/></div>
-      <div style="margin: 0 auto;">年房租：<Input v-model="question.annualRent" style="width: 88px" disabled/></div><div style="margin-right:14%;">床位数：<Input v-model="question.annualRent" style="width: 88px" disabled/></div></div>
+     <div class="modalInputs"><div style="margin-left:14%;">店平方数：<Input v-model="question.area" style="width: 88px" disabled/></div>
+      <div style="margin: 0 auto;">年房租：<Input v-model="question.rent" style="width: 88px" disabled/></div><div style="margin-right:14%;">床位数：<Input v-model="question.bedCount" style="width: 88px" disabled/></div></div>
       <br/>
-      <table border="1">
-        <thead>
-        <tr>
-          <th></th>
-          <th>单间</th>
-          <th>两人间</th>
-          <th>三人间</th>
-          <th>三人以上间</th>
-        </tr>
-      </thead>
-        <tr>
-          <td>仅淋浴</td>
-          <td>100</td>
-          <td>100</td>
-          <td>50</td>
-          <td>100</td>
-        </tr>
-        <tr>
-          <td>仅坐便</td>
-          <td>50</td>
-          <td>100</td>
-          <td>50</td>
-          <td>100</td>
-        </tr>
-        <tr>
-          <td>仅泡浴</td>
-          <td>100</td>
-          <td>100</td>
-          <td>50</td>
-          <td>100</td>
-        </tr>
-        <tr>
-          <td>淋浴+坐便</td>
-          <td>300</td>
-          <td>100</td>
-          <td>50</td>
-          <td>100</td>
-        </tr>
-        <tr>
-          <td>坐便+泡浴</td>
-          <td>100</td>
-          <td>100</td>
-          <td>50</td>
-          <td>100</td>
-        </tr>
-        <tr>
-          <td>淋浴+泡浴</td>
-          <td>300</td>
-          <td>100</td>
-          <td>50</td>
-          <td>100</td>
-        </tr>
-        <tr>
-          <td>淋浴+泡浴+坐便</td>
-          <td>80</td>
-          <td>100</td>
-          <td>50</td>
-          <td>100</td>
-        </tr>
-      </table>
+        <Table border :columns="question.roomTypesColumns" :data="roomTypes"></Table>
       <br/>
       <br/>
       <div style="width:100%;margin:0 auto;" align="center">
-  <table border="1">
-    <thead>
-    <tr>
-      <th>美容师（皮肤管理师）</th>
-      <th>美体师</th>
-      <th>护士</th>
-      <th>理疗师</th>
-      <th>足疗师</th>
-    </tr>
-  </thead>
-    <tr>
-      <td>100</td>
-      <td>50</td>
-      <td>100</td>
-      <td>50</td>
-      <td>100</td>
-    </tr>
-  </table>
+         <Table border :columns="question.memberColumns" :data="question.member"></Table>
       </div>
       <br/>
       </section>
@@ -546,8 +470,8 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
-  import { findStoreList,findStoreListById, newStore, editStore,deleteStore,getProvinces,getCities,checkStorePhone } from '../../interface';
+<script>
+  import { findStoreList,findStoreListById, newStore, editStore,deleteStore,getProvinces,getCities,checkStorePhone, getRoomInfo } from '../../interface';
 
   export default {
     name: 's_index',
@@ -599,7 +523,9 @@
           phoneNumber: '',
           provinceName: '',
           shopSquare: '',
-          annualRent: '',
+          area: '',
+          rent: '',
+          bedCount:'',
           severalStores: '',
           numberOfRooms: '',
           numberOfBeds: '',
@@ -629,6 +555,10 @@
           numberOfCustomers: '',
           theNumberOfRenewals: '',
           theBiggestProblem: '',
+          roomTypesColumns: [],
+          roomTypes: [],
+          memberColumns: [],
+          member: []
         },
         columns1: [
           {
@@ -689,7 +619,14 @@
                   on: {
                     click: () => {
                       if(sessionStorage.getItem('isSystem')) {
-                        this.check(params.row)
+                        this.$ajax({
+                          method: 'GET',
+                          url: getRoomInfo()+params.row.id,
+                        }).then((res) => {
+                          this.check(params.row, res.data)
+                        }).catch((error) =>{
+                          this.$Message.error({content: '页面有错误请刷新'});
+                        })
                       } else {
                         this.$Message.warning('权限不足');
                       }
@@ -757,6 +694,7 @@
     methods: {
       getData(){
         this.tag = 1;
+        console.log(this.isSystem)
         if(this.isSystem == 'true'){
           this.getList('',this.page,this.pagesize);
         }else{
@@ -1031,9 +969,9 @@
         }).catch((error) => {
         });
       },
-      check(data) {
+      check(data, rowData) {
         this.questionFlag = true;
-        this.question = JSON.parse(JSON.stringify(data));
+        this.showRoomInfo(rowData)
       },
       clearNew() {
         this.storeVal = {
@@ -1055,6 +993,39 @@
       check2(value){
         return value.replace(/[^\d\.]/g,'');
       },
+      showRoomInfo(rowData){
+        this.question.area = rowData.roomInfo.room.area;
+        this.question.rent = rowData.roomInfo.room.rent;
+        let memberObj = {}
+        const arrRule = ['onlyShower', 'onlyToilet', 'onlyBubble', 'showerAndToilet', 'bubbleAndToilet', 'showerAndBubble', 'showerAndToiletAndBubble']
+         let temArr = ['仅淋浴','仅坐便','仅泡浴', '淋浴+坐便', '泡浴+坐便','淋浴+泡浴','淋浴+坐便+泡浴']
+        const room = ['单间', '两人间', '三人间', '三人以上间']
+        const member = [{cosmeTologist: '美容师（皮肤管理师)'},{therapist: '美体师'},{nurse: '护士'},{physicalTherapist: '理疗师'},{pedicure: '足疗师'}]
+        this.question.roomTypesColumns.push({type: 'index'})
+        for (let val of room) {
+          this.question.roomTypesColumns.push({title: val, key: val})
+        }
+        for (let i =0; i<arrRule.length; i++) {
+
+        }
+        for (let i=0; i<member.length; i++){
+          this.question.memberColumns.push({title: Object.values(member[i])[0], key: Object.keys(member[i])[0]})
+          let memberObj2 ={}
+          memberObj2[Object.keys(member[i])[0]] =  rowData.roomInfo.member[Object.keys(member[i])[0]]
+          memberObj = Object.assign(memberObj, memberObj2);
+        }
+        this.question.member.push(memberObj)
+        console.log(this.question.member)
+        console.log(this.question.memberColumns)
+      },
+      cancelQuestion(){
+        this.question.area = ''
+        this.question.rent = ''
+        this.question.memberColumns = []
+        this.question.member = []
+        this.question.roomTypesColumns = []
+        this.question.roomTypes = []
+      }
     },
   };
 </script>

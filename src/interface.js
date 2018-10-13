@@ -7,7 +7,7 @@ const host = 'http://116.62.201.135:8080';
 
 //门店列表
 export const findStoreList = function () {
-  const URL = '/app/api/store/findStoreList';
+  const URL = '/store/page/';
   const API = host + URL;
   return API;
 };
@@ -58,7 +58,7 @@ export const extendWaterInfo = function () {
   return API;
 };
 export const userLogin = function () {
-  const URL = '/app/api/user/login';
+  const URL = '/customer/login';
   const API = host + URL;
   return API;
 };
@@ -99,6 +99,11 @@ export const getProvinces  = function () {
 };
 export const getCities  = function () {
   const URL = '/city/provinceId/';
+  const API = host + URL;
+  return API;
+};
+export const getRoomInfo  = function () {
+  const URL = '/store/getRoomInfo/';
   const API = host + URL;
   return API;
 };
