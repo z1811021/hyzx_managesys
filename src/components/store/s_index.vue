@@ -644,10 +644,6 @@
             key: 'address'
           },
           {
-            title: '联系人电话',
-            key: 'phoneNumber'
-          },
-          {
             title: '门店电话',
             key: 'telephone'
           },

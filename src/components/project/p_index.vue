@@ -8,7 +8,7 @@
     </Row>
     <Table :columns="columns" :data="data"></Table>
 
-    <Modal  v-model="storeFlag" :mask-closable="false"  :title="store" @on-ok="ok">
+    <Modal  class="modalProjects" v-model="storeFlag" :mask-closable="false"  :title="store" @on-ok="ok">
       项目名称：<Input v-model="pis.projectName" placeholder="名称" style="width: 300px"/>
       <br/>
       <br/>
@@ -304,5 +304,8 @@
 </script>
 
 <style scoped>
-
+  .modalProjects {
+    margin: 0 auto;            
+    text-align: center;    
+  }
 </style>
