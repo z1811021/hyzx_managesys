@@ -196,20 +196,19 @@
       brands: [...this.brandsJJForm, ...this.brandsYHForm],
       instruments: this.instrumentsForm
     }
-    console.log(params)
-    // this.$ajax({
-    //   method: 'post',
-    //   url: extendBrandInfo(),
-    //   data: params,
-    //   withCredentials: true,
-    // }).then((res) => {
-    //   console.log(res)
-    //   this.$Message.success({content:'提交成功'});
-    //   this.$router.push({name: 'register_5', params:params});
-    //   this.$emit('changeActivename','register_5')
-    // }).catch((error) =>{
-    //   this.$Message.error({content: '提交失败'});
-    // })
+    this.$ajax({
+      method: 'post',
+      url: extendBrandInfo(),
+      data: params,
+      withCredentials: true,
+    }).then((res) => {
+      console.log(res)
+      this.$Message.success({content:'提交成功'});
+      this.$router.push({name: 'register_5', params:params});
+      this.$emit('changeActivename','register_5')
+    }).catch((error) =>{
+      this.$Message.error({content: '提交失败'});
+    })
 	},
 	priviousPage(){
 	  this.$router.push({name: 'register_3'});
