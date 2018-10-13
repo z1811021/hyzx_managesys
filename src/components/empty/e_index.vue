@@ -257,9 +257,7 @@
     }
   };
 </script>
-<style>
-  .ivu-modal{margin-top:-4%;}
-</style>
+
 <style scoped>
   .com{
     margin: 10px 0;
