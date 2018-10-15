@@ -20,11 +20,12 @@
       </div>
       <div class="com">
           员工等级：<Select v-model="employeeLevelInput"  placeholder="员工等级" style="width:80px" :transfer=true>
-          <Option value="1" >一级</Option>
-          <Option value="2" >二级</Option>
-          <Option value="3" >三级</Option>
-          <Option value="4" >四级</Option>
-          <Option value="5" >五级</Option>
+          <Option value="一级" >一级</Option>
+          <Option value="二级" >二级</Option>
+          <Option value="三级" >三级</Option>
+          <Option value="四级" >四级</Option>
+          <Option value="五级" >五级</Option>
+          <Option value="六级" >六级</Option>
         </Select>
         <Input v-model="employeeNameInput" placeholder="名称" style="width: 160px"/>
         <Button class="hy_btn" @click="addEmployee">添加</Button>
@@ -40,9 +41,9 @@
           </thead>
           <tbody>
             <tr v-for="(item,index) in employeeForm">
-              <td >{{item.level}}}</td>
+              <td >{{item.level}}</td>
               <td >{{item.name}}</td>
-              <td ><Button class="ep_btn" @click="deleteEmployee(index)">移除</Button></td>
+              <td ><div class="imgIn"><img @click="deleteEmployee(index)" class="ltClose" src="../../assets/close.png"></div></td>
             </tr> 
             <tr>
               <td></td>
@@ -70,40 +71,40 @@
         </Checkbox-group>
       </div>
       <div class="com">
-        分红管理：<Select v-model="job.dataRankings" :transfer=true style="width:300px">
+        分红管理：<Select v-model="job.dataRankings" :transfer=true style="width:300px;">
           <Option value="年" >年</Option>
           <Option value="半年" >半年</Option>
           <Option value="季度" >季度</Option>
           <Option value="月" >月</Option>
         </Select>
       </div>
-      <div class="com">
+      <div class="com" style="margin-bottom: 60px;margin-top:5px;">
         <div style="float: left;margin-left: 64px;">股权设置：</div>
         <br/>
-        <RadioGroup v-model="stock" style="margin-top:2%;">
-            <Radio label="原始股" style="float:left;">
+        <Checkbox-group v-model="stock">
+            <Checkbox label="原始股" class="checkStock">
                 <span>原始股</span>
-            </Radio>
-            <Input v-model="job.workflow" placeholder="每股金额" style="width: 240px;float:right;margin-top: -5px;"/>
+            </Checkbox>
+            <Input v-model="job.workflow" placeholder="每股金额" class="checkInput"/>
             <br/>
             <br/>
-            <Radio label="实股" style="float:left;">
+            <Checkbox label="实股" class="checkStock">
                 <span>实股</span>
-            </Radio>
-            <Input v-model="job.workflow" placeholder="每股金额" style="width: 240px;float:right;margin-top: -5px;"/>
+            </Checkbox>
+            <Input v-model="job.workflow" placeholder="每股金额" class="checkInput"/>
             <br/>
             <br/>
-            <Radio label="干股" style="float:left;">
+            <Checkbox label="干股" class="checkStock">
                 <span>干股</span>
-            </Radio>
-            <Input v-model="job.workflow" placeholder="每股金额" style="width: 240px;float:right;margin-top: -5px;"/>
+            </Checkbox>
+            <Input v-model="job.workflow" placeholder="每股金额" class="checkInput"/>
             <br/>
             <br/>
-            <Radio label="分红股" style="float:left;">
+            <Checkbox label="分红股" class="checkStock">
                 <span>分红股</span>
-            </Radio>
-            <Input v-model="job.workflow" placeholder="每股金额" style="width: 240px;float:right;margin-top: -5px;"/>
-        </RadioGroup>
+            </Checkbox>
+            <Input v-model="job.workflow" placeholder="每股金额" class="checkInput"/>
+        </Checkbox-group>
       </div>
     </Modal>
   </div>
@@ -310,6 +311,30 @@
   .ep_btn{
     width:2px;
   }
+  .imgIn{
+    width:100%;
+    height:50%;
+    display:flex;
+    align-items:center; 
+    justify-content:center;
+    cursor: pointer;
+  }
+  .ltClose{
+    width:50%;
+    height:90%;
+  }
+  .checkInput{
+    width: 180px;
+    float:right;margin-right: 164px;
+    margin-top:8px;
+  }
+  .checkStock{
+    float:left;
+    margin-left: 74px;
+  }
+  .employeeCheck{
+    margin-left:35px;
+  }
   table{           
    border-collapse: collapse;            
    margin: 0 auto;            
@@ -322,7 +347,7 @@
       height: 30px;        
     }        
   table thead th{            
-      background-color: #CCE8EB;            
+      background-color: #f8f8f9;            
       width: 135px;        
     }        
   table tr:nth-child(odd)        
@@ -331,6 +356,6 @@
     }        
   table tr:nth-child(even)        
     {            
-      background: #F5FAFA;        
+      background: #f8f8f9;        
     }
 </style>

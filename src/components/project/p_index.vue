@@ -9,38 +9,98 @@
     <Table :columns="columns" :data="data"></Table>
 
     <Modal  class="modalProjects" v-model="storeFlag" :mask-closable="false"  :title="store" @on-ok="ok">
+      <div style="float:left;;margin-left: 63px;">项目类别：</div>
+      <br/>
+      <br/>
+      <RadioGroup v-model="projectChoose" @on-change="changePro">
+          <Radio label="面部" style="float:left;">
+              <span>面部</span>
+          </Radio>
+          <Select v-show="!showFace" style="float:right;width:300px;margin-top:-6px;" disabled>
+          </Select>
+          <Select v-show="showFace" style="float:right;width:300px;margin-top:-6px;">
+            <Option value="清洁" >清洁</Option>
+            <Option value="补水" >补水</Option>
+            <Option value="美白" >美白</Option>
+            <Option value="修复" >修复</Option>
+            <Option value="抗敏" >抗敏</Option>
+            <Option value="痘痘" >痘痘</Option>
+            <Option value="紧致" >紧致</Option>
+            <Option value="除皱" >除皱</Option>
+            <Option value="祛斑" >祛斑</Option>
+            <Option value="毛孔管理" >毛孔管理</Option>
+            <Option value="V脸瘦脸" >V脸瘦脸</Option>
+            <Option value="眼部" >眼部</Option>
+            <Option value="整骨" >整骨</Option>
+          </Select>
+          <br/>
+          <br/>
+          <Radio label="身体" style="float:left;">
+              <span>身体</span>
+          </Radio>
+          <Select v-show="!showBody" style="float:right;width:300px;margin-top:-6px;" disabled>
+          </Select>
+          <Select v-show="showBody" style="float:right;width:300px;margin-top:-6px;">
+            <Option value="头部" >头部</Option>
+            <Option value="肩颈" >肩颈</Option>
+            <Option value="背部" >背部</Option>
+            <Option value="胸部" >胸部</Option>
+            <Option value="腹部" >腹部</Option>
+            <Option value="腰部" >腰部</Option>
+            <Option value="臀部" >臀部</Option>
+            <Option value="大腿" >大腿</Option>
+            <Option value="小腿" >小腿</Option>
+            <Option value="足部" >足部</Option>
+          </Select>
+      </RadioGroup>
+      <br/>
+      <br/>
       项目名称：<Input v-model="pis.projectName" placeholder="名称" style="width: 300px"/>
-      <br/>
-      <br/>
-      疗程次数：<Input v-model="pis.frequency" @on-keyup="pis.frequency=check(pis.frequency)" placeholder="疗程次数" style="width: 300px"/>
-      <br/>
-      <br/>
-      项目间隔：<Input v-model="pis.intervalTime" @on-keyup="pis.intervalTime=check(pis.intervalTime)" placeholder="间隔 天/次" style="width: 300px"/>
       <br/>
       <br/>
       项目单价：<Input v-model="pis.courseMoney" @on-keyup="pis.courseMoney=check2(pis.courseMoney)" placeholder="项目单价 次/元" style="width: 300px"/>
       <br/>
       <br/>
-      现金价格：<Input v-model="pis.cashMoney" @on-keyup="pis.cashMoney=check2(pis.cashMoney)" placeholder="现金价格 疗程/元" style="width: 300px"/>
+      <div style="float:left;margin-left: 63px;">是否设计疗程：</div>
+      <RadioGroup v-model="healAgenda" @on-change="changeAgenda" style="margin-right:20%;">
+          <Radio label="是" style="float:left;">
+              <span>是</span>
+          </Radio>
+          <Radio label="否" style="float:right;">
+              <span>否</span>
+          </Radio>
+      </RadioGroup>
+          <div v-show="showAgenda">
+          <br/>
+            <div class="leftRadio">疗程次数：</div><Input placeholder="项目单价 次/元" style="width: 170px;float:right;margin-top:-6px;margin-right:164px;"/>
+          <br/>
+          <br/>
+          <div class="leftRadio">疗程价：</div><Input placeholder="项目单价 次/元" style="width: 170px;float:right;margin-top:-6px;margin-right:164px;"/>
+          <br/>
+          <br/>
+          <div class="leftRadio">间隔：</div><Input placeholder="项目单价 次/元" style="width: 170px;float:right;margin-top:-6px;margin-right:164px;"/>
+          </div>
       <br/>
       <br/>
-      卡扣价格：<Input v-model="pis.buckleMoney" @on-keyup="pis.buckleMoney=check2(pis.buckleMoney)" placeholder="卡扣价格 疗程/元" style="width: 300px"/>
-      <br/>
-      <br/>
-      体验价格：<Input v-model="pis.experienceMoney" @on-keyup="pis.experienceMoney=check2(pis.experienceMoney)" ref="exs"  placeholder="体验价格 次/元" style="width: 160px"/>
-      <Checkbox v-model="pis.isCalculate" @on-change="$refs.exs.disabled = !$refs.exs.disabled ">选择会员最低折扣价</Checkbox>
-
-      <br/>
-      <br/>
-      搭配项目：<Select v-model="pis.collocationItems" style="width:300px" :transfer=true>
-        <Option :value="items.id" :key="items.id" v-for="items in projectList">{{items.projectName}}</Option>
-      </Select>
-      <br/>
-      <br/>
-      项目类别：<Select v-model="pis.type" style="width:300px" :transfer=true>
-                <Option value="身体类">身体类</Option>
-                <Option value="面护类">面护类</Option>
-              </Select>
+      <div style="float:left;margin-left: 63px;">是否设计套餐：</div>
+      <RadioGroup v-model="taoCan" @on-change="changeTaocan" style="margin-right:20%;">
+          <Radio label="是" style="float:left;">
+              <span>是</span>
+          </Radio>
+          <Radio label="否" style="float:right;">
+              <span>否</span>
+          </Radio>
+      </RadioGroup>
+          <div v-show="showTc">
+          <br/>
+            <div class="leftRadio">项目名称：</div><Input placeholder="项目单价 次/元" style="width: 170px;float:right;margin-top:-6px;margin-right:164px;"/>
+          <br/>
+          <br/>
+          <div class="leftRadio">次数：</div><Input placeholder="项目单价 次/元" style="width: 170px;float:right;margin-top:-6px;margin-right:164px;"/>
+          <br/>
+          <br/>
+          <div class="leftRadio">组合：</div><Input placeholder="项目单价 次/元" style="width: 170px;float:right;margin-top:-6px;margin-right:164px;"/>
+          </div>
       <br/>
       <br/>
       项目属性：<Select v-model="pis.projectAttributes" style="width:300px" :transfer=true>
@@ -50,15 +110,13 @@
               </Select>
       <br/>
       <br/>
-      解决问题：<Select v-model="pis.effect" placeholder="问题症状" :multiple=true style="width:300px" :transfer=true>
-        <Option v-for="item in prds" :value="item.id" :key="item.id">{{ item.problem }}</Option>
-      </Select>
+      解决问题：<Input v-model="pis.technicalPoints" type="textarea" :rows="2" placeholder="解决问题" style="width:70%;"/>
       <br/>
       <br/>
-      专业说明：<Input v-model="pis.projectDescription" type="textarea" :rows="2" placeholder="专业说明"/>
+      专业说明：<Input v-model="pis.projectDescription" type="textarea" :rows="2" placeholder="专业说明" style="width:70%;"/>
       <br/>
       <br/>
-      技术要点：<Input v-model="pis.technicalPoints" type="textarea" :rows="2" placeholder="技术要点"/>
+      技术要点：<Input v-model="pis.technicalPoints" type="textarea" :rows="2" placeholder="技术要点" style="width:70%;"/>
     </Modal>
   </div>
 </template>
@@ -77,6 +135,10 @@
       return {
         storeFlag: false,
         store: '',
+        showFace: false,
+        showBody: false,
+        showAgenda: false,
+        showTc: false,
         pis: {
           projectName : '',
           courseMoney: '',
@@ -299,6 +361,29 @@
       check2(value){
         return value.replace(/[^\d\.]/g,'');
       },
+      changePro(){
+        if(this.projectChoose == "面部"){
+          this.showFace = true;
+          this.showBody = false;
+        }else{
+          this.showFace = false;
+          this.showBody = true;
+        }
+      },
+      changeAgenda(){
+        if(this.healAgenda == "是"){
+          this.showAgenda = true;
+        }else{
+          this.showAgenda = false;
+        }
+      },
+      changeTaocan(){
+        if(this.taoCan == "是"){
+          this.showTc = true;
+        }else{
+          this.showTc = false;
+        }
+      }
     }
   };
 </script>
@@ -307,5 +392,9 @@
   .modalProjects {
     margin: 0 auto;            
     text-align: center;    
+  }
+  .leftRadio{
+    float:left;
+    margin-left:94px;
   }
 </style>
