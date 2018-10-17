@@ -62,7 +62,7 @@
       <br/>
       <br/>
       <div style="float:left;margin-left: 63px;">是否设计疗程：</div>
-      <RadioGroup v-model="healAgenda" @on-change="changeAgenda" style="margin-right:20%;">
+      <RadioGroup v-model="healAgenda" @on-change="changeAgenda" style="margin-right:40%;">
           <Radio label="是" style="float:left;">
               <span>是</span>
           </Radio>
@@ -70,20 +70,30 @@
               <span>否</span>
           </Radio>
       </RadioGroup>
+          <div v-show="!showAgenda">
+          <br/>
+            <div class="leftRadio">疗程次数：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" disabled/>
+          <br/>
+          <br/>
+          <div class="leftRadio">疗程价：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" disabled/>
+          <br/>
+          <br/>
+          <div class="leftRadio">间隔：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" disabled/>
+          </div>
           <div v-show="showAgenda">
           <br/>
-            <div class="leftRadio">疗程次数：</div><Input placeholder="项目单价 次/元" style="width: 170px;float:right;margin-top:-6px;margin-right:164px;"/>
+            <div class="leftRadio">疗程次数：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;"/>
           <br/>
           <br/>
-          <div class="leftRadio">疗程价：</div><Input placeholder="项目单价 次/元" style="width: 170px;float:right;margin-top:-6px;margin-right:164px;"/>
+          <div class="leftRadio">疗程价：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;"/>
           <br/>
           <br/>
-          <div class="leftRadio">间隔：</div><Input placeholder="项目单价 次/元" style="width: 170px;float:right;margin-top:-6px;margin-right:164px;"/>
+          <div class="leftRadio">间隔：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;"/>
           </div>
       <br/>
       <br/>
       <div style="float:left;margin-left: 63px;">是否设计套餐：</div>
-      <RadioGroup v-model="taoCan" @on-change="changeTaocan" style="margin-right:20%;">
+      <RadioGroup v-model="taoCan" @on-change="changeTaocan" style="margin-right:40%;">
           <Radio label="是" style="float:left;">
               <span>是</span>
           </Radio>
@@ -91,16 +101,27 @@
               <span>否</span>
           </Radio>
       </RadioGroup>
+          <div v-show="!showTc">
+          <br/>
+          <div class="leftRadio">项目名称：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" disabled/>
+          <br/>
+          <br/>
+          <div class="leftRadio">次数：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" disabled/>
+          <br/>
+          <br/>
+          <div class="leftRadio">组合：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" disabled/>
+          </div>
           <div v-show="showTc">
           <br/>
-            <div class="leftRadio">项目名称：</div><Input placeholder="项目单价 次/元" style="width: 170px;float:right;margin-top:-6px;margin-right:164px;"/>
+          <div class="leftRadio">项目名称：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;"/>
           <br/>
           <br/>
-          <div class="leftRadio">次数：</div><Input placeholder="项目单价 次/元" style="width: 170px;float:right;margin-top:-6px;margin-right:164px;"/>
+          <div class="leftRadio">次数：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;"/>
           <br/>
           <br/>
-          <div class="leftRadio">组合：</div><Input placeholder="项目单价 次/元" style="width: 170px;float:right;margin-top:-6px;margin-right:164px;"/>
+          <div class="leftRadio">组合：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;"/>
           </div>
+      <br/>
       <br/>
       <br/>
       项目属性：<Select v-model="pis.projectAttributes" style="width:300px" :transfer=true>

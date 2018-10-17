@@ -81,30 +81,36 @@
       <div class="com" style="margin-bottom: 60px;margin-top:5px;">
         <div style="float: left;margin-left: 64px;">股权设置：</div>
         <br/>
-        <Checkbox-group v-model="stock">
-            <Checkbox label="原始股" class="checkStock">
+        <div style="margin-top:10px;">
+          <Checkbox-group v-model='stock' @on-change="changeStock">
+            <Checkbox label="original" class="checkStock">
                 <span>原始股</span>
             </Checkbox>
-            <Input v-model="job.workflow" placeholder="每股金额" class="checkInput"/>
+            <Input v-show="!showOriginal" placeholder="每股金额" class="checkInput" disabled/>
+            <Input v-show="showOriginal" v-model="job.originalStock" placeholder="每股金额" class="checkInput"/>
             <br/>
             <br/>
-            <Checkbox label="实股" class="checkStock">
+            <Checkbox label="real" class="checkStock">
                 <span>实股</span>
             </Checkbox>
-            <Input v-model="job.workflow" placeholder="每股金额" class="checkInput"/>
+            <Input v-show="!showReal" placeholder="每股金额" class="checkInput" disabled/>
+            <Input v-show="showReal" v-model="job.realStock" placeholder="每股金额" class="checkInput"/>
             <br/>
             <br/>
-            <Checkbox label="干股" class="checkStock">
+            <Checkbox label="perform" class="checkStock">
                 <span>干股</span>
             </Checkbox>
-            <Input v-model="job.workflow" placeholder="每股金额" class="checkInput"/>
+            <Input v-show="!showPerform" placeholder="每股金额" class="checkInput" disabled/>
+            <Input v-show="showPerform" v-model="job.performStock" placeholder="每股金额" class="checkInput"/>
             <br/>
             <br/>
-            <Checkbox label="分红股" class="checkStock">
+            <Checkbox label="bonus" class="checkStock">
                 <span>分红股</span>
             </Checkbox>
-            <Input v-model="job.workflow" placeholder="每股金额" class="checkInput"/>
-        </Checkbox-group>
+            <Input v-show="!showBonus" placeholder="每股金额" class="checkInput" disabled/>
+            <Input v-show="showBonus" v-model="job.bonusStock" placeholder="每股金额" class="checkInput"/>
+          </Checkbox-group>
+        </div>
       </div>
     </Modal>
   </div>
@@ -122,9 +128,14 @@
       return {
         storeFlag: false,
         store: '',
+        showOriginal: false,
+        showBonus: false,
+        showPerform: false,
+        showReal: false,
         employeeForm:[],
         employeeLevelInput:'',
         employeeNameInput:'',
+        stock:[],
         job: {
           id : '',
           storeId: '',
@@ -212,10 +223,6 @@
         });
       },
       optai() {
-        /*if(this.job.postName == '' || this.job.postDuties == '' || this.job.workflow == '' || this.job.achievements == '' || this.job.technicalExamination == ''){
-          this.$Message.warning('请完整填写内容');
-          return false;
-        }*/
         this.job.storeId = this.$route.params.id;
         let URL = findPostsave();
         if( this.store == '修改') {
@@ -292,6 +299,32 @@
       },
       check2(value){
         return value.replace(/[^\d\.]/g,'');
+      },
+      changeStock(){
+        if(this.stock.indexOf('original') > -1){
+          this.showOriginal = true;
+        }else{
+          this.showOriginal = false;
+          this.job.originalStock = '';
+        }
+        if(this.stock.indexOf('real') > -1){
+          this.showReal = true;
+        }else{
+          this.showReal = false;
+          this.job.realStock = '';
+        }
+        if(this.stock.indexOf('perform') > -1){
+          this.showPerform = true;
+        }else{
+          this.showPerform = false;
+          this.job.performStock = '';
+        }
+        if(this.stock.indexOf('bonus') > -1){
+          this.showBonus = true;
+        }else{
+          this.showBonus = false;
+          this.job.bonusStock = '';
+        }
       }
     }
   };
@@ -326,11 +359,11 @@
   .checkInput{
     width: 180px;
     float:right;margin-right: 164px;
-    margin-top:8px;
   }
   .checkStock{
     float:left;
     margin-left: 74px;
+    margin-top: 6px;
   }
   .employeeCheck{
     margin-left:35px;
