@@ -33,17 +33,17 @@
         管理周期：{{storeVal.managementCycle}}
         <br/>
         <br/>
-        门店类型：{{storeVal.storeType=='1' ? '美容院':'皮肤管理'}}
+        门店类型：{{storeVal.storeType}}
         <br/>
         <br/>
-        经营方式：{{storeVal.operationMode == '1'?'单店':'连锁'}}
+        经营方式：{{storeVal.operationMode}}
         <br>
         <br>
-        审核选择：<Select v-model="auditStatus" style="width:300px" placeholder="审核选择" :transfer=true>
-        <Option value="2">通过</Option>
-        <Option value="3">拒绝</Option>
+        审核选择：<Select v-model="storeStatus" style="width:300px" placeholder="审核选择" :transfer=true>
+        <Option value="1">通过</Option>
+        <Option value="2">拒绝</Option>
         </Select>
-        <div v-if="auditStatus=='3'" style="margin-top: 10px;">
+        <div v-if="storeStatus=='3'" style="margin-top: 10px;">
           拒绝通过原因：<Input v-model="causeOfFailure" type="textarea" :autosize="true" placeholder="拒绝通过原因" style="width: 275px"/>
         </div>
         <!--<div v-show="isShow" style="color: red;">*请填写拒绝通过原因*</div>-->
@@ -52,7 +52,7 @@
   </div>
 </template>
 <script>
-import { findStoreRegister,getProvinces,getCities,auditStoreCustomer } from '../../interface';
+import { findStoreList,getProvinces,getCities,auditStoreCustomer,review,customer,audit } from '../../interface';
   export default{
     name: 's_check',
     data(){
@@ -78,7 +78,7 @@ import { findStoreRegister,getProvinces,getCities,auditStoreCustomer } from '../
         columns1: [
           {
             title: '编号',
-            key: 'code'
+            key: 'id'
           },
           {
             title: '门店名称',
@@ -93,16 +93,8 @@ import { findStoreRegister,getProvinces,getCities,auditStoreCustomer } from '../
             key: 'cityName'
           },
           {
-            title: '区',
-            key: 'cityName'
-          },
-          {
             title: '地址',
             key: 'address'
-          },
-          {
-            title: '联系人电话',
-            key: 'phoneNumber'
           },
           {
             title: '门店电话',
@@ -112,7 +104,12 @@ import { findStoreRegister,getProvinces,getCities,auditStoreCustomer } from '../
             title: '门店类型',
             key: 'storeType',
             render:(h,params)=>{
-              return h('div',params.row.storeType == 1 ?'美容院':'皮肤管理')
+              if(!parseInt(params.row.storeType)) {
+                return h('div', params.row.storeType)
+              } else {
+                let storeType = this.getStoreType(params.row.storeType)
+                return h('div',storeType)
+              }
             }
           },
           {
@@ -121,9 +118,9 @@ import { findStoreRegister,getProvinces,getCities,auditStoreCustomer } from '../
           },
           {
             title: '审核状态',
-            key: 'auditStatus',
+            key: 'storeStatus',
             render:(h,params)=>{
-              return h('div',params.row.auditStatus == 3 ?'拒绝':'审核中')
+              return h('div',params.row.storeStatus == 2 ?'拒绝':'审核中')
             }
           },
           {
@@ -155,7 +152,7 @@ import { findStoreRegister,getProvinces,getCities,auditStoreCustomer } from '../
         orData:[],
         isSystem: sessionStorage.getItem('isSystem'),
         storeId: sessionStorage.getItem('storeId'),
-        auditStatus:'',
+        storeStatus:'',
         causeOfFailure:'',
         isShow:false,
       }
@@ -174,36 +171,34 @@ import { findStoreRegister,getProvinces,getCities,auditStoreCustomer } from '../
       getList(){
         this.$ajax({
           method:'GET',
-          url:findStoreRegister(),
+          url:review(),
         }).then( (res)=>{
-          this.data1 = res.data.results;
-          this.orData = res.data.results;
+          console.log(res)
+          if (res.data.stores.storeStatus !== 1) {
+            this.data1 = res.data.stores;
+            this.orData = res.data.stores;
+          }
         }).catch((error)=>{
 
         })
       },
-      getProvinces(){
-        this.$ajax({
-          method: 'GET',
-          url: getProvinces()
-        }).then( (res) =>{
-          this.provincesData = res.data;
-        })
-      },
-      getCities(id){
-        this.$ajax({
-          method: 'GET',
-          url: getCities()+id,
-        }).then( (res) =>{
-          this.citiesData = res.data;
-        })
-      },
       check(data){
-        this.storeFlag = true;
-        this.storeVal = data;
+        this.$ajax({
+          method:'GET',
+          url:customer()+data.id,
+        }).then( (res)=>{
+          console.log(data)
+          this.storeFlag = true;
+          this.storeVal = data;
+          this.storeVal.staffName = res.data.customer.name;
+          this.storeVal.phoneNumber = res.data.customer.account;
+          this.storeVal.storeType = this.getStoreType(data.storeType)
+          this.storeStatus =data.storeStatus == 2 ? data.storeStatus : null;
+          this.causeOfFailure =data.storeDesc;  
+          console.log(this.storeVal)
+        }).catch((error)=>{
 
-        this.auditStatus =data.auditStatus == 3 ? data.auditStatus : null;
-        this.causeOfFailure =data.causeOfFailure;
+        })
       },
       check1(value){
         return value.replace(/[^\d]/g,'');
@@ -211,23 +206,34 @@ import { findStoreRegister,getProvinces,getCities,auditStoreCustomer } from '../
       check2(value){
         return value.replace(/[^\d\.]/g,'');
       },
+      getStoreType(data){
+        let arr = ['美容院', '皮肤管理', 'SPA会所', '养发', '理疗', '产后修复', '减肥馆', '祛痘馆', '整骨小颜']
+        let storeType = ''
+        for (let i =0;i<arr.length;i++){
+          if (i == data-1) {
+              storeType = arr[i]
+          }
+        }
+        return storeType;
+      },
       ok(){
-        if(this.auditStatus==''){
+        if(this.storeStatus==''){
           this.$Message.error('请选择审核！');
           return;
         }
-        if(this.auditStatus == 3 && (this.causeOfFailure == ''|| this.causeOfFailure ==null)){
+        if(this.storeStatus == 2 && (this.causeOfFailure == ''|| this.causeOfFailure ==null)){
           // this.isShow = true;
           this.$Message.error('请填写拒绝通过原因!');
           return;
         }
+        console.log(this.causeOfFailure)
         this.$ajax({
           method:'POST',
-          url: auditStoreCustomer(),
+          url: audit(),
           data:{
-            id: this.storeVal.id,
-            auditStatus: this.auditStatus,
-            causeOfFailure: this.causeOfFailure
+            storeId: this.storeVal.id,
+            status: this.storeStatus,
+            desc: this.causeOfFailure
           }
         }).then( (res)=>{
           this.$Message.success('操作成功');

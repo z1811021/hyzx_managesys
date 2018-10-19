@@ -62,6 +62,11 @@ export const userLogin = function () {
   const API = host + URL;
   return API;
 };
+export const customer = function () {
+  const URL = '/store/customer/';
+  const API = host + URL;
+  return API;
+};
 export const userRegister = function () {
   const URL = '/store/register';
   const API = host + URL;
@@ -82,6 +87,11 @@ export const auditStoreCustomer = function () {
   const API = host + URL;
   return API;
 };
+export const audit = function () {
+  const URL = '/store/audit';
+  const API = host + URL;
+  return API;
+};
 export const extendSalaryInfo = function () {
   const URL = '/store/extendSalaryInfo';
   const API = host + URL;
@@ -89,6 +99,11 @@ export const extendSalaryInfo = function () {
 };
 export const extendProblemInfo = function () {
   const URL = '/store/extendProblemInfo';
+  const API = host + URL;
+  return API;
+};
+export const review = function () {
+  const URL = '/store/review';
   const API = host + URL;
   return API;
 };

@@ -703,9 +703,10 @@
       },
       getList(name,page,pagesize) {
         if(name==''||name==null){
-          var URL = findStoreList()+page;
+          var URL = findStoreList()+page+'?status=1';
+          console.log(URL)
         }else{
-          URL = findStoreList()+'?id='+name+'&page='+page+'&pageSize='+pagesize;
+          URL = findStoreList()+'?id='+name+'&page='+page+'&pageSize='+pagesize ;
         }
         this.$ajax({
           method: 'GET',
@@ -994,8 +995,10 @@
         return value.replace(/[^\d\.]/g,'');
       },
       showRoomInfo(rowData){
+        console.log(rowData)
         this.question.area = rowData.roomInfo.room.area;
         this.question.rent = rowData.roomInfo.room.rent;
+        this.question.bedCount = rowData.roomNum;
         let memberObj = {}
         const arrRule = ['onlyShower', 'onlyToilet', 'onlyBubble', 'showerAndToilet', 'bubbleAndToilet', 'showerAndBubble', 'showerAndToiletAndBubble']
          let temArr = ['仅淋浴','仅坐便','仅泡浴', '淋浴+坐便', '泡浴+坐便','淋浴+泡浴','淋浴+坐便+泡浴']
@@ -1021,6 +1024,7 @@
       cancelQuestion(){
         this.question.area = ''
         this.question.rent = ''
+        this.question.bedCount = ''
         this.question.memberColumns = []
         this.question.member = []
         this.question.roomTypesColumns = []

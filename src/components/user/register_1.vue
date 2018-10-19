@@ -31,12 +31,12 @@
         </FormItem>
         <FormItem label="门店省份 ：" prop="provinceId"  class="formItemStyle2" >
           <Select v-model="storeVal.provinceId" style="width:150px" placeholder="门店所在省" @on-change="getCities(storeVal.provinceId)">
-            <Option :value="item.id" :key="item.id" v-for="item in provincesData">{{item.name}}</Option>
+            <Option :value="item.id" :key="item.id" v-for="item in provincesData">{{item.provinceName}}</Option>
           </Select>
         </FormItem>
         <FormItem label="门店城市 ：" prop="cityId"  class="formItemStyle2" >
           <Select v-model="storeVal.cityId" style="width:150px" placeholder="门店所在市">
-            <Option :value="item.id" :key="item.id" v-for="item in citiesData">{{item.name}}</Option>
+            <Option :value="item.id" :key="item.id" v-for="item in citiesData">{{item.cityName}}</Option>
           </Select>
         </FormItem>
         <FormItem label="门店地址 ：" prop="address"  class="formItemStyle" >
@@ -118,6 +118,7 @@
           storeStatus: '0',
           provinceId:'',
           cityId:'',
+          storeDesc: '',
         },
         validatePhoneVal: {
           disabled:false,
@@ -185,7 +186,6 @@
           withCredentials: true,
         }).then( (res) =>{
           this.provincesData = res.data.provinces;
-          console.log(this.provincesData)
         })
       },
       getCities(id){
