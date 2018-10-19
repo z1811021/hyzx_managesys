@@ -10,6 +10,8 @@ import s_datile from '@/components/store/s_datile';
 import m_index_set from '@/components/member/m_index_set';
 import m_index_info from '@/components/member/m_index_info';
 import p_index from '@/components/project/p_index';
+import p_plan_index from '@/components/project/p_plan_index';
+import p_meal_index from '@/components/project/p_meal_index';
 import p_symptom from '@/components/project/p_symptom';
 import p_program from '@/components/project/p_program';
 import c_index from '@/components/custem/c_index';
@@ -81,6 +83,16 @@ export default new Router({
               path: 'p_index',
               name: 'p_index',
               component: p_index,
+            },
+            {
+              path: 'p_plan_index',
+              name: 'p_plan_index',
+              component: p_plan_index,
+            },
+            {
+              path: 'p_meal_index',
+              name: 'p_meal_index',
+              component: p_meal_index,
             },
             {
               path: 'p_symptom',

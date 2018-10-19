@@ -31,6 +31,8 @@
           </Button>
           <DropdownMenu slot="list">
             <DropdownItem name="p_index">项目列表</DropdownItem>
+            <DropdownItem name="p_plan_index">项目方案</DropdownItem>
+            <DropdownItem name="p_meal_index">项目套餐</DropdownItem>
             <DropdownItem name="p_symptom">症状管理</DropdownItem>
             <DropdownItem name="p_program">解决方案管理</DropdownItem>
           </DropdownMenu>
@@ -94,7 +96,7 @@
        if(name == 'cr_index' || name == 'tk_m'|| name == 'hd_m'|| name == 'lc_m'|| name == 'cp_m'){
           this.isActive2 = true;
        }
-       if(name == 'p_index' || name == 'p_symptom' || name == 'p_program'){
+       if(name == 'p_index' || name == 'p_symptom' || name == 'p_program' || name == 'p_plan_index' || name == 'p_meal_index'){
           this.isActive3 = true;
        }
        if(name == 'e_index'){

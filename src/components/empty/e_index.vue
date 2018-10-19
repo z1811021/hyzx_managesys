@@ -19,39 +19,28 @@
         工作流程：<Input v-model="job.workflow" placeholder="第一步：  ，第二步：  " style="width: 300px"/>
       </div>
       <div class="com">
-          员工等级：<Select v-model="employeeLevelInput"  placeholder="员工等级" style="width:80px" :transfer=true>
-          <Option value="一级" >一级</Option>
-          <Option value="二级" >二级</Option>
-          <Option value="三级" >三级</Option>
-          <Option value="四级" >四级</Option>
-          <Option value="五级" >五级</Option>
-          <Option value="六级" >六级</Option>
-        </Select>
-        <Input v-model="employeeNameInput" placeholder="名称" style="width: 160px"/>
-        <Button class="hy_btn" @click="addEmployee">添加</Button>
-      </div>
-      <div class="comTable">
-        <table>
-          <thead>
-            <tr>
-              <th>级别</th>
-              <th>名称</th>
-              <th style="width:10%;"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(item,index) in employeeForm">
-              <td >{{item.level}}</td>
-              <td >{{item.name}}</td>
-              <td ><div class="imgIn"><img @click="deleteEmployee(index)" class="ltClose" src="../../assets/close.png"></div></td>
-            </tr> 
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr> 
-          </tbody>
-        </table>
+        <div style="float: left;margin-left: 13%;">是否设置岗位等级：</div>
+        <RadioGroup v-model="gradeChoose" @on-change="changeGrade">
+          <Radio label="是" style="float:left;">
+              <span>是</span>
+          </Radio>
+          <Radio label="否" style="float:left;">
+              <span>否</span>
+          </Radio>
+        </RadioGroup>
+        <div class="com">级别类型：<Select v-show="!showStyle" style="width:300px" disabled>
+            <Option value="1" >数字</Option>
+            <Option value="2" >字母</Option>
+          </Select>
+          <Select v-show="showStyle" v-model="checkWorkAttendance" :transfer=true style="width:300px">
+            <Option value="1" >数字</Option>
+            <Option value="2" >字母</Option>
+          </Select>
+       </div>
+        <div class="com">
+        级别数量：<Input v-show="!showNumber" placeholder="级别数量" style="width: 300px" disabled/>
+        <Input v-show="showNumber" placeholder="级别数量" style="width: 300px" />
+        </div>
       </div>
       <div class="com">
         员工排名：<Select v-model="job.checkWorkAttendance" :transfer=true style="width:300px">
@@ -79,7 +68,7 @@
         </Select>
       </div>
       <div class="com" style="margin-bottom: 60px;margin-top:5px;">
-        <div style="float: left;margin-left: 64px;">股权设置：</div>
+        <div style="float: left;margin-left: 13%;">股权设置：</div>
         <br/>
         <div style="margin-top:10px;">
           <Checkbox-group v-model='stock' @on-change="changeStock">
@@ -132,9 +121,8 @@
         showBonus: false,
         showPerform: false,
         showReal: false,
-        employeeForm:[],
-        employeeLevelInput:'',
-        employeeNameInput:'',
+        showStyle: false,
+        showNumber: false,
         stock:[],
         job: {
           id : '',
@@ -264,20 +252,6 @@
         this.store = '修改';
         this.job = JSON.parse(JSON.stringify(data));
       },
-      addEmployee(){
-      if(this.employeeLevelInput == "" || this.employeeNameInput == ""){
-        alert("请完整输入级别和名称后添加！");
-      }else{
-          this.employeeForm.push({ 
-              level:this.employeeLevelInput, name:this.employeeNameInput, storeId:19
-          })  
-          this.employeeLevelInput = "";
-          this.employeeNameInput = "";
-      }
-    }, 
-      deleteEmployee(index) {
-        this.employeeForm.splice(index,1);  
-    },
       Delete(data){
         this.$ajax({
           method: 'GET',
@@ -325,6 +299,15 @@
           this.showBonus = false;
           this.job.bonusStock = '';
         }
+      },
+      changeGrade(){
+        if(this.gradeChoose == "是"){
+            this.showStyle= true;
+            this.showNumber= true;
+        }else{
+            this.showStyle= false;
+            this.showNumber= false;
+        }
       }
     }
   };
@@ -341,16 +324,8 @@
   .ivu-checkbox-group-item{
     margin: 3% 0 1% 2%;
   }
-  .ep_btn{
-    width:2px;
-  }
-  .imgIn{
-    width:100%;
-    height:50%;
-    display:flex;
-    align-items:center; 
-    justify-content:center;
-    cursor: pointer;
+  .ivu-radio-group{
+    margin-left: -44%;
   }
   .ltClose{
     width:50%;
@@ -368,27 +343,4 @@
   .employeeCheck{
     margin-left:35px;
   }
-  table{           
-   border-collapse: collapse;            
-   margin: 0 auto;            
-   text-align: center;  
-   margin-left:123px;;  
-  } 
-  table td, table th{            
-      border: 1px solid #cad9ea;            
-      color: #666;            
-      height: 30px;        
-    }        
-  table thead th{            
-      background-color: #f8f8f9;            
-      width: 135px;        
-    }        
-  table tr:nth-child(odd)        
-    {            
-      background: #fff;        
-    }        
-  table tr:nth-child(even)        
-    {            
-      background: #f8f8f9;        
-    }
 </style>
