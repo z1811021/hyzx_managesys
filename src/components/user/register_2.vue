@@ -8,31 +8,54 @@
       <FormItem label="年租房：" prop="annualRent"  class="formItemStyle" >
             <Input v-model="roomVal.annualRent" placeholder="年租房"></Input>
       </FormItem>
-      <div class="layout-logo-left">单人间数量</div>
-      <div class="container1">
-        <FormItem :label="value.lableName" v-for='(value, index) in roomVal.singleRoom' class="formItemStyle2" :key="index">
-          <Input v-model="roomVal.singleRoom[index].count" :placeholder="value.lableName"></Input>
-        </FormItem>
-      </div>
-      <div class="layout-logo-left">双人间数量</div>
-      <div class="container1">
-        <FormItem :label="value.lableName" v-for='(value, index) in roomVal.doubleRoom' class="formItemStyle2" :key="index">
-          <Input v-model="roomVal.doubleRoom[index].count" :placeholder="value.lableName"></Input>
-        </FormItem>
-      </div>
-      <div class="layout-logo-left">三人间数量</div>
-      <div class="container1">
-        <FormItem :label="value.lableName" v-for='(value, index) in roomVal.tribleRoom' class="formItemStyle2" :key="index">
-          <Input v-model="roomVal.tribleRoom[index].count" :placeholder="value.lableName"></Input>
-        </FormItem>
-      </div>
-      <div class="layout-logo-left">三人间以上数量</div>
-      <div class="container1">
-        <FormItem :label="value.lableName" v-for='(value, index) in roomVal.aboveTribleRoom' class="formItemStyle2" :key="index">
-          <Input v-model="roomVal.aboveTribleRoom[index].count" :placeholder="value.lableName"></Input>
-        </FormItem>
+      <FormItem label="房间总数详情"  class="formItemStyle" prop="roomCount">
+          <RadioGroup v-model="roomRadio" @on-change="hiddenDetailLabel()">
+              <Radio label="displayDetail">显示详情</Radio>
+              <Radio label="noDisplayDetail">不显示详情</Radio>
+          </RadioGroup>
+          <Input v-model="roomVal.roomCount" placeholder="请输入房间总数" :disabled="roomInputDisable"></Input>
+      </FormItem>
+      <div v-if="showRoomDetail">
+        <div class="layout-logo-left">单人间数量</div>
+        <div class="container1">
+          <FormItem :label="value.lableName" v-for='(value, index) in roomVal.singleRoom' class="formItemStyle2" :key="index">
+            <Input v-model="roomVal.singleRoom[index].count" :placeholder="value.lableName"></Input>
+          </FormItem>
+        </div>
+        <div class="layout-logo-left">双人间数量</div>
+        <div class="container1">
+          <FormItem :label="value.lableName" v-for='(value, index) in roomVal.doubleRoom' class="formItemStyle2" :key="index">
+            <Input v-model="roomVal.doubleRoom[index].count" :placeholder="value.lableName"></Input>
+          </FormItem>
+        </div>
+        <div class="layout-logo-left">三人间数量</div>
+        <div class="container1">
+          <FormItem :label="value.lableName" v-for='(value, index) in roomVal.tribleRoom' class="formItemStyle2" :key="index">
+            <Input v-model="roomVal.tribleRoom[index].count" :placeholder="value.lableName"></Input>
+          </FormItem>
+        </div>
+        <div class="layout-logo-left">三人间以上数量</div>
+        <div class="container1">
+          <FormItem :label="value.lableName" v-for='(value, index) in roomVal.aboveTribleRoom' class="formItemStyle2" :key="index">
+            <Input v-model="roomVal.aboveTribleRoom[index].count" :placeholder="value.lableName"></Input>
+          </FormItem>
+        </div>
       </div>
       <div class="layout-logo-left">员工</div>
+      <FormItem label="是否有顾问"  class="formItemStyle">
+        <RadioGroup v-model="roomCounselor" @on-change="hiddenCounselorLabel()">
+            <Radio label="noCounselor">否</Radio>
+            <Radio label="haveCounselor">是</Radio>
+        </RadioGroup>
+        <Input v-model="roomVal.counselor" placeholder="请输入顾问人数" v-if="showCounselorInput"></Input>
+      </FormItem>
+      <FormItem label="是否有店长"  class="formItemStyle">
+        <RadioGroup v-model="roomManager" @on-change="hiddenManagerLabel()">
+            <Radio label="noManager">否</Radio>
+            <Radio label="haveManager">是</Radio>
+        </RadioGroup>
+        <Input v-model="roomVal.manager" placeholder="请输入店长人数" v-if="showManagerInput"></Input>
+      </FormItem>
       <FormItem label="美容师（皮肤管理师）：" prop="cosmetologist"  class="formItemStyle" >
             <Input v-model="roomVal.cosmetologist" placeholder="请输入人数"></Input>
       </FormItem>
@@ -60,17 +83,18 @@
 
 <script>
   import { extendRoom } from '../../interface';
+  const valueEqualNumber = (rule, value, callback) => {
+    const valueInt = Number(value)
+    console.log(value)
+    if (!Number.isInteger(valueInt) && value.length !== 0) {
+      callback(new Error('所填必须为数字'));
+      } else {
+        callback();
+      }
+    };
   export default{
     name: 'register_2',
     data(){
-      const valueEqualNumber = (rule, value, callback) => {
-      const valueInt = Number(value)
-      if (!Number.isInteger(valueInt) && value.length !== 0) {
-        callback(new Error('所填必须为数字'));
-        } else {
-          callback();
-        }
-      };
       let temArr = [{lableName: '仅淋浴', count:''}, {lableName: '仅坐便', count:''}, {lableName: '仅泡浴', count:''}, {lableName: '淋浴+坐便', count:''}, {lableName: '泡浴+坐便', count:''}, {lableName: '淋浴+泡浴', count:''}, {lableName: '淋浴+坐便+泡浴', count:''}]
       //let [[...singleRoomArr], [...doubleRoomArr], [...tribleRoomArr], [...aboveTribleRoomArr]] = [temArr, temArr, temArr, temArr]
       let singleRoomArr = JSON.parse(JSON.stringify(temArr))
@@ -82,6 +106,7 @@
         roomVal: {
           roomSize: '',
           annualRent: '',
+          roomCount: '',
           singleRoom: singleRoomArr,
           doubleRoom: doubleRoomArr,
           tribleRoom: tribleRoomArr,
@@ -90,14 +115,41 @@
           Therapist: '',
           nurse: '',
           physicalTherapist: '',
-          pedicure: ''
+          pedicure: '',
+          counselor: '',
+          manager: ''
         },
+        roomRadio:'noDisplayDetail',
+        roomCounselor: 'haveCounselor',
+        roomManager: 'haveManager',
+        roomInputDisable: false,
+        showRoomDetail: false,
+        showCounselorInput: true,
+        showManagerInput: true,
         ruleValidate: {
           roomSize: [
             { validator: valueEqualNumber, trigger: 'blur' }
           ],
           annualRent: [
             { validator: valueEqualNumber, trigger: 'blur' }
+          ],
+          cosmetologist: [
+            { validator: valueEqualNumber, trigger: 'blur' }
+          ],
+          Therapist: [
+            { validator: valueEqualNumber, trigger: 'blur' }
+          ],
+          nurse: [
+            { validator: valueEqualNumber, trigger: 'blur' }
+          ],
+          physicalTherapist: [
+            { validator: valueEqualNumber, trigger: 'blur' }
+          ],
+          pedicure: [
+            { validator: valueEqualNumber, trigger: 'blur' }
+          ],
+          roomCount: [
+            { validator: valueEqualNumber, trigger: 'change' }
           ]
         }
       }
@@ -161,6 +213,27 @@
 	     this.$router.push({name: 'register_1'});
        this.$emit('changeActivename','register_1')
 	    },
+      hiddenDetailLabel(){
+        if (this.roomRadio === 'noDisplayDetail') {
+          this.roomInputDisable = false;
+          this.showRoomDetail = false;
+          this.ruleValidate.roomCount = [
+            { validator: valueEqualNumber, trigger: 'change' }
+          ];
+        } else {
+          this.roomVal.roomCount = '';
+          this.roomInputDisable = true;
+          this.showRoomDetail = true
+          delete this.ruleValidate.roomCount;
+          console.log(this.ruleValidate)
+        }
+      },
+      hiddenCounselorLabel(){
+        this.showCounselorInput = this.roomCounselor === 'haveCounselor' ? true : false
+      },
+      hiddenManagerLabel(){
+        this.showManagerInput = this.roomManager === 'haveManager' ? true : false
+      },
     },
     created() {
       this.$emit('changeActivename','register_2')
@@ -220,5 +293,8 @@
   display: flex;
   flex-wrap: wrap;
   margin: 0 auto;
+}
+.ivu-radio-group {
+  display: flex;
 }
 </style>
