@@ -13,7 +13,7 @@
               <Radio label="displayDetail">显示详情</Radio>
               <Radio label="noDisplayDetail">不显示详情</Radio>
           </RadioGroup>
-          <Input v-model="roomVal.roomCount" placeholder="请输入房间总数" :disabled="roomInputDisable"></Input>
+          <Input v-model="roomVal.roomCount" placeholder="请输入房间总数" v-if="showroomCount"></Input>
       </FormItem>
       <div v-if="showRoomDetail">
         <div class="layout-logo-left">单人间数量</div>
@@ -42,19 +42,19 @@
         </div>
       </div>
       <div class="layout-logo-left">员工</div>
-      <FormItem label="是否有顾问"  class="formItemStyle">
+      <FormItem label="是否有顾问"  class="formItemStyle" prop="counselor">
         <RadioGroup v-model="roomCounselor" @on-change="hiddenCounselorLabel()">
             <Radio label="noCounselor">否</Radio>
             <Radio label="haveCounselor">是</Radio>
         </RadioGroup>
-        <Input v-model="roomVal.counselor" placeholder="请输入顾问人数" v-if="showCounselorInput"></Input>
+        <Input v-model="roomVal.counselor" placeholder="请输入顾问人数" v-if="showcounselor"></Input>
       </FormItem>
-      <FormItem label="是否有店长"  class="formItemStyle">
+      <FormItem label="是否有店长"  class="formItemStyle" prop="manager">
         <RadioGroup v-model="roomManager" @on-change="hiddenManagerLabel()">
             <Radio label="noManager">否</Radio>
             <Radio label="haveManager">是</Radio>
         </RadioGroup>
-        <Input v-model="roomVal.manager" placeholder="请输入店长人数" v-if="showManagerInput"></Input>
+        <Input v-model="roomVal.manager" placeholder="请输入店长人数" v-if="showmanager"></Input>
       </FormItem>
       <FormItem label="美容师（皮肤管理师）：" prop="cosmetologist"  class="formItemStyle" >
             <Input v-model="roomVal.cosmetologist" placeholder="请输入人数"></Input>
@@ -83,15 +83,6 @@
 
 <script>
   import { extendRoom } from '../../interface';
-  const valueEqualNumber = (rule, value, callback) => {
-    const valueInt = Number(value)
-    console.log(value)
-    if (!Number.isInteger(valueInt) && value.length !== 0) {
-      callback(new Error('所填必须为数字'));
-      } else {
-        callback();
-      }
-    };
   export default{
     name: 'register_2',
     data(){
@@ -101,7 +92,17 @@
       let doubleRoomArr  = JSON.parse(JSON.stringify(temArr))
       let tribleRoomArr = JSON.parse(JSON.stringify(temArr))
       let aboveTribleRoomArr = JSON.parse(JSON.stringify(temArr))
-
+      const valueEqualNumber = (rule, value, callback) => {
+        console.log(typeof this[`show${rule.field}`])
+        const valueInt = Number(value)
+        if (!Number.isInteger(valueInt) && value.length !== 0 && (typeof this[`show${rule.field}`] ==='undefined' || this[`show${rule.field}`])) {
+          callback(new Error('所填必须为数字'));
+          } else if (value.length === 0 && (typeof this[`show${rule.field}`] ==='undefined' || this[`show${rule.field}`])){
+            callback(new Error('所填不能为空'));
+          }else {
+            callback();
+          }
+        };
       return{
         roomVal: {
           roomSize: '',
@@ -122,10 +123,10 @@
         roomRadio:'noDisplayDetail',
         roomCounselor: 'haveCounselor',
         roomManager: 'haveManager',
-        roomInputDisable: false,
         showRoomDetail: false,
-        showCounselorInput: true,
-        showManagerInput: true,
+        showroomCount: true,
+        showcounselor: true,
+        showmanager: true,
         ruleValidate: {
           roomSize: [
             { validator: valueEqualNumber, trigger: 'blur' }
@@ -149,6 +150,12 @@
             { validator: valueEqualNumber, trigger: 'blur' }
           ],
           roomCount: [
+            { validator: valueEqualNumber, trigger: 'change' }
+          ],
+          counselor: [
+            { validator: valueEqualNumber, trigger: 'change' }
+          ],
+          manager: [
             { validator: valueEqualNumber, trigger: 'change' }
           ]
         }
@@ -175,39 +182,37 @@
         const params = {
           storeId: sessionStorage['storeId'],
           roomTypes: roomTypes,
-          room: Object.assign({area: this.roomVal.roomSize}, {rent: this.roomVal.annualRent}, {storeId: sessionStorage['storeId']}),
+          room: Object.assign({area: this.roomVal.roomSize}, {rent: this.roomVal.annualRent}, {roomCount: this.roomVal.roomCount}, {storeId: sessionStorage['storeId']}),
           member: {
             cosmeTologist: this.roomVal.cosmetologist,
             therapist: this.roomVal.Therapist,
             nurse: this.roomVal.nurse,
             physicalTherapist: this.roomVal.physicalTherapist,
             pedicure: this.roomVal.pedicure,
-            storeId: sessionStorage['storeId']}
+            counselor: this.roomVal.counselor,
+            manager: this.roomVal.manager,
+            storeId: sessionStorage['storeId']
+            },
           }
-        this.$ajax({
-          method: 'POST',
-          url: extendRoom(),
-          data: params,
-          withCredentials: true,
-        }).then((res) => {
-          console.log(res)
-          this.$Message.success('Success!');
-          this.$router.push({name: 'register_3', params: params});
-          this.$emit('changeActivename','register_3')
-        }).catch((error) =>{
-          this.$Message.error({content: '提交失败'});
+        this.$refs[name].validate((valid) => {
+            if (valid) {
+              this.$ajax({
+                method: 'POST',
+                url: extendRoom(),
+                data: params,
+                withCredentials: true,
+              }).then((res) => {
+                console.log(res)
+                this.$Message.success('Success!');
+                this.$router.push({name: 'register_3', params: params});
+                this.$emit('changeActivename','register_3')
+              }).catch((error) =>{
+                this.$Message.error({content: '提交失败'});
+              })
+            } else {
+                this.$Message.error('无法进入下一步');
+            }
         })
-        // this.$refs[name].validate((valid) => {
-        //     if (valid) {
-        //         this.$Message.success('Success!');
-        //         this.$router.push({name: 'register_3', params:{register2Info: this.roomVal}});
-        //         this.$emit('changeActivename','register_3')
-        //     } else {
-        //         this.$Message.error('无法进入下一步');
-        //     }
-        // })
-        // this.$router.push({name: 'register_3', params:{register2Info: this.roomVal}});
-        // this.$emit('changeActivename','register_3')
 	    },
 	    priviousPage(){
 	     this.$router.push({name: 'register_1'});
@@ -215,24 +220,21 @@
 	    },
       hiddenDetailLabel(){
         if (this.roomRadio === 'noDisplayDetail') {
-          this.roomInputDisable = false;
+          this.showroomCount = true;
           this.showRoomDetail = false;
-          this.ruleValidate.roomCount = [
-            { validator: valueEqualNumber, trigger: 'change' }
-          ];
         } else {
           this.roomVal.roomCount = '';
-          this.roomInputDisable = true;
+          this.showroomCount = false;
           this.showRoomDetail = true
-          delete this.ruleValidate.roomCount;
-          console.log(this.ruleValidate)
         }
       },
       hiddenCounselorLabel(){
-        this.showCounselorInput = this.roomCounselor === 'haveCounselor' ? true : false
+        this.showcounselor = this.roomCounselor === 'haveCounselor' ? true : false
+        this.roomVal.counselor = this.roomCounselor === 'haveCounselor' ? this.roomVal.counselor : ''
       },
       hiddenManagerLabel(){
-        this.showManagerInput = this.roomManager === 'haveManager' ? true : false
+        this.showmanager = this.roomManager === 'haveManager' ? true : false
+        this.roomVal.manager = this.roomManager === 'haveManager' ? this.roomVal.manager : ''
       },
     },
     created() {

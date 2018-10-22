@@ -1,8 +1,8 @@
 /**
  * Created by Benson on 2017/12/27.
  */
-const host = 'http://116.62.201.135:8080';
-//const host = 'http://9.112.49.16:8080';
+//const host = 'http://116.62.201.135:8080';
+const host = 'http://9.112.49.16:8080';
 //const host = 'http://localhost:8080';
 
 //门店列表
