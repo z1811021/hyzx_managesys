@@ -951,6 +951,7 @@
       },
       manerge(id, storeName) {
         this.$router.push({path:'s_datile/'+id+'/c_index', query:{storeName: storeName}});
+        sessionStorage.setItem('storeId',id);
       },
       Delete(id){
         this.$ajax({
