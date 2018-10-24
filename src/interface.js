@@ -242,7 +242,7 @@ export const deletePost = function () {
 };
 //客户管理
 export const findStoreById = function () {
-  const URL = '/app/api/store/findStoreById';
+  const URL = '/client/manage/store';
   const API = host + URL;
   return API;
 };
