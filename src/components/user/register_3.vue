@@ -98,7 +98,7 @@ export default{
     let currentFlowObj={}
     let currentProductPerformObj={}
     const caculateMonth = () => {
-      let currentMonth =  new Date().getMonth()+1;
+      let currentMonth =  new Date().getMonth();
       const currentYear = new Date().getFullYear();
       for (let count = 0; count<12; count++){
         let obj1, obj2, obj3, obj4;

@@ -10,10 +10,10 @@
       </FormItem>
       <FormItem label="房间总数详情"  class="formItemStyle" prop="roomCount">
           <RadioGroup v-model="roomRadio" @on-change="hiddenDetailLabel()">
-              <Radio label="displayDetail">显示详情</Radio>
-              <Radio label="noDisplayDetail">不显示详情</Radio>
+              <Radio label="displayDetail">输入具体房间数量</Radio>
+              <Radio label="noDisplayDetail">直接输入房间总数</Radio>
           </RadioGroup>
-          <Input v-model="roomVal.roomCount" placeholder="请输入房间总数" v-if="showroomCount"></Input>
+          <Input v-model="roomVal.roomCount" placeholder="请输入房间总数" :disabled="showroomCountDisabled" :ifShow="showroomCount"></Input>
       </FormItem>
       <div v-if="showRoomDetail">
         <div class="layout-logo-left">单人间数量</div>
@@ -93,7 +93,6 @@
       let tribleRoomArr = JSON.parse(JSON.stringify(temArr))
       let aboveTribleRoomArr = JSON.parse(JSON.stringify(temArr))
       const valueEqualNumber = (rule, value, callback) => {
-        console.log(typeof this[`show${rule.field}`])
         const valueInt = Number(value)
         if (!Number.isInteger(valueInt) && value.length !== 0 && (typeof this[`show${rule.field}`] ==='undefined' || this[`show${rule.field}`])) {
           callback(new Error('所填必须为数字'));
@@ -107,7 +106,7 @@
         roomVal: {
           roomSize: '',
           annualRent: '',
-          roomCount: '',
+          roomCount: 0,
           singleRoom: singleRoomArr,
           doubleRoom: doubleRoomArr,
           tribleRoom: tribleRoomArr,
@@ -120,11 +119,12 @@
           counselor: '',
           manager: ''
         },
-        roomRadio:'noDisplayDetail',
+        roomRadio:'displayDetail',
         roomCounselor: 'haveCounselor',
         roomManager: 'haveManager',
-        showRoomDetail: false,
-        showroomCount: true,
+        showRoomDetail: true,
+        showroomCountDisabled: true,
+        showroomCount: false,
         showcounselor: true,
         showmanager: true,
         ruleValidate: {
@@ -221,10 +221,12 @@
       hiddenDetailLabel(){
         if (this.roomRadio === 'noDisplayDetail') {
           this.showroomCount = true;
+          this.showroomCountDisabled = false;
           this.showRoomDetail = false;
         } else {
-          this.roomVal.roomCount = '';
+          this.roomVal.roomCount = 0;
           this.showroomCount = false;
+           this.showroomCountDisabled = true;
           this.showRoomDetail = true
         }
       },
@@ -239,6 +241,20 @@
     },
     created() {
       this.$emit('changeActivename','register_2')
+    },
+    updated() {
+      let count =0
+      if (this.showroomCount === false) {
+        const roomValArr = [...this.roomVal.singleRoom, ...this.roomVal.doubleRoom, ...this.roomVal.tribleRoom, ...this.roomVal.aboveTribleRoom]
+        for (let val of roomValArr) {
+          if(parseInt(val.count)) {
+            count+=parseInt(val.count)
+          }
+        }
+        this.roomVal.roomCount = count
+      } else {
+        count = 0
+      }
     }
   }
 </script>
