@@ -204,6 +204,7 @@
     }).then((res) => {
       console.log(res)
       this.$Message.success({content:'提交成功'});
+      sessionStorage.register_4_info = JSON.stringify(params)
       this.$router.push({name: 'register_5', params:params});
       this.$emit('changeActivename','register_5')
     }).catch((error) =>{

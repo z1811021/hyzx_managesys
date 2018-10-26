@@ -1,11 +1,11 @@
 <template>
   <div class="register">
     <div class="layout-logo-left">薪资制度</div>
-<div class="ivu-input-wrapper ivu-input-type" style="width: 60%;"><textarea autocomplete="off" spellcheck="false" placeholder="目前自己认为经营的最大问题是什么？" rows="2" class="ivu-input" style="height: 130px;" wrap="soft" v-model="desc"></textarea></div>
+<div class="ivu-input-wrapper ivu-input-type" style="width: 60%;"><textarea autocomplete="off" spellcheck="false" placeholder="薪资制度" rows="2" class="ivu-input" style="height: 130px;" wrap="soft" v-model="desc"></textarea></div>
     <Form :model="currentSalary" :label-width="100">  
     <div class="layout-logo-left">员工连续十二个月薪资(元)</div>
       <div class="container1">
-        <FormItem :label="key.split('_')[1].slice(2,4)+'年'+key.split('_')[2]+'月客流'" v-for='(value, key, index) in currentSalary' class="formItemStyle" :key="key">
+        <FormItem :label="key.split('_')[1].slice(2,4)+'年'+key.split('_')[2]+'月薪资'" v-for='(value, key, index) in currentSalary' class="formItemStyle" :key="key">
           <Input v-model="currentSalary[key]" :placeholder="key.split('_')[1]+'年'+key.split('_')[2]+'月'"></Input>
         </FormItem>
       </div>
@@ -71,6 +71,7 @@
     }).then((res) => {
       console.log(res)
       this.$Message.success({content:'提交成功'});
+      sessionStorage.register_5_info = JSON.stringify(params)
       this.$router.push({name: 'register_6', params: params});
       this.$emit('changeActivename','register_6')
     }).catch((error) =>{

@@ -217,6 +217,7 @@ export default{
     }).then((res) => {
       console.log(res)
       this.$Message.success('Success!');
+      sessionStorage.register_3_info = JSON.stringify(params);
       this.$router.push({name: 'register_4', params: params});
       this.$emit('changeActivename','register_4')
     }).catch((error) =>{

@@ -5,10 +5,11 @@ import iView from 'iview';
 import 'iview/dist/styles/iview.css';
 import VueResource from 'vue-resource';
 import axios from 'axios';
-
+import htmlToPdf from '@/components/user/htmlToPdf.js';
 Vue.config.productionTip = false
 Vue.use(VueResource);
 Vue.use(iView);
+Vue.use(htmlToPdf)
 Vue.prototype.$ajax = axios;
 /* eslint-disable no-new */
 new Vue({

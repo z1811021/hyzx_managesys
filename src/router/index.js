@@ -36,6 +36,7 @@ import register_6 from '@/components/user/register_6'
 import register_7 from '@/components/user/register_7'
 import register_8 from '@/components/user/register_8'
 import registerResult from '@/components/user/registerResult'
+import registerInfo from '@/components/user/registerInfo'
 import forget from '@/components/user/forget'
 
 Vue.use(Router)
@@ -54,7 +55,7 @@ export default new Router({
           component: s_check,
         },
         {
-          path: 'm_index_info_gl',
+          path: '/m_index_info_gl',//页面从哪进//
           name: 'm_index_info_gl',
           component: m_index_info_gl,
         },
@@ -191,12 +192,12 @@ export default new Router({
         component: register_3,
         },
         {
-        path: '/register_4',
+        path: '/register_4',//排版不好看//
         name: 'register_4',
         component: register_4,
         },
         {
-        path: '/register_5',
+        path: '/register_5',//内容不符//
         name: 'register_5',
         component: register_5,
         },
@@ -221,6 +222,11 @@ export default new Router({
       path: '/registerResult',
       name: 'registerResult',
       component: registerResult,
+    },
+    {
+      path: '/registerInfo',
+      name: 'registerInfo',
+      component: registerInfo,
     },
     {
       path: '/forget',
