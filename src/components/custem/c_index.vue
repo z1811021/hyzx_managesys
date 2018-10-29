@@ -370,28 +370,30 @@
           },
           url: findStoreById()+"/"+sessionStorage.getItem('storeId'),
         }).then((res) => {
-          this.data.clientManage = res.data.clientManageInfo.clientManage;
-          this.data.clientManage.technicianServe = this.transferBack(this.data.clientManage.technicianServe);
-          this.data.clientManage.designatedCliIntro = this.transferBack(this.data.clientManage.designatedCliIntro);
-          this.data.clientManage.technicianDirExten = this.transferBack(this.data.clientManage.technicianDirExten);
-          this.data.clientManage.clientComplaint = this.transferBack(this.data.clientManage.clientComplaint);
-          this.data.clientManage.continuousServe = this.transferBack(this.data.clientManage.continuousServe);
-          this.data.clientManage.clientConNostore = this.transferBack(this.data.clientManage.clientConNostore);
-          this.data.clientManage.clientConNocash = this.transferBack(this.data.clientManage.clientConNocash);
-          this.RA = res.data.clientManageInfo.clientRule.ruleOne;
-          this.RB = res.data.clientManageInfo.clientRule.ruleTwo;
-          this.RC = res.data.clientManageInfo.clientRule.ruleThree;
-          this.RD = res.data.clientManageInfo.clientRule.ruleFour;
-          this.data.clientClassify = res.data.clientManageInfo.clientClassify;
-          this.data.clientClassify.active = this.transferBack(this.data.clientClassify.active);
-          this.data.clientClassify.clientLevel = this.transferBack(this.data.clientClassify.clientLevel);
-          this.data.clientClassify.clientBig = this.transferBack(this.data.clientClassify.clientBig);
-          this.data.clientClassify.clientFrequent = this.transferBack(this.data.clientClassify.clientFrequent);
-          this.data.clientClassify.clientDormancy = this.transferBack(this.data.clientClassify.clientDormancy);
-          this.data.clientClassify.clientFrozen = this.transferBack(this.data.clientClassify.clientFrozen);
-          this.enableSec = true;
-          this.enableThi = true;
-          this.enableFou = true;
+          if(res.data.clientManageInfo.clientRule != null && res.data.clientManageInfo.clientManage != null && res.data.clientManageInfo.clientClassify != null){
+            this.data.clientManage = res.data.clientManageInfo.clientManage;
+            this.data.clientManage.technicianServe = this.transferBack(this.data.clientManage.technicianServe);
+            this.data.clientManage.designatedCliIntro = this.transferBack(this.data.clientManage.designatedCliIntro);
+            this.data.clientManage.technicianDirExten = this.transferBack(this.data.clientManage.technicianDirExten);
+            this.data.clientManage.clientComplaint = this.transferBack(this.data.clientManage.clientComplaint);
+            this.data.clientManage.continuousServe = this.transferBack(this.data.clientManage.continuousServe);
+            this.data.clientManage.clientConNostore = this.transferBack(this.data.clientManage.clientConNostore);
+            this.data.clientManage.clientConNocash = this.transferBack(this.data.clientManage.clientConNocash);
+            this.RA = res.data.clientManageInfo.clientRule.ruleOne;
+            this.RB = res.data.clientManageInfo.clientRule.ruleTwo;
+            this.RC = res.data.clientManageInfo.clientRule.ruleThree;
+            this.RD = res.data.clientManageInfo.clientRule.ruleFour;
+            this.data.clientClassify = res.data.clientManageInfo.clientClassify;
+            this.data.clientClassify.active = this.transferBack(this.data.clientClassify.active);
+            this.data.clientClassify.clientLevel = this.transferBack(this.data.clientClassify.clientLevel);
+            this.data.clientClassify.clientBig = this.transferBack(this.data.clientClassify.clientBig);
+            this.data.clientClassify.clientFrequent = this.transferBack(this.data.clientClassify.clientFrequent);
+            this.data.clientClassify.clientDormancy = this.transferBack(this.data.clientClassify.clientDormancy);
+            this.data.clientClassify.clientFrozen = this.transferBack(this.data.clientClassify.clientFrozen);
+            this.enableSec = true;
+            this.enableThi = true;
+            this.enableFou = true;
+            }
           }).catch((error) => {
         });
       },

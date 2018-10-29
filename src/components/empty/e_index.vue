@@ -10,17 +10,17 @@
 
     <Modal  class="modalEmployee" v-model="storeFlag" :mask-closable="false" :title="store" @on-ok="optai">
       <div class="com">
-        职位名称：<Input v-model="job.postName" placeholder="岗位名称" style="width: 300px"/>
+        职位名称：<Input v-model="job.jobTitle" placeholder="岗位名称" style="width: 300px"/>
       </div>
       <div class="com">
-        职责内容：<Input v-model="job.postDuties" placeholder="岗位职责" style="width: 300px"/>
+        职责内容：<Input v-model="job.respCont" placeholder="岗位职责" style="width: 300px"/>
       </div>
       <div class="com">
         工作流程：<Input v-model="job.workflow" placeholder="第一步：  ，第二步：  " style="width: 300px"/>
       </div>
       <div class="com">
         <div style="float: left;margin-left: 13%;">是否设置岗位等级：</div>
-        <RadioGroup v-model="gradeChoose" @on-change="changeGrade">
+        <RadioGroup v-model="job.postGrade" @on-change="changeGrade">
           <Radio label="是" style="float:left;">
               <span>是</span>
           </Radio>
@@ -32,73 +32,71 @@
             <Option value="1" >数字</Option>
             <Option value="2" >字母</Option>
           </Select>
-          <Select v-show="showStyle" v-model="checkWorkAttendance" :transfer=true style="width:300px">
+          <Select v-show="showStyle" v-model="job.levelType" :transfer=true style="width:300px">
             <Option value="1" >数字</Option>
             <Option value="2" >字母</Option>
           </Select>
        </div>
         <div class="com">
         级别数量：<Input v-show="!showNumber" placeholder="级别数量" style="width: 300px" disabled/>
-        <Input v-show="showNumber" placeholder="级别数量" style="width: 300px" />
+        <Input v-model="job.levelNum" v-show="showNumber" placeholder="级别数量" style="width: 300px" />
         </div>
       </div>
       <div class="com">
-        员工排名：<Select v-model="job.checkWorkAttendance" :transfer=true style="width:300px">
-          <Option value="1" >年</Option>
-          <Option value="2" >半年</Option>
-          <Option value="3" >季度</Option>
-          <Option value="4" >两个月</Option>
-          <Option value="5" >单月</Option>
+        员工排名：<Select v-model="job.memRank" :transfer=true style="width:300px">
+          <Option value="0" >年</Option>
+          <Option value="1" >半年</Option>
+          <Option value="2" >季度</Option>
+          <Option value="3" >两个月</Option>
+          <Option value="4" >单月</Option>
         </Select>
         <br/>
         <Checkbox-group class="employeeCheck">
-          <Checkbox label="现金"></Checkbox>
-          <Checkbox label="客流"></Checkbox>
-          <Checkbox label="实操"></Checkbox>
-          <Checkbox label="产品"></Checkbox>
-          <Checkbox label="消耗"></Checkbox>
+          <Checkbox v-model="job.memRankCash" label="现金"></Checkbox>
+          <Checkbox v-model="job.memRankPflow" label="客流"></Checkbox>
+          <Checkbox v-model="job.memRankPexer" label="实操"></Checkbox>
+          <Checkbox v-model="job.memRankProd" label="产品"></Checkbox>
+          <Checkbox v-model="job.memRankCons" label="消耗"></Checkbox>
         </Checkbox-group>
       </div>
       <div class="com">
-        分红管理：<Select v-model="job.dataRankings" :transfer=true style="width:300px;">
-          <Option value="年" >年</Option>
-          <Option value="半年" >半年</Option>
-          <Option value="季度" >季度</Option>
-          <Option value="月" >月</Option>
+        分红管理：<Select v-model="job.dvidendMange" :transfer=true style="width:300px;">
+          <Option value="0" >年</Option>
+          <Option value="1" >半年</Option>
+          <Option value="2" >季度</Option>
+          <Option value="3" >月</Option>
         </Select>
       </div>
       <div class="com" style="margin-bottom: 60px;margin-top:5px;">
         <div style="float: left;margin-left: 13%;">股权设置：</div>
         <br/>
         <div style="margin-top:10px;">
-          <Checkbox-group v-model='stock' @on-change="changeStock">
-            <Checkbox label="original" class="checkStock">
+            <Checkbox v-model="job.primStock" label="prim" class="checkStock" @on-change="checkPrim">
                 <span>原始股</span>
             </Checkbox>
-            <Input v-show="!showOriginal" placeholder="每股金额" class="checkInput" disabled/>
-            <Input v-show="showOriginal" v-model="job.originalStock" placeholder="每股金额" class="checkInput"/>
+            <Input v-show="!job.primStock" placeholder="每股金额" class="checkInput" disabled/>
+            <Input v-show="job.primStock" v-model="job.primStockMoney" placeholder="每股金额" class="checkInput"/>
             <br/>
             <br/>
-            <Checkbox label="real" class="checkStock">
+            <Checkbox v-model="job.realStock" label="real" class="checkStock" @on-change="checkReal">
                 <span>实股</span>
             </Checkbox>
-            <Input v-show="!showReal" placeholder="每股金额" class="checkInput" disabled/>
-            <Input v-show="showReal" v-model="job.realStock" placeholder="每股金额" class="checkInput"/>
+            <Input v-show="!job.realStock" placeholder="每股金额" class="checkInput" disabled/>
+            <Input v-show="job.realStock" v-model="job.realStockMoney" placeholder="每股金额" class="checkInput"/>
             <br/>
             <br/>
-            <Checkbox label="perform" class="checkStock">
+            <Checkbox v-model="job.dryStock" label="dry" class="checkStock" @on-change="checkDry">
                 <span>干股</span>
             </Checkbox>
-            <Input v-show="!showPerform" placeholder="每股金额" class="checkInput" disabled/>
-            <Input v-show="showPerform" v-model="job.performStock" placeholder="每股金额" class="checkInput"/>
+            <Input v-show="!job.dryStock" placeholder="每股金额" class="checkInput" disabled/>
+            <Input v-show="job.dryStock" v-model="job.dryStockMoney" placeholder="每股金额" class="checkInput"/>
             <br/>
             <br/>
-            <Checkbox label="bonus" class="checkStock">
+            <Checkbox v-model="job.bonStock" label="bon" class="checkStock" @on-change="checkBon">
                 <span>分红股</span>
             </Checkbox>
-            <Input v-show="!showBonus" placeholder="每股金额" class="checkInput" disabled/>
-            <Input v-show="showBonus" v-model="job.bonusStock" placeholder="每股金额" class="checkInput"/>
-          </Checkbox-group>
+            <Input v-show="!job.bonStock" placeholder="每股金额" class="checkInput" disabled/>
+            <Input v-show="job.bonStock" v-model="job.bonStockMoney" placeholder="每股金额" class="checkInput"/>
         </div>
       </div>
     </Modal>
@@ -111,7 +109,7 @@
   export default {
     name: 'e_index',
     created() {
-      this.getList(1);
+      this.getList();
     },
     data(){
       return {
@@ -125,35 +123,61 @@
         showNumber: false,
         stock:[],
         job: {
-          id : '',
-          storeId: '',
-          postName: '',
-          postDuties: '',
-          workflow: '',
-          achievements: '',
-          technicalExamination: '',
-          checkWorkAttendance: '',
-          multiMonthCash: '',
-          classes: '',
-          shareAmount: '',
-          dividendManagement: '',
-          natureOfEquity: '',
-          dataRankings: '',
-          employeeType:'',
-          employeeRank:''
+              storeId: sessionStorage.getItem('storeId'),
+              // 职位名称, 应限定在 32 个字符长度
+              jobTitle: '',
+              // 职责内容， 应限定在 64 个字符长度
+              respCont: '',
+              // 工作流程，  应限定在 64 个字符长度
+              workflow: '',
+              // 是否设置岗位等级, 0 否， 1 是
+              postGrade: '',
+              // 级别类型， 0 数字， 1 字母
+              levelType: '',
+              // 级别数量
+              levelNum: '',
+              // 员工排名， 0 年，1 半年，2 季度，3 两个月， 4 单月
+              memRank: '',
+              // 现金, 0 未选中， 1 选中
+              memRankCash: false,
+              // 客流， 0 未选中， 1 选中
+              memRankPflow: false,
+              // 实操，0 未选中， 1 选中
+              memRankPexer: false,
+              // 产品，0 未选中， 1 选中 
+              memRankProd: false,
+              // 消耗，0 未选中， 1 选中 
+              memRankCons: false,
+              // 分红管理， 0 年，1 半年，2 季度，3 月
+              dvidendMange: '',
+              // 原始股， 0 未选中， 1 选中 
+              primStock: false,
+              // 原始股每股金额
+              primStockMoney: '',
+              // 实股，0 未选中， 1 选中 
+              realStock: false,
+              // 实股每股金额
+              realStockMoney: '',
+              // 干股， 0 未选中， 1 选中 
+              dryStock: false,
+              // 干股每股金额
+              dryStockMoney: '',
+              // 分红股， 0 未选中， 1 选中 
+              bonStock: false,
+              bonStockMoney: ''
         },
         columns: [
           {
-            title: '序号',
-            key: 'id',
-          },
-          {
             title: '岗位名称',
-            key: 'postName',
+            key: 'jobTitle',
           },
           {
             title: '职责',
-            key: 'postDuties',
+            key: 'respCont',
+          },
+          {
+            title: '工作流程',
+            key: 'workflow',
           },
           {
             title: '操作',
@@ -196,7 +220,14 @@
       };
     },
     methods: {
-      getList(page) {
+      transfer(b){
+        if(b == true){
+          return 1;
+        }else{
+          return 0;
+        }
+      },
+      getList() {
         this.$ajax({
           method: 'GET',
           dataType: 'JSON',
@@ -204,69 +235,163 @@
           headers: {
             "authToken": sessionStorage.getItem('authToken')
           },
-          url: findPostList()+"?id="+this.$route.params.id+"&page="+page+"&pageSize=30",
+          url: findPostList()+"/"+sessionStorage.getItem('storeId'),
         }).then((res) => {
-          this.data = res.data.results;
+          this.data = res.data.memMangeInfo;
         }).catch((error) => {
         });
       },
       optai() {
-        this.job.storeId = this.$route.params.id;
-        let URL = findPostsave();
-        if( this.store == '修改') {
-          URL = findPostedit();
-        };
-        this.$ajax({
+          this.job.memRankCash = this.transfer(this.job.memRankCash);
+          this.job.memRankPflow = this.transfer(this.job.memRankPflow);
+          this.job.memRankPexer = this.transfer(this.job.memRankPexer);
+          this.job.memRankProd = this.transfer(this.job.memRankProd);
+          this.job.memRankCons = this.transfer(this.job.memRankCons);
+          this.job.realStock = this.transfer(this.job.realStock);
+          this.job.dryStock = this.transfer(this.job.dryStock);
+          this.job.bonStock = this.transfer(this.job.bonStock);
+          this.job.primStock = this.transfer(this.job.primStock);
+          this.job.postGrade = this.transferGrade(this.job.postGrade);
+          var params = {
+              storeId: sessionStorage.getItem('storeId'),
+              memMange: this.job
+          }
+          this.$ajax({
           method: 'POST',
           dataType: 'JSON',
           contentType: 'application/json;charset=UTF-8',
+          data: params,
           headers: {
             "authToken": sessionStorage.getItem('authToken')
           },
-          data: this.job,
-          url: URL,
+          url: findPostsave(),
         }).then((res) => {
           this.$Message.success('操作成功');
-          this.getList(1);
+          this.clear();
+          this.getList();
         }).catch((error) => {
           this.$Message.error('操作失败');
         });
       },
+      transferBack(c){
+        if(c == 1){
+          return true;
+        }else{
+          return false;
+        }
+      },
+      clear(){
+          this.job = {
+            storeId: sessionStorage.getItem('storeId'),
+            // 职位名称, 应限定在 32 个字符长度
+            jobTitle: '',
+            // 职责内容， 应限定在 64 个字符长度
+            respCont: '',
+            // 工作流程，  应限定在 64 个字符长度
+            workflow: '',
+            // 是否设置岗位等级, 0 否， 1 是
+            postGrade: '',
+            // 级别类型， 0 数字， 1 字母
+            levelType: '',
+            // 级别数量
+            levelNum: '',
+            // 员工排名， 0 年，1 半年，2 季度，3 两个月， 4 单月
+            memRank: '',
+            // 现金, 0 未选中， 1 选中
+            memRankCash: false,
+            // 客流， 0 未选中， 1 选中
+            memRankPflow: false,
+            // 实操，0 未选中， 1 选中
+            memRankPexer: false,
+            // 产品，0 未选中， 1 选中 
+            memRankProd: false,
+            // 消耗，0 未选中， 1 选中 
+            memRankCons: false,
+            // 分红管理， 0 年，1 半年，2 季度，3 月
+            dvidendMange: '',
+            // 原始股， 0 未选中， 1 选中 
+            primStock: false,
+            // 原始股每股金额
+            primStockMoney: '',
+            // 实股，0 未选中， 1 选中 
+            realStock: false,
+            // 实股每股金额
+            realStockMoney: '',
+            // 干股， 0 未选中， 1 选中 
+            dryStock: false,
+            // 干股每股金额
+            dryStockMoney: '',
+            // 分红股， 0 未选中， 1 选中 
+            bonStock: false,
+            bonStockMoney: ''
+        };
+      },
       newEm() {
         this.storeFlag = true;
         this.store = '新建岗位设置';
-        this.job = {
-          id : '',
-            postName: '',
-            postDuties: '',
-            workflow: '',
-            achievements: '',
-            technicalExamination: '',
-            checkWorkAttendance: '',
-          employeeType:'',
-          employeeRank:''
-        };
+        this.clear();
+        this.showStyle= false;
+        this.showNumber= false;
+        this.showBonus = false;
+        this.showPerform = false;
+        this.showReal = false;
+        this.showOriginal = false;
       },
       mannger(data) {
         this.storeFlag = true;
         this.store = '修改';
         this.job = JSON.parse(JSON.stringify(data));
+        this.job.memRankCash = this.transferBack(this.job.memRankCash);
+        this.job.memRankPflow = this.transferBack(this.job.memRankPflow);
+        this.job.memRankPexer = this.transferBack(this.job.memRankPexer);
+        this.job.memRankProd = this.transferBack(this.job.memRankProd);
+        this.job.memRankCons = this.transferBack(this.job.memRankCons);
+        this.job.realStock = this.transferBack(this.job.realStock);
+        this.job.dryStock = this.transferBack(this.job.dryStock);
+        this.job.bonStock = this.transferBack(this.job.bonStock);
+        this.job.primStock = this.transferBack(this.job.primStock);
+        this.job.postGrade = this.transferGradeBack(this.job.postGrade);
+        if(this.job.postGrade == "是"){this.showStyle= true;this.showNumber= true;}
+        if(this.job.bonStock == true){this.showBonus = true;}
+        if(this.job.dryStock == true){this.showPerform = true;}
+        if(this.job.realStock == true){this.showReal = true;}
+        if(this.job.primStock == true){this.showOriginal = true;}
       },
       Delete(data){
-        this.$ajax({
+        this.$ajax({  
           method: 'GET',
           dataType: 'JSON',
           contentType: 'application/json;charset=UTF-8',
           headers: {
             "authToken": sessionStorage.getItem('authToken')
           },
-          url: deletePost()+'?id='+data.id,
+          url: deletePost()+"/"+sessionStorage.getItem('storeId')+"?jobTitle="+data.jobTitle,
         }).then((res) => {
           this.$Message.success('操作成功');
-          this.getList(1);
+          this.getList();
         }).catch((error) => {
           this.$Message.error('操作失败');
         })
+      },
+      checkPrim(){
+        if(this.job.primStock == false){
+          this.job.primStockMoney = "";
+        }
+      },
+      checkReal(){
+        if(this.job.realStock == false){
+          this.job.realStockMoney = "";
+        }
+      },
+      checkDry(){
+        if(this.job.dryStock == false){
+          this.job.dryStockMoney = "";
+        }
+      },
+      checkBon(){
+        if(this.job.bonStock == false){
+          this.job.bonStockMoney = "";
+        }
       },
       check(value){
         return value.replace(/[^\d]/g,'');
@@ -274,39 +399,29 @@
       check2(value){
         return value.replace(/[^\d\.]/g,'');
       },
-      changeStock(){
-        if(this.stock.indexOf('original') > -1){
-          this.showOriginal = true;
+      transferGrade(d){
+        if(d == "是"){
+          return 1;
         }else{
-          this.showOriginal = false;
-          this.job.originalStock = '';
+          return 0;
         }
-        if(this.stock.indexOf('real') > -1){
-          this.showReal = true;
+      },
+      transferGradeBack(e){
+        if(e == 1){
+          return "是";
         }else{
-          this.showReal = false;
-          this.job.realStock = '';
-        }
-        if(this.stock.indexOf('perform') > -1){
-          this.showPerform = true;
-        }else{
-          this.showPerform = false;
-          this.job.performStock = '';
-        }
-        if(this.stock.indexOf('bonus') > -1){
-          this.showBonus = true;
-        }else{
-          this.showBonus = false;
-          this.job.bonusStock = '';
+          return "否";
         }
       },
       changeGrade(){
-        if(this.gradeChoose == "是"){
+        if(this.job.postGrade == "是"){
             this.showStyle= true;
             this.showNumber= true;
         }else{
             this.showStyle= false;
             this.showNumber= false;
+            this.job.levelType= "";
+            this.job.levelNum= "";
         }
       }
     }

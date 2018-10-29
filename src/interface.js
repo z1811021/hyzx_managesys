@@ -221,12 +221,12 @@ export const deleteSolution = function () {
 };
 //员工管理
 export const findPostList = function () {
-  const URL = '/app/api/post/findPostList';
+  const URL = '/member/manage/store';
   const API = host + URL;
   return API;
 };
 export const findPostsave = function () {
-  const URL = '/app/api/post/save';
+  const URL = '/member/manage/add';
   const API = host + URL;
   return API;
 };
@@ -236,7 +236,7 @@ export const findPostedit = function () {
   return API;
 };
 export const deletePost = function () {
-  const URL = '/app/api/post/delete';
+  const URL = '/member/manage/delete';
   const API = host + URL;
   return API;
 };
