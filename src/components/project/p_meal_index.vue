@@ -26,9 +26,10 @@
     data(){
       return {
         storeFlag: false,
+        store:'',
         columns: [
           {
-            title: '方案名称',
+            title: '套餐名称',
             key: 'projectName'
           },
           {
@@ -36,8 +37,8 @@
             key: 'projectNumber'
           },
           {
-            title: '单价',
-            key: 'courseMoney'
+            title: '套餐次数',
+            key: 'mealAmount'
           },
           {
             title: '现金价格',

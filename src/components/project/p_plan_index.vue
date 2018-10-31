@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 style="padding: .6rem;">项目套餐</h2>
+    <h2 style="padding: .6rem;">项目方案</h2>
     <Row :gutter="24" class="option">
       <Col span="2">
         <Button class="hy_btn" @click="newEm">新建</Button>
@@ -26,6 +26,7 @@
     data(){
       return {
         storeFlag: false,
+        store:'',
         columns: [
           {
             title: '方案名称',
