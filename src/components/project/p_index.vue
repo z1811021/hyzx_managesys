@@ -92,43 +92,17 @@
           </div>
       <br/>
       <br/>
-      <div style="float:left;margin-left: 63px;">是否设计套餐：</div>
-      <RadioGroup v-model="taoCan" @on-change="changeTaocan" style="margin-right:40%;">
-          <Radio label="是" style="float:left;">
-              <span>是</span>
-          </Radio>
-          <Radio label="否" style="float:right;">
-              <span>否</span>
-          </Radio>
-      </RadioGroup>
-          <div v-show="!showTc">
-          <br/>
-          <div class="leftRadio">项目名称：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" disabled/>
+      <div style="float: left;margin-left: 12%;margin-top:3%;">项目属性：</div>
           <br/>
           <br/>
-          <div class="leftRadio">次数：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" disabled/>
           <br/>
-          <br/>
-          <div class="leftRadio">组合：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" disabled/>
-          </div>
-          <div v-show="showTc">
-          <br/>
-          <div class="leftRadio">项目名称：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;"/>
-          <br/>
-          <br/>
-          <div class="leftRadio">次数：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;"/>
-          <br/>
-          <br/>
-          <div class="leftRadio">组合：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;"/>
-          </div>
-      <br/>
-      <br/>
-      <br/>
-      项目属性：<Select v-model="pis.projectAttributes" style="width:300px" :transfer=true>
-                <Option value="到店率">到店率</Option>
-                <Option value="功效类">功效类</Option>
-                <Option value="保养类">保养类</Option>
-              </Select>
+      <Checkbox-group>
+          <Checkbox label="高频到店"></Checkbox>
+          <Checkbox label="赠送属性"></Checkbox>
+          <Checkbox label="叠加属性"></Checkbox>
+          <Checkbox label="强功效"></Checkbox>
+          <Checkbox label="常规属性"></Checkbox>
+      </Checkbox-group>
       <br/>
       <br/>
       解决问题：<Input v-model="pis.technicalPoints" type="textarea" :rows="2" placeholder="解决问题" style="width:70%;"/>
@@ -251,7 +225,7 @@
     methods: {
       newEm() {
         this.storeFlag = true;
-        this.store = '新建';
+        this.store = '新建项目';
         this.pis = {
           projectName : '',
           courseMoney: '',
