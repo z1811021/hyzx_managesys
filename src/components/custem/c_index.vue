@@ -372,6 +372,7 @@
         }).then((res) => {
           if(res.data.clientManageInfo.clientRule != null && res.data.clientManageInfo.clientManage != null && res.data.clientManageInfo.clientClassify != null){
             this.data.clientManage = res.data.clientManageInfo.clientManage;
+            this.data.clientManage.exclusiveness = this.transferBack(this.data.clientManage.exclusiveness);
             this.data.clientManage.technicianServe = this.transferBack(this.data.clientManage.technicianServe);
             this.data.clientManage.designatedCliIntro = this.transferBack(this.data.clientManage.designatedCliIntro);
             this.data.clientManage.technicianDirExten = this.transferBack(this.data.clientManage.technicianDirExten);
@@ -454,6 +455,7 @@
         }
       },
       save() {
+        var validateMessage = '';
         this.data.clientRule.ruleOne = this.RA;
         this.data.clientRule.ruleTwo = this.RB;
         this.data.clientRule.ruleThree = this.RC;
@@ -466,7 +468,6 @@
         this.data.clientManage.continuousServe = this.transfer(this.data.clientManage.continuousServe);
         this.data.clientManage.clientConNostore = this.transfer(this.data.clientManage.clientConNostore);
         this.data.clientManage.clientConNocash = this.transfer(this.data.clientManage.clientConNocash);
-        this.data.clientManage.clientConNocashMoth = this.transfer(this.data.clientManage.clientConNocashMoth);
         this.data.clientClassify.active = this.transfer(this.data.clientClassify.active);
         this.data.clientClassify.clientLevel = this.transfer(this.data.clientClassify.clientLevel);
         this.data.clientClassify.clientBig = this.transfer(this.data.clientClassify.clientBig);
@@ -480,19 +481,56 @@
               clientRule: this.data.clientRule,
               clientClassify: this.data.clientClassify
           };
+        if(this.data.clientManage.technicianServe == 1 && this.data.clientManage.technicianServeTimes == '') { 
+          validateMessage = validateMessage + "请输入指定条件：某技师连续服务次数。<br/>";
+        }
+        if(this.data.clientManage.continuousServe == 1 && this.data.clientManage.continuousServeTimes == '') { 
+          validateMessage = validateMessage + "请输入非指定条件：连续被他人服务次数。<br/>";
+        }
+        if(this.data.clientManage.clientConNostore == 1 && this.data.clientManage.clientConNostoreMoth == '') { 
+          validateMessage = validateMessage + "请输入非指定条件：顾客连续不到店次数。<br/>";
+        }
+        if(this.data.clientManage.clientConNocash == 1 && this.data.clientManage.clientConNocashMoth == '') { 
+          validateMessage = validateMessage + "请输入非指定条件：顾客连续无现金月数。<br/>";
+        }
+        if(this.data.clientClassify.clientBig == 1) { 
+          if(this.data.clientClassify.clientBigMoth == '' || this.data.clientClassify.clientBigConsume == ''){
+            validateMessage = validateMessage + "请输入大客户消费实力连续消费月份，金额。<br/>";
+          }
+        }
+        if(this.data.clientClassify.clientFrequent == 1) { 
+          if(this.data.clientClassify.clientFrequentMoth == '' || this.data.clientClassify.clientFrequentTimes == ''){
+            validateMessage = validateMessage + "请输入客户活跃度常到店月份次数。<br/>";
+          }
+        }
+        if(this.data.clientClassify.clientDormancy == 1 && this.data.clientClassify.clientDormancyMoth == '') { 
+          validateMessage = validateMessage + "请输入睡眠客户月数。<br/>";
+        }
+        if(this.data.clientClassify.clientFrozen == 1 && this.data.clientClassify.clientFrozenTimes == '') { 
+          validateMessage = validateMessage + "请输入冻结客户月数。<br/>";
+        }
+        if(this.data.clientClassify.clientFrozen == 1 && this.data.clientClassify.clientFrozenTimes == '') { 
+          validateMessage = validateMessage + "请输入常到店客户连续到店月份次数<br/>";
+        }
+        if(validateMessage != ''){
+          this.$Message.error(validateMessage);
+          validateMessage = '';
+        }else{
           this.$ajax({
           method: 'POST',
           dataType: 'JSON',
           contentType: 'application/json;charset=UTF-8',
-          data: this.data,
+          data: params,
           headers: {
             "authToken": sessionStorage.getItem('authToken')
           },
           url: editStoreCustomer(),
-        }).then((res) => {
-          this.$Message.success('保存成功');
-        }).catch((error) => {
-        });
+          }).then((res) => {
+            this.$Message.success('保存成功');
+          }).catch((error) => {
+            this.$Message.error('保存失败');
+          });
+        }
       }
     }
   };
