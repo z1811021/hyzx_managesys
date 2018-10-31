@@ -8,7 +8,7 @@
     </Row>
     <Table :columns="columns" :data="data"></Table>
 
-    <Modal  class="modalEmployee" v-model="storeFlag" :mask-closable="false" :title="store" @on-ok="optai">
+    <Modal  class="modalEmployee" v-model="storeFlag" :mask-closable="false" :title="store">
       <div class="com">
         职位名称：<Input v-model="job.jobTitle" placeholder="岗位名称" style="width: 300px"/>
       </div>
@@ -44,11 +44,11 @@
       </div>
       <div class="com">
         员工排名：<Select v-model="job.memRank" :transfer=true style="width:300px">
-          <Option value="0" >年</Option>
-          <Option value="1" >半年</Option>
-          <Option value="2" >季度</Option>
-          <Option value="3" >两个月</Option>
-          <Option value="4" >单月</Option>
+          <Option value="1" >年</Option>
+          <Option value="2" >半年</Option>
+          <Option value="3" >季度</Option>
+          <Option value="4" >两个月</Option>
+          <Option value="5" >单月</Option>
         </Select>
         <br/>
         <Checkbox-group class="employeeCheck">
@@ -61,10 +61,10 @@
       </div>
       <div class="com">
         分红管理：<Select v-model="job.dvidendMange" :transfer=true style="width:300px;">
-          <Option value="0" >年</Option>
-          <Option value="1" >半年</Option>
-          <Option value="2" >季度</Option>
-          <Option value="3" >月</Option>
+          <Option value="1" >年</Option>
+          <Option value="2" >半年</Option>
+          <Option value="3" >季度</Option>
+          <Option value="4" >月</Option>
         </Select>
       </div>
       <div class="com" style="margin-bottom: 60px;margin-top:5px;">
@@ -98,6 +98,10 @@
             <Input v-show="!job.bonStock" placeholder="每股金额" class="checkInput" disabled/>
             <Input v-show="job.bonStock" v-model="job.bonStockMoney" placeholder="每股金额" class="checkInput"/>
         </div>
+      </div>
+      <div slot="footer">
+          <Button type="primary" @click="optai">添加</Button>
+          <Button type="ghost" @click="close">取消</Button>
       </div>
     </Modal>
   </div>
@@ -242,6 +246,7 @@
         });
       },
       optai() {
+          var validateMessage = '';
           this.job.memRankCash = this.transfer(this.job.memRankCash);
           this.job.memRankPflow = this.transfer(this.job.memRankPflow);
           this.job.memRankPexer = this.transfer(this.job.memRankPexer);
@@ -252,26 +257,47 @@
           this.job.bonStock = this.transfer(this.job.bonStock);
           this.job.primStock = this.transfer(this.job.primStock);
           this.job.postGrade = this.transferGrade(this.job.postGrade);
-          var params = {
-              storeId: sessionStorage.getItem('storeId'),
-              memMange: this.job
+          if(this.job.jobTitle == ''){
+            validateMessage = validateMessage + "请输入岗位名称！<br/>";
           }
-          this.$ajax({
-          method: 'POST',
-          dataType: 'JSON',
-          contentType: 'application/json;charset=UTF-8',
-          data: params,
-          headers: {
-            "authToken": sessionStorage.getItem('authToken')
-          },
-          url: findPostsave(),
-        }).then((res) => {
-          this.$Message.success('操作成功');
-          this.clear();
-          this.getList();
-        }).catch((error) => {
-          this.$Message.error('操作失败');
-        });
+          if(this.job.respCont == ''){
+            validateMessage = validateMessage + "请输入岗位流程!<br/>";
+          }
+          if(this.job.workflow == ''){
+            validateMessage = validateMessage + "请输入岗位名称！<br/>";
+          }
+          if(this.job.memRank == 0 || (this.job.memRankCash == 0 && this.job.memRankPflow == 0 && this.job.memRankPexer == 0 && this.job.memRankProd == 0 && this.job.memRankCons == 0)){
+            validateMessage = validateMessage + "请选择该类员工排名时段，方式！<br/>";
+          }
+          if(this.job.dvidendMange == 0){
+            validateMessage = validateMessage + "请选择该类员工分红时段！<br/>";
+          }
+          if(validateMessage != ''){
+            this.$Message.error(validateMessage);
+            validateMessage = '';
+          }else{
+              var params = {
+                  storeId: sessionStorage.getItem('storeId'),
+                  memMange: this.job
+              }
+              this.$ajax({
+              method: 'POST',
+              dataType: 'JSON',
+              contentType: 'application/json;charset=UTF-8',
+              data: params,
+              headers: {
+                "authToken": sessionStorage.getItem('authToken')
+              },
+              url: findPostsave(),
+            }).then((res) => {
+              this.$Message.success('操作成功');
+              this.clear();
+              this.getList();
+              this.storeFlag = false;
+            }).catch((error) => {
+              this.$Message.error('操作失败');
+            });
+          }
       },
       transferBack(c){
         if(c == 1){
@@ -412,6 +438,9 @@
         }else{
           return "否";
         }
+      },
+      close(){
+        this.storeFlag=false;
       },
       changeGrade(){
         if(this.job.postGrade == "是"){
