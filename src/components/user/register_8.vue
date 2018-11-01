@@ -33,7 +33,6 @@
           data: params,
           withCredentials: true,
         }).then((res) => {
-          console.log(res)
           this.$Message.success({content:'提交成功'});
           this.$router.push({name: 'registerInfo', params: params});
         }).catch((error) =>{
