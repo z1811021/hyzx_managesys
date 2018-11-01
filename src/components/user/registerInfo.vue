@@ -7,11 +7,11 @@
         <header><span></span>注册信息汇总表</header>
         <div id="register_1_info">
             <ul>
-                <li class="licenter"><div class="item2">门店品牌：<span>{{storeVal.storeName}}</span></div><div class="item2">类型：<span>{{storeVal.franchType}}</span></div></li>
-                <li class="licenter"><div class="item2">联系人：<span>{{validatePhoneVal.name}}</span></div><div class="item2">联系电话：<span>{{validatePhoneVal.account}}</span></div></li>
-                <li class="licenter"><div class="item2">门店省份：<span></span></div><div class="item2">门店城市：<span></span></div></li>
-                <li class="licenter"><div class="item2">门店地址：<span>{{storeVal.address}}</span></div><div class="item2">门店电话：<span>{{storeVal.telephone}}</span></div></li>
-                <li class="licenter"><div class="item2">门店类型: <span>{{storeVal.storeType}}</span></div><div class="item2">经营状态：<span>{{storeVal.operationMode}}</span></div></li>  
+                <li class="licenter"><div class="item2">门店品牌：<span>{{register_1_info.storeName}}</span></div><div class="item2">类型：<span>{{register_1_info.franchType}}</span></div></li>
+                <li class="licenter"><div class="item2">联系人：<span>{{register_1_info.name}}</span></div><div class="item2">联系电话：<span>{{register_1_info.account}}</span></div></li>
+                <li class="licenter"><div class="item2">门店省份：<span>{{register_1_info.provinceName}}</span></div><div class="item2">门店城市：<span>{{register_1_info.cityName}}</span></div></li>
+                <li class="licenter"><div class="item2">门店地址：<span>{{register_1_info.address}}</span></div><div class="item2">门店电话：<span>{{register_1_info.telephone}}</span></div></li>
+                <li class="licenter"><div class="item2">门店类型: <span>{{register_1_info.storeType}}</span></div><div class="item2">经营状态：<span>{{register_1_info.operationMode}}</span></div></li>  
             </ul>
         </div>
         <div id="register_2_info">
@@ -105,7 +105,7 @@
         </div>
         <div id="register_5_info">
             <h1>薪资制度</h1>
-            <p>test containt</p>
+            <p>{{register_5_desc}}</p>
             <h1>员工连续十二个月薪资（元）</h1>  
             <ul>
                 <Row>
@@ -120,7 +120,8 @@
         <div id="register_6_info">
             <h1>项目表</h1>
             <Table :columns="xiangmuColumns" :data="register_6_info.items"></Table>
-             <div class="item2">拓客卡：<span>{{register_6_info.card.extensionCard}}</span></div><div class="item2">留客卡：<span>{{register_6_info.card.guestCard}}</span></div>
+             <div class="item2">拓客卡：<span>{{register_6_info.card.extensionCard}}</span></div> 
+             <div class="item2">留客卡：<span>{{register_6_info.card.guestCard}}</span></div>
              <h1>近六个月托客方式</h1>
              <Table :columns="tuokeColumns" :data="register_6_info.extensions"></Table>
         </div>
@@ -192,8 +193,7 @@ export default {
                 },
             ],
             htmlTitle:"注册信息表",
-            storeVal:{},
-            validatePhoneVal:{},
+            register_1_info:{},
             register_2_info:{},
             register_3_info:[],
             register_4_info:{},
@@ -201,6 +201,7 @@ export default {
             register_6_info:{},
             register_7_info:{},
             register_8_info:{},
+            register_5_desc:"",
             jiajuyuanhu:[],
             jiaju:[],
             yuanhu:[]
@@ -211,31 +212,25 @@ export default {
 
     },
     mounted () {
+        console.log(sessionStorage)
         this.$ajax({
             method: 'GET',
-            url: infos()+34,
+            url: infos()+sessionStorage['storeId'],
         }).then((res)=>{
-            this.storeVal = res.data.register_1.store
-            this.validatePhoneVal = res.data.register_1.customer
+            this.register_1_info = res.data.register_1
             this.register_2_info = res.data.register_2
             this.change_register_3_info(res.data.register_3);
             this.register_4_info = res.data.register_4
             this.change_register_5_info(res.data.register_5);
+            this.register_5_desc = res.data.register_5.salary.desc
             this.register_6_info = res.data.register_6
             this.register_7_info = res.data.register_7
             this.register_8_info = res.data.register_8
 
-            //this.register_2_info = JSON.parse(sessionStorage.register_2_info)
-            //this.register_3_info = JSON.parse(sessionStorage.register_3_info)
-            //this.register_4_info = JSON.parse(sessionStorage.register_4_info)
-            // this.register_5_info = JSON.parse(sessionStorage.register_5_info)
-            // this.register_6_info = JSON.parse(sessionStorage.register_6_info)
-            // this.register_7_info = JSON.parse(sessionStorage.register_7_info)
-            // this.register_8_info = JSON.parse(sessionStorage.register_8_info)
-            //console.log(this.storeVal)
-            this.storeVal.storeType = this.storeTypeTransfer(this.storeVal.storeType)
-            this.storeVal.operationMode = this.storeTypeTransfer(this.storeVal.operationMode)
-            this.storeVal.franchType = this.franchTypeTransfer(this.storeVal.franchType)
+
+            this.register_1_info.storeType = this.storeTypeTransfer(this.register_1_info.storeType)
+            this.register_1_info.operationMode = this.storeTypeTransfer(this.register_1_info.operationMode)
+            this.register_1_info.franchType = this.franchTypeTransfer(this.register_1_info.franchType)
             
             this.getYuanhuInfo()
             this.register_2_info = this.emptyTransfer(this.register_2_info)
@@ -330,13 +325,11 @@ export default {
         const objYear = parseInt(data.curMonth.split('-')[0]);
         let deduct = objMonth - currentMonth <0 ? objMonth - currentMonth+12  : objMonth - currentMonth;
             deduct = currentYear - objYear > 2 ? 0 : deduct;
-        let num=1; 
-        console.log(deduct)   
+        let num=1;    
         for (let count = 1+deduct; count<=12+deduct; count++){
         let obj1;
         let monthData = count >= 1 && currentYear - objYear <= 2 ? data[`month_${num}`] : null; 
             monthData = monthData === '' ? null : monthData
-        console.log(monthData)
         if (currentMonth <= 12 && currentMonth>0) {
           obj1 = JSON.parse(`{"${type}_${currentYear}_${currentMonth}": ${monthData}}`);
         }else{
@@ -377,7 +370,11 @@ h1,h2{
     
     text-align: center;
 }
-.item4,.item2,.item3{
+.item2{
+    display:block;
+    text-align: justify;
+}
+.item4,.item3{
     display: inline-block;
     text-align: justify;
     
