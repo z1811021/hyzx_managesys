@@ -116,6 +116,14 @@
       },
     methods:{
   addInstruments(){
+    for(var i=0; i<this.instrumentsForm.length; i++){
+      if(this.instrumentsForm[i].name == this.instrumentPPInput){
+         this.$Message.error("请勿输入重复的仪器品牌！");
+        this.instrumentYQInput = "";
+        this.instrumentPPInput = ""; 
+         return;
+      }
+    }
     if(this.instrumentYQInput == "" || this.instrumentPPInput == ""){
       this.$Message.error("请完整输入功效和品牌后添加！");
     }else{
@@ -159,6 +167,14 @@
     }
   },
   addBrandsYH(){   
+      for(var i=0; i<this.brandsYHForm.length; i++){
+        if(this.brandsYHForm[i].name == this.brandsInput){
+           this.$Message.error("请勿输入重复的院护品牌！");
+           this.brandsSelect = "";
+           this.brandsInput = ""; 
+           return;
+        }
+      }
       this.brandsYHForm.push({ 
            type:1, name:this.brandsInput, storeId:sessionStorage['storeId']
       });
@@ -180,7 +196,15 @@
       this.brandsSelect = "";
       this.brandsInput = "";
   },
-  addBrandsJJ(){   
+  addBrandsJJ(){
+      for(var i=0; i<this.brandsJJForm.length; i++){
+        if(this.brandsJJForm[i].name == this.brandsInput){
+           this.$Message.error("请勿输入重复的家居品牌！");
+           this.brandsSelect = "";
+           this.brandsInput = ""; 
+           return;
+        }
+      }   
       this.brandsJJForm.push({ 
           type:2, name:this.brandsInput, storeId:sessionStorage['storeId']
       });
