@@ -26,6 +26,10 @@
                <td><Button class="hy_btn" @click="deleteBrandsYHItem(index)">移除</Button></td>
               </tr>
             </tbody>
+              <tr v-show="showYH">
+               <td></td>
+               <td></td>
+              </tr>
           </table>
         </div>
         <div style="float:right;width:50%;height:auto;">  
@@ -42,6 +46,10 @@
                <td><Button class="hy_btn" @click="deleteBrandsJJItem(index)">移除</Button></td>
               </tr>
             </tbody>
+              <tr v-show="showJJ">
+               <td></td>
+               <td></td>
+              </tr>
           </table>
         </div>
       </div>
@@ -72,6 +80,11 @@
               <td><Button class="hy_btn" @click="deleteInstrumentsItem(index)">移除</Button></td>
             </tr> 
           </tbody>
+          <tr v-show="showInstruments">
+               <td></td>
+               <td></td>
+               <td></td>
+              </tr>
         </table>
     </div>
 <div class="footer">
@@ -89,105 +102,105 @@
     name: 'register_4',
       data() {    
         return {      
-          instrumentsForm: [{effect:"", name:"", storeId:sessionStorage['storeId']}],
-          brandsJJForm: [{type:2, name:"", storeId:sessionStorage['storeId']}],
-          brandsYHForm: [{type:1, name:"", storeId:sessionStorage['storeId']}],
+          instrumentsForm: [],
+          brandsJJForm: [],
+          brandsYHForm: [],
           brandsInput: "",
           instrumentYQInput: "",
           instrumentPPInput: "",
-          brandsSelect: ""   
+          brandsSelect: "",
+          showYH: true,
+          showJJ: true,
+          showInstruments: true
         }  
       },
     methods:{
   addInstruments(){
     if(this.instrumentYQInput == "" || this.instrumentPPInput == ""){
-      alert("请完整输入功效和品牌后添加！");
+      this.$Message.error("请完整输入功效和品牌后添加！");
     }else{
-      if(this.instrumentsForm[0].effect == ""){
-        this.instrumentsForm = [];
-        this.instrumentsForm.push({ 
-            effect:this.instrumentYQInput, name:this.instrumentPPInput, storeId:sessionStorage['storeId']
-        })  
-        this.instrumentYQInput = "";
-        this.instrumentPPInput = "";
-      } else{
         this.instrumentsForm.push({ 
             effect:this.instrumentYQInput, name:this.instrumentPPInput, storeId:sessionStorage['storeId']
         })   
+        if(this.instrumentsForm.length == 0){
+          this.showInstruments = true;
+        }else{
+          this.showInstruments = false;
+        }  
         this.instrumentYQInput = "";
-        this.instrumentPPInput = "";
-      }   
+        this.instrumentPPInput = "";  
     }
   },    
   deleteInstrumentsItem(index) {
-    if(this.instrumentsForm.length == 1){
-       this.instrumentsForm = [{effect:"", name:"", storeId:sessionStorage['storeId']}];
-    }else{
-      this.instrumentsForm.splice(index,1);
-    }      
+      this.instrumentsForm.splice(index,1); 
+      if(this.instrumentsForm.length == 0){
+        this.showInstruments = true;
+      }else{
+        this.showInstruments = false;
+      }  
+      this.instrumentYQInput = "";
+      this.instrumentPPInput = "";    
   },
   addBrands(){
     if(this.brandsSelect == 1){
       if(this.brandsInput == ""){
-        alert("请输入院护品牌后点击添加！")
+        this.$Message.error("请输入院护品牌后点击添加！")
       }else{
         this.addBrandsYH();
       }
     }else if(this.brandsSelect == 2){
       if(this.brandsInput == ""){
-        alert("请输入家居品牌后点击添加！")
+        this.$Message.error("请输入家居品牌后点击添加！")
       }else{
         this.addBrandsJJ();
       }
     }else{
-      alert("请选择直营品牌院护或家居！");
+      this.$Message.error("请选择直营品牌院护或家居！");
     }
   },
   addBrandsYH(){   
-    if(this.brandsYHForm[0].name == ""){
-      this.brandsYHForm = [];
       this.brandsYHForm.push({ 
            type:1, name:this.brandsInput, storeId:sessionStorage['storeId']
-      })  
+      });
+      if(this.brandsYHForm.length == 0){
+        this.showYH = true;
+      }else{
+        this.showYH = false;
+      }  
       this.brandsSelect = "";
-      this.brandsInput = "";
-    } else{
-      this.brandsYHForm.push({ 
-           type:1, name:this.brandsInput, storeId:sessionStorage['storeId']
-      })
-      this.brandsSelect = "";   
-      this.brandsInput = "";
-    }   
+      this.brandsInput = ""; 
   },    
   deleteBrandsYHItem(index) {      
-    if(this.brandsYHForm.length == 1){
-       this.brandsYHForm = [{type:1, name:"", storeId:sessionStorage['storeId']}];
-    }else{
-      this.brandsYHForm.splice(index, 1);
-    }   
+      this.brandsYHForm.splice(index, 1); 
+      if(this.brandsYHForm.length == 0){
+        this.showYH = true;
+      }else{
+        this.showYH = false;
+      } 
       this.brandsSelect = "";
       this.brandsInput = "";
   },
   addBrandsJJ(){   
-    if(this.brandsJJForm[0].name == ""){
-      this.brandsJJForm = [];
       this.brandsJJForm.push({ 
           type:2, name:this.brandsInput, storeId:sessionStorage['storeId']
-      })  
-    } else{
-      this.brandsJJForm.push({ 
-           type:2, name:this.brandsInput, storeId:sessionStorage['storeId']
-      })   
+      });
+      if(this.brandsJJForm.length == 0){
+        this.showJJ = true;
+      }else{
+        this.showJJ = false;
+      }     
       this.brandsSelect = "";
       this.brandsInput = "";
-    }   
   },  
   deleteBrandsJJItem(index) {      
-    if(this.brandsJJForm.length == 1){
-       this.brandsJJForm = [{type:2, name:"", storeId:sessionStorage['storeId']}];
-    }else{
-      this.brandsJJForm.splice(index, 1);
-    }   
+      this.brandsJJForm.splice(index, 1); 
+      if(this.brandsJJForm.length == 0){
+        this.showJJ = true;
+      }else{
+        this.showJJ = false;
+      } 
+      this.brandsSelect = "";
+      this.brandsInput = "";
   },
   nextPage(){
 	  // this.$router.push({name: 'register_5'});

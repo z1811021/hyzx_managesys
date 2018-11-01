@@ -127,7 +127,7 @@
         showNumber: false,
         stock:[],
         job: {
-              storeId: sessionStorage.getItem('storeId'),
+              storeId: this.$route.params.id,
               // 职位名称, 应限定在 32 个字符长度
               jobTitle: '',
               // 职责内容， 应限定在 64 个字符长度
@@ -239,7 +239,7 @@
           headers: {
             "authToken": sessionStorage.getItem('authToken')
           },
-          url: findPostList()+"/"+sessionStorage.getItem('storeId'),
+          url: findPostList()+"/"+this.$route.params.id,
         }).then((res) => {
           this.data = res.data.memMangeInfo;
         }).catch((error) => {
@@ -277,7 +277,7 @@
             validateMessage = '';
           }else{
               var params = {
-                  storeId: sessionStorage.getItem('storeId'),
+                  storeId: this.$route.params.id,
                   memMange: this.job
               }
               this.$ajax({
@@ -308,7 +308,7 @@
       },
       clear(){
           this.job = {
-            storeId: sessionStorage.getItem('storeId'),
+            storeId: this.$route.params.id,
             // 职位名称, 应限定在 32 个字符长度
             jobTitle: '',
             // 职责内容， 应限定在 64 个字符长度
@@ -391,7 +391,7 @@
           headers: {
             "authToken": sessionStorage.getItem('authToken')
           },
-          url: deletePost()+"/"+sessionStorage.getItem('storeId')+"?jobTitle="+data.jobTitle,
+          url: deletePost()+"/"+this.$route.params.id+"?jobTitle="+data.jobTitle,
         }).then((res) => {
           this.$Message.success('操作成功');
           this.getList();

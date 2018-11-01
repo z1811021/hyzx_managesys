@@ -220,7 +220,7 @@
         data: {
           clientManage: {
               // 门店 id, 本地测试可以使用 24, 服务器可使用 22
-              storeId: sessionStorage.getItem('storeId'),
+              storeId: this.$route.params.id,
               // 排他性点单, 1 为选中, 0 为不选中
               exclusiveness: 0,
               // 某技师连续服务, 1 为选中, 0 为不选中
@@ -248,7 +248,7 @@
           },
           clientRule: {
               // 门店 id, 本地测试可以使用 24, 服务器可使用 22
-              storeId: sessionStorage.getItem('storeId'), 
+              storeId: this.$route.params.id, 
               ruleOne: '',
               ruleTwo: '',
               ruleThree: '',
@@ -256,7 +256,7 @@
           },
           clientClassify: { 
               // 门店 id, 本地测试可以使用 24, 服务器可使用 22
-              storeId: sessionStorage.getItem('storeId'), 
+              storeId: this.$route.params.id, 
               // 激活顾客分类, 1 为选中, 0 为不选中
               active: 0,
               // 客户分级, 1 为选中, 0 为不选中
@@ -368,7 +368,7 @@
           headers: {
             "authToken": sessionStorage.getItem('authToken')
           },
-          url: findStoreById()+"/"+sessionStorage.getItem('storeId'),
+          url: findStoreById()+"/"+this.$route.params.id,
         }).then((res) => {
           if(res.data.clientManageInfo.clientRule != null && res.data.clientManageInfo.clientManage != null && res.data.clientManageInfo.clientClassify != null){
             this.data.clientManage = res.data.clientManageInfo.clientManage;
@@ -476,7 +476,7 @@
         this.data.clientClassify.clientFrozen = this.transfer(this.data.clientClassify.clientFrozen);
         var params = {
               // 门店 id, 本地测试可以使用 24, 服务器可使用 22
-              storeId: sessionStorage.getItem('storeId'),
+              storeId: this.$route.params.id,
               clientManage: this.data.clientManage,
               clientRule: this.data.clientRule,
               clientClassify: this.data.clientClassify
