@@ -71,7 +71,6 @@
     }).then((res) => {
       console.log(res)
       this.$Message.success({content:'提交成功'});
-      sessionStorage.register_5_info = JSON.stringify(params)
       this.$router.push({name: 'register_6', params: params});
       this.$emit('changeActivename','register_6')
     }).catch((error) =>{
@@ -82,10 +81,13 @@
 	  this.$router.push({name: 'register_4', params: params});
 	},
   modifyKey() {
-    const month = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
+    const currentMonth =  new Date().getMonth()+1;
+    const currentYear = new Date().getFullYear();
+    const month = ['month_1', 'month_2', 'month_3', 'month_4', 'month_5', 'month_6', 'month_7', 'month_8', 'month_9', 'month_10', 'month_11', 'month_12']
     for (let i =0; i<12; i++) {
       this.currentSalary[month[i]] = Object.values(this.currentSalary)[i];
     }
+     this.currentSalary['curMonth'] = `${currentYear}-${currentMonth}`;
   }
     },
     created() {

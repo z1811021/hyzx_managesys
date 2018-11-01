@@ -206,6 +206,7 @@ export default{
       storeId: sessionStorage['storeId'],
       waterInfos: waterInfos
     }
+    console.log(waterInfos)
     this.$ajax({
       method: 'POST',
       url: extendWaterInfo(),
@@ -217,7 +218,6 @@ export default{
     }).then((res) => {
       console.log(res)
       this.$Message.success('Success!');
-      sessionStorage.register_3_info = JSON.stringify(params);
       this.$router.push({name: 'register_4', params: params});
       this.$emit('changeActivename','register_4')
     }).catch((error) =>{
@@ -229,13 +229,19 @@ export default{
       this.$emit('changeActivename','register_2')
     },
     modifyKey() {
-      const month = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
+      const currentMonth =  new Date().getMonth()+1;
+      const currentYear = new Date().getFullYear();
+      const month = ['month_1', 'month_2', 'month_3', 'month_4', 'month_5', 'month_6', 'month_7', 'month_8', 'month_9', 'month_10', 'month_11', 'month_12']
       for (let i =0; i<12; i++) {
         this.currentAccountCash[month[i]] = Object.values(this.currentAccountCash)[i];
         this.currentOperation[month[i]] = Object.values(this.currentOperation)[i];
         this.currentFlow[month[i]] = Object.values(this.currentFlow)[i];
         this.currentProductPerform[month[i]] = Object.values(this.currentProductPerform)[i];
       }
+      this.currentAccountCash['curMonth'] = `${currentYear}-${currentMonth}`;
+      this.currentOperation['curMonth'] = `${currentYear}-${currentMonth}`;
+      this.currentFlow['curMonth'] = `${currentYear}-${currentMonth}`;
+      this.currentProductPerform['curMonth'] = `${currentYear}-${currentMonth}`;
     }
   },
   created() {

@@ -67,6 +67,11 @@ export const customer = function () {
   const API = host + URL;
   return API;
 };
+export const infos = function () {
+  const URL = '/store/infos/';
+  const API = host + URL;
+  return API;
+};
 export const userRegister = function () {
   const URL = '/store/register';
   const API = host + URL;

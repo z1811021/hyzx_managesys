@@ -35,7 +35,6 @@
         }).then((res) => {
           console.log(res)
           this.$Message.success({content:'提交成功'});
-          sessionStorage.register_8_info = JSON.stringify(params)
           this.$router.push({name: 'registerInfo', params: params});
         }).catch((error) =>{
           this.$Message.error({content: '提交失败'});

@@ -1,10 +1,14 @@
 <template>
     <div id="pdfDom">
+        <div id="register_button">
+            <Button type="info" @click="print()">打印PDF</Button>
+            <Button type="success" @click="back()">回到首页</Button>
+        </div>
         <header><span></span>注册信息汇总表</header>
         <div id="register_1_info">
             <ul>
                 <li class="licenter"><div class="item2">门店品牌：<span>{{storeVal.storeName}}</span></div><div class="item2">类型：<span>{{storeVal.franchType}}</span></div></li>
-                <li class="licenter"><div class="item2">联系人：<span>{{validatePhoneVal.staffName}}</span></div><div class="item2">联系电话：<span>{{validatePhoneVal.phoneNumber}}</span></div></li>
+                <li class="licenter"><div class="item2">联系人：<span>{{validatePhoneVal.name}}</span></div><div class="item2">联系电话：<span>{{validatePhoneVal.account}}</span></div></li>
                 <li class="licenter"><div class="item2">门店省份：<span></span></div><div class="item2">门店城市：<span></span></div></li>
                 <li class="licenter"><div class="item2">门店地址：<span>{{storeVal.address}}</span></div><div class="item2">门店电话：<span>{{storeVal.telephone}}</span></div></li>
                 <li class="licenter"><div class="item2">门店类型: <span>{{storeVal.storeType}}</span></div><div class="item2">经营状态：<span>{{storeVal.operationMode}}</span></div></li>  
@@ -19,22 +23,22 @@
                     <h2>单人间数量</h2>
                     <ul>
                         <li><div class="item4">仅淋浴：<span>{{register_2_info.roomTypes[0].onlyShower}}</span></div><div class="item4">仅坐便：<span>{{register_2_info.roomTypes[0].onlyToilet}}</span></div><div class="item4">仅泡浴：<span>{{register_2_info.roomTypes[0].onlyBubble}}</span></div><div class="item4">淋浴+坐便：<span>{{register_2_info.roomTypes[0].showerAndToilet}}</span></div></li>
-                        <li><div class="item4">泡浴+坐便：<span>{{register_2_info.roomTypes[0].bubbleAndToilet}}</span></div><div class="item4">淋浴+泡浴：<span>{{register_2_info.roomTypes[0].showerAndBubble}}</span></div><div class="item4">淋浴+坐便+泡浴：<span></span></div><div class="item4"><span>{{register_2_info.roomTypes[0].showerAndToiletAndBubble}}</span></div></li>
+                        <li><div class="item4">泡浴+坐便：<span>{{register_2_info.roomTypes[0].bubbleAndToilet}}</span></div><div class="item4">淋浴+泡浴：<span>{{register_2_info.roomTypes[0].showerAndBubble}}</span></div><div class="item4">淋浴+坐便+泡浴：<span>{{register_2_info.roomTypes[0].showerAndToiletAndBubble}}</span></div><div class="item4"><span></span></div></li>
                     </ul>
                     <h2>双人间数量</h2>
                     <ul>
                         <li><div class="item4">仅淋浴：<span>{{register_2_info.roomTypes[1].onlyShower}}</span></div><div class="item4">仅坐便：<span>{{register_2_info.roomTypes[1].onlyToilet}}</span></div><div class="item4">仅泡浴：<span>{{register_2_info.roomTypes[1].onlyBubble}}</span></div><div class="item4">淋浴+坐便：<span>{{register_2_info.roomTypes[1].showerAndToilet}}</span></div></li>
-                        <li><div class="item4">泡浴+坐便：<span>{{register_2_info.roomTypes[1].bubbleAndToilet}}</span></div><div class="item4">淋浴+泡浴：<span>{{register_2_info.roomTypes[1].showerAndBubble}}</span></div><div class="item4">淋浴+坐便+泡浴：<span></span></div><div class="item4"><span>{{register_2_info.roomTypes[1].showerAndToiletAndBubble}}</span></div></li>
+                        <li><div class="item4">泡浴+坐便：<span>{{register_2_info.roomTypes[1].bubbleAndToilet}}</span></div><div class="item4">淋浴+泡浴：<span>{{register_2_info.roomTypes[1].showerAndBubble}}</span></div><div class="item4">淋浴+坐便+泡浴：<span>{{register_2_info.roomTypes[1].showerAndToiletAndBubble}}</span></div><div class="item4"><span></span></div></li>
                     </ul>
                     <h2>三人间数量</h2>
                     <ul>
                         <li><div class="item4">仅淋浴：<span>{{register_2_info.roomTypes[2].onlyShower}}</span></div><div class="item4">仅坐便：<span>{{register_2_info.roomTypes[2].onlyToilet}}</span></div><div class="item4">仅泡浴：<span>{{register_2_info.roomTypes[2].onlyBubble}}</span></div><div class="item4">淋浴+坐便：<span>{{register_2_info.roomTypes[2].showerAndToilet}}</span></div></li>
-                        <li><div class="item4">泡浴+坐便：<span>{{register_2_info.roomTypes[2].bubbleAndToilet}}</span></div><div class="item4">淋浴+泡浴：<span>{{register_2_info.roomTypes[2].showerAndBubble}}</span></div><div class="item4">淋浴+坐便+泡浴：<span></span></div><div class="item4"><span>{{register_2_info.roomTypes[2].showerAndToiletAndBubble}}</span></div></li>
+                        <li><div class="item4">泡浴+坐便：<span>{{register_2_info.roomTypes[2].bubbleAndToilet}}</span></div><div class="item4">淋浴+泡浴：<span>{{register_2_info.roomTypes[2].showerAndBubble}}</span></div><div class="item4">淋浴+坐便+泡浴：<span>{{register_2_info.roomTypes[2].showerAndToiletAndBubble}}</span></div><div class="item4"><span></span></div></li>
                     </ul>
                     <h2>三人间以上数量</h2>
                     <ul>
                         <li><div class="item4">仅淋浴：<span>{{register_2_info.roomTypes[3].onlyShower}}</span></div><div class="item4">仅坐便：<span>{{register_2_info.roomTypes[3].onlyToilet}}</span></div><div class="item4">仅泡浴：<span>{{register_2_info.roomTypes[3].onlyBubble}}</span></div><div class="item4">淋浴+坐便：<span>{{register_2_info.roomTypes[3].showerAndToilet}}</span></div></li>
-                        <li><div class="item4">泡浴+坐便：<span>{{register_2_info.roomTypes[3].bubbleAndToilet}}</span></div><div class="item4">淋浴+泡浴：<span>{{register_2_info.roomTypes[3].showerAndBubble}}</span></div><div class="item4">淋浴+坐便+泡浴：<span></span></div><div class="item4"><span>{{register_2_info.roomTypes[3].showerAndToiletAndBubble}}</span></div></li>
+                        <li><div class="item4">泡浴+坐便：<span>{{register_2_info.roomTypes[3].bubbleAndToilet}}</span></div><div class="item4">淋浴+泡浴：<span>{{register_2_info.roomTypes[3].showerAndBubble}}</span></div><div class="item4">淋浴+坐便+泡浴：<span>{{register_2_info.roomTypes[3].showerAndToiletAndBubble}}</span></div><div class="item4"><span></span></div></li>
                     </ul>
                 </div>
             </ul>
@@ -49,40 +53,68 @@
         <div id="register_3_info">
             <h1>连续十二个月店内现金流水</h1>
             <ul>
-                <li><div class="item4">年月流水：<span></span></div><div class="item4">年月流水：<span></span></div><div class="item4">年月流水：<span></span></div><div class="item4">年月流水：<span></span></div></li>
-                <li><div class="item4">年月流水：<span></span></div><div class="item4">年月流水：<span></span></div><div class="item4">年月流水：<span></span></div><div class="item4">年月流水：<span></span></div></li>
-                <li><div class="item4">年月流水：<span></span></div><div class="item4">年月流水：<span></span></div><div class="item4">年月流水：<span></span></div><div class="item4">年月流水：<span></span></div></li>
+                <Row>
+                    <Col v-for="(value, key) in this.register_3_info[0]" span="6" :key="key">
+                        <li>
+                            <div>{{key.split('_')[1].slice(2,4)+'年'+key.split('_')[2]+'月流水:'}}<span>     {{ value }}</span></div>
+                        </li>
+                    </Col>
+                </Row>
             </ul>
             <h1>连续十二个月店内店内实操</h1>
             <ul>
-                <li><div class="item4">年月实操：<span></span></div><div class="item4">年月实操：<span></span></div><div class="item4">年月实操：<span></span></div><div class="item4">年月实操：<span></span></div></li>
-                <li><div class="item4">年月实操：<span></span></div><div class="item4">年月实操：<span></span></div><div class="item4">年月实操：<span></span></div><div class="item4">年月实操：<span></span></div></li>
-                <li><div class="item4">年月实操：<span></span></div><div class="item4">年月实操：<span></span></div><div class="item4">年月实操：<span></span></div><div class="item4">年月实操：<span></span></div></li>
+                <Row>
+                    <Col v-for="(value, key) in this.register_3_info[1]" span="6" :key="key">
+                        <li>
+                            <div>{{key.split('_')[1].slice(2,4)+'年'+key.split('_')[2]+'月实操:'}}<span>     {{ value }}</span></div>
+                        </li>
+                    </Col>
+                </Row>
             </ul>
             <h1>连续十二个月店内店内客流</h1>
             <ul>
-                <li><div class="item4">年月客流：<span></span></div><div class="item4">年月客流：<span></span></div><div class="item4">年月客流：<span></span></div><div class="item4">年月客流：<span></span></div></li>
-                <li><div class="item4">年月客流：<span></span></div><div class="item4">年月客流：<span></span></div><div class="item4">年月客流：<span></span></div><div class="item4">年月客流：<span></span></div></li>
-                <li><div class="item4">年月客流：<span></span></div><div class="item4">年月客流：<span></span></div><div class="item4">年月客流：<span></span></div><div class="item4">年月客流：<span></span></div></li>
+               <Row>
+                    <Col v-for="(value, key) in this.register_3_info[2]" span="6" :key="key">
+                        <li>
+                            <div>{{key.split('_')[1].slice(2,4)+'年'+key.split('_')[2]+'月客流:'}}<span>     {{ value }}</span></div>
+                        </li>
+                    </Col>
+                </Row>
+            </ul>
+            <h1>连续十二个月店内产品业绩</h1>
+            <ul>
+               <Row>
+                    <Col v-for="(value, key) in this.register_3_info[3]" span="6" :key="key">
+                        <li>
+                            <div>{{key.split('_')[1].slice(2,4)+'年'+key.split('_')[2]+'月业绩:'}}<span>     {{ value }}</span></div>
+                        </li>
+                    </Col>
+                </Row>
             </ul>
         </div>
         <div id="register_4_info">
-            <p><span>直营产品品牌</span><span>仪器品牌</span></p>
-            <Table :columns="chanpinColumns" width="400" class="tableClass" :data='jiajuyuanhu'>
+            <div id="register_4_info_header"><h1>直营产品品牌</h1><h1>仪器品牌</h1></div>
+            <div id="register_4_info_body">
+                <Table :columns="chanpinColumns" width="400" class="tableClass" :data='jiajuyuanhu'>
 
-            </Table>
-            <Table :columns="yiqiColumns" width="400" class="tableClass" :data='register_4_info.instruments'>
+                </Table>
+                <Table :columns="yiqiColumns" width="400" class="tableClass" :data='register_4_info.instruments'>
 
-            </Table>
+                </Table>
+            </div>
         </div>
         <div id="register_5_info">
             <h1>薪资制度</h1>
             <p>test containt</p>
             <h1>员工连续十二个月薪资（元）</h1>  
             <ul>
-                <li><div class="item4">年月薪资：<span></span></div><div class="item4">年月薪资：<span></span></div><div class="item4">年月薪资：<span></span></div><div class="item4">年月薪资：<span></span></div></li>
-                <li><div class="item4">年月薪资：<span></span></div><div class="item4">年月薪资：<span></span></div><div class="item4">年月薪资：<span></span></div><div class="item4">年月薪资：<span></span></div></li>
-                <li><div class="item4">年月薪资：<span></span></div><div class="item4">年月薪资：<span></span></div><div class="item4">年月薪资：<span></span></div><div class="item4">年月客流：<span></span></div></li>
+                <Row>
+                    <Col v-for="(value, key) in this.register_5_info[0]" span="6" :key="key">
+                        <li>
+                            <div>{{key.split('_')[1].slice(2,4)+'年'+key.split('_')[2]+'月薪资:'}}<span>     {{ value }}</span></div>
+                        </li>
+                    </Col>
+                </Row>
             </ul>
         </div>
         <div id="register_6_info">
@@ -107,6 +139,7 @@
     </div>
 </template>
 <script>
+import { infos } from '../../interface';
 export default {
     data(){
         return {
@@ -162,9 +195,9 @@ export default {
             storeVal:{},
             validatePhoneVal:{},
             register_2_info:{},
-            register_3_info:{},
+            register_3_info:[],
             register_4_info:{},
-            register_5_info:{},
+            register_5_info:[],
             register_6_info:{},
             register_7_info:{},
             register_8_info:{},
@@ -175,33 +208,45 @@ export default {
         }
     },
     created () {
-        this.storeVal = JSON.parse(sessionStorage.storeVal)
-        this.validatePhoneVal = JSON.parse(sessionStorage.validatePhoneVal)
-        this.register_2_info = JSON.parse(sessionStorage.register_2_info)
-        this.register_3_info = JSON.parse(sessionStorage.register_3_info)
-        this.register_4_info = JSON.parse(sessionStorage.register_4_info)
-        this.register_5_info = JSON.parse(sessionStorage.register_5_info)
-        this.register_6_info = JSON.parse(sessionStorage.register_6_info)
-        this.register_7_info = JSON.parse(sessionStorage.register_7_info)
-        this.register_8_info = JSON.parse(sessionStorage.register_8_info)
-        //console.log(this.storeVal)
-        this.storeVal.storeType = this.storeTypeTransfer(this.storeVal.storeType)
-        this.storeVal.operationMode = this.storeTypeTransfer(this.storeVal.operationMode)
-        this.storeVal.franchType = this.franchTypeTransfer(this.storeVal.franchType)
-        
-        this.getYuanhuInfo()
-        this.register_2_info = this.emptyTransfer(this.register_2_info)
-        this.register_3_info = this.emptyTransfer(this.register_3_info)
-        this.register_4_info = this.emptyTransfer(this.register_4_info)
-        this.register_5_info = this.emptyTransfer(this.register_5_info)
-        this.register_6_info = this.emptyTransfer(this.register_6_info)
-        this.register_7_info = this.emptyTransfer(this.register_7_info)
-        this.register_8_info = this.emptyTransfer(this.register_8_info)
-        console.log(this.register_2_info.roomTypes[0].onlyShower)
+
     },
     mounted () {
-        //导出pdf
-        this.getPdf()
+        this.$ajax({
+            method: 'GET',
+            url: infos()+34,
+        }).then((res)=>{
+            this.storeVal = res.data.register_1.store
+            this.validatePhoneVal = res.data.register_1.customer
+            this.register_2_info = res.data.register_2
+            this.change_register_3_info(res.data.register_3);
+            this.register_4_info = res.data.register_4
+            this.change_register_5_info(res.data.register_5);
+            this.register_6_info = res.data.register_6
+            this.register_7_info = res.data.register_7
+            this.register_8_info = res.data.register_8
+
+            //this.register_2_info = JSON.parse(sessionStorage.register_2_info)
+            //this.register_3_info = JSON.parse(sessionStorage.register_3_info)
+            //this.register_4_info = JSON.parse(sessionStorage.register_4_info)
+            // this.register_5_info = JSON.parse(sessionStorage.register_5_info)
+            // this.register_6_info = JSON.parse(sessionStorage.register_6_info)
+            // this.register_7_info = JSON.parse(sessionStorage.register_7_info)
+            // this.register_8_info = JSON.parse(sessionStorage.register_8_info)
+            //console.log(this.storeVal)
+            this.storeVal.storeType = this.storeTypeTransfer(this.storeVal.storeType)
+            this.storeVal.operationMode = this.storeTypeTransfer(this.storeVal.operationMode)
+            this.storeVal.franchType = this.franchTypeTransfer(this.storeVal.franchType)
+            
+            this.getYuanhuInfo()
+            this.register_2_info = this.emptyTransfer(this.register_2_info)
+            this.register_3_info = this.emptyTransfer(this.register_3_info)
+            this.register_4_info = this.emptyTransfer(this.register_4_info)
+            this.register_5_info = this.emptyTransfer(this.register_5_info)
+            this.register_6_info = this.emptyTransfer(this.register_6_info)
+            this.register_7_info = this.emptyTransfer(this.register_7_info)
+            this.register_8_info = this.emptyTransfer(this.register_8_info)
+        })
+
     },
     methods: {
       getYuanhuInfo:function(){
@@ -253,19 +298,64 @@ export default {
     emptyTransfer : (obj)=>{
          
       for(var key in obj){
-        console.log(key,obj[key])
         if(obj[key]===""){
             
           obj[key]="无"
         }
         if(typeof(obj[key])=="object"){
-            console.log(this)
            this.a.methods.emptyTransfer(obj[key])
         }
         
     }
     
     return obj
+    },
+    change_register_3_info(obj){
+        const data = JSON.parse(JSON.stringify(obj))
+        for (let i=0; i<data.waterInfos.length;i++){
+            let objData = this.obtainMonth(data.waterInfos[i],data.waterInfos[i]['type'])
+            this.register_3_info.push(objData)
+        }
+    },
+    change_register_5_info(obj){
+        const data = JSON.parse(JSON.stringify(obj))
+        let objData = this.obtainMonth(data.salary,null)
+        this.register_5_info.push(objData)
+    },
+    obtainMonth(data,type){ 
+        let obj={}
+        let objMonth = parseInt(data.curMonth.split('-')[1])-1;
+        let currentMonth =  new Date().getMonth();
+        let currentYear =  new Date().getFullYear();
+        const objYear = parseInt(data.curMonth.split('-')[0]);
+        let deduct = objMonth - currentMonth <0 ? objMonth - currentMonth+12  : objMonth - currentMonth;
+            deduct = currentYear - objYear > 2 ? 0 : deduct;
+        let num=1; 
+        console.log(deduct)   
+        for (let count = 1+deduct; count<=12+deduct; count++){
+        let obj1;
+        let monthData = count >= 1 && currentYear - objYear <= 2 ? data[`month_${num}`] : null; 
+            monthData = monthData === '' ? null : monthData
+        console.log(monthData)
+        if (currentMonth <= 12 && currentMonth>0) {
+          obj1 = JSON.parse(`{"${type}_${currentYear}_${currentMonth}": ${monthData}}`);
+        }else{
+          let currentMonthNew = currentMonth+12;
+          let currentYearNew = currentYear-1
+          obj1 = JSON.parse(`{"${type}_${currentYearNew}_${currentMonthNew}": ${monthData}}`);
+        }
+        currentMonth--; 
+        num++;
+        obj = Object.assign(obj, obj1)
+      }
+        return obj;
+    },
+    print(){
+        //导出pdf
+        this.getPdf()
+    },
+    back(){
+        this.$router.push({name: 'login'});
     }
     }
 }
@@ -301,6 +391,10 @@ h1,h2{
     width: 1000px;
     margin: 0 auto
 }
+#register_button{
+    width: 1000px;
+    margin: 10px auto;
+}
 .tableClass{
     display: inline-block
 }
@@ -320,6 +414,9 @@ ul li{
 #pdfDom{
     font-size: 15px
 }
-
+#register_4_info_header,#register_4_info_body{
+    display:flex;
+    justify-content: space-between;
+}
 </style>
 
