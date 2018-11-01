@@ -203,7 +203,6 @@
             this.validatePhoneVal.time=60;
             this.validatePhoneVal.disabled=true;
             this.timer();
-            console.log(this.validatePhoneVal.phoneNumber)
             if(valid){
               this.$ajax({
                 method: 'post',
@@ -303,8 +302,6 @@
                     cancelText: '返回',
                     onOk: () => {
                         this.$Message.info('进行下一步填写');
-                        sessionStorage.storeVal = JSON.stringify(this.storeVal);
-                        sessionStorage.validatePhoneVal = JSON.stringify(this.validatePhoneVal)
                         this.$router.push({name: 'register_2', params:{loginInfo: this.storeVal}});
                         this.$emit('changeActivename','register_2')
                     },
