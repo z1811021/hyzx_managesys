@@ -26,6 +26,12 @@
               <td><Button class="hy_btn" @click="deleteCard(index)">移除</Button></td>
             </tr> 
           </tbody>
+          <tr v-show="showCard">
+              <td ></td>
+              <td ></td>
+              <td ></td>
+              <td ></td>
+            </tr> 
         </table>
     </div>
     <br/>
@@ -74,6 +80,12 @@
               <td><Button class="hy_btn" @click="deleteCustomerCard(index)">移除</Button></td>
             </tr> 
           </tbody>
+            <tr v-show="showCustomerCard">
+              <td ></td>
+              <td ></td>
+              <td ></td>
+              <td ></td>
+            </tr> 
         </table>
     </div>
 
@@ -92,9 +104,8 @@
     name: 'register_6',
       data() {    
         return {      
-          instrumentsForm: [{effect:"", name:"", storeId:sessionStorage['storeId']}],
-          cardsForm : [{name:"", price:"", count:"", storeId:sessionStorage['storeId']}],
-          customerCardsForm: [{type:"", number:"", deNumber:"", storeId:sessionStorage['storeId']}],
+          cardsForm : [],
+          customerCardsForm: [],
           instrumentYQInput: "",
           instrumentPPInput: "",
           cardNameInput : "",
@@ -105,265 +116,175 @@
           customerCardSel: "",
           guestCard: "",
           extensionCard: "",
+          showCard: true,
+          showCustomerCard: true
         }  
       },
     methods:{
-  addInstruments(){
-    if(this.instrumentYQInput == "" || this.instrumentPPInput == ""){
-      alert("请完整输入项目和价格后添加！");
-    }else{
-      if(this.instrumentsForm[0].effect == ""){
-        this.instrumentsForm = [];
-        this.instrumentsForm.push({ 
-            effect:this.instrumentYQInput, name:this.instrumentPPInput, storeId:sessionStorage['storeId']
-        })  
-        this.instrumentYQInput = "";
-        this.instrumentPPInput = "";
-      } else{
-        this.instrumentsForm.push({ 
-            effect:this.instrumentYQInput, name:this.instrumentPPInput, storeId:sessionStorage['storeId']
-        })   
-        this.instrumentYQInput = "";
-        this.instrumentPPInput = "";
-      }   
-    }
-  },    
-  deleteInstrumentsItem(index) {
-    if(this.instrumentsForm.length == 1){
-       this.instrumentsForm = [{effect:"", name:"", storeId:sessionStorage['storeId']}];
-    }else{
-      this.instrumentsForm.splice(index,1);
-    }      
-  },
   addCard(){
+      for(var i=0; i<this.cardsForm.length; i++){
+        if(this.cardsForm[i].name == this.cardNameInput){
+           this.$Message.error("请勿输入重复的项目名称！");
+           this.cardNameInput = "";
+           this.cardPriceInput = "";
+           this.cardStyleInput = ""; 
+           return;
+        }
+      }
     if(this.cardNameInput == "" || this.cardPriceInput == "" || this.cardStyleInput == ""){
-      alert("请完整输入项目和价格后添加！");
+      this.$Message.error("请完整输入项目和价格后添加！");
     }else{
-      if(this.cardsForm[0].name == ""){
-        this.cardsForm = [];
         this.cardsForm.push({ 
-            name:this.cardNameInput, price:this.cardPriceInput, count:this.cardStyleInput, storeId:sessionStorage['storeId']
+        name:this.cardNameInput, price:this.cardPriceInput, count:this.cardStyleInput, storeId:sessionStorage['storeId']
         })  
         this.cardNameInput = "";
         this.cardPriceInput = "";
-        this.cardStyleInput = "";
-      } else{
-        this.cardsForm.push({ 
-            name:this.cardNameInput, price:this.cardPriceInput, count:this.cardStyleInput, storeId:sessionStorage['storeId']
-        })   
-        this.cardNameInput = "";
-        this.cardPriceInput = "";
-        this.cardStyleInput = "";
-      }   
+        this.cardStyleInput = ""; 
+        this.showCard = false;
     }
   },    
   deleteCard(index) {
-    if(this.cardsForm.length == 1){
-       this.cardsForm = [{name:"", price:"", count:""}];
+    this.cardsForm.splice(index,1); 
+    if(this.cardsForm.length == 0){
+      this.showCard = true;
     }else{
-      this.cardsForm.splice(index,1);
-    }      
+      this.showCard = false;
+    }
+    this.cardNameInput = "";
+    this.cardPriceInput = "";
+    this.cardStyleInput = ""; 
   },
   addCustomerCard(){
+      for(var i=0; i<this.customerCardsForm.length; i++){
+        if(this.customerCardsForm[i].selection == this.customerCardSel){
+           this.$Message.error("请勿输入重复的拓客方式！");
+           this.customerCardSel = "";
+           this.customerCardNum = "";
+           this.customerNum = "";
+           return;
+        } 
+      }
     if(this.customerCardSel == 1){
-      if(this.customerCardNum == "" || this.customerCardNum == ""){
-        alert("请输入拓客人数成交人数后点击添加！")
+      if(this.customerCardNum == "" || this.customerNum == ""){
+        this.$Message.error("请输入拓客人数成交人数后点击添加！")
       }else{
-        if(this.customerCardsForm[0].type == ""){
-          this.customerCardsForm = [];
           this.customerCardsForm.push({ 
-              type:"团购", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId']
-          })  
+            type:"团购", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId'], selection:this.customerCardSel})  
           this.customerCardSel = "";
           this.customerCardNum = "";
           this.customerNum = "";
-        } else{
-          this.customerCardsForm.push({ 
-              type:"团购", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId']
-          })   
-          this.customerCardSel = "";
-          this.customerCardNum = "";
-          this.customerNum = "";
-        }
+          this.showCustomerCard = false;
       }
     }else if(this.customerCardSel == 2){
-      if(this.customerCardNum == "" || this.customerCardNum == ""){
-        alert("请输入拓客人数成交人数后点击添加！")
+      if(this.customerCardNum == "" || this.customerNum == ""){
+        this.$Message.error("请输入拓客人数成交人数后点击添加！")
       }else{
-        if(this.customerCardsForm[0].type == ""){
-          this.customerCardsForm = [];
           this.customerCardsForm.push({ 
-              type:"微信", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId']
+              type:"微信", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId'],selection:this.customerCardSel
           })  
           this.customerCardSel = "";
           this.customerCardNum = "";
           this.customerNum = "";
-        } else{
-          this.customerCardsForm.push({ 
-              type:"微信", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId']
-          })   
-          this.customerCardSel = "";
-          this.customerCardNum = "";
-          this.customerNum = "";
-        }
+          this.showCustomerCard = false;
       }
     }else if(this.customerCardSel == 3){
-      if(this.customerCardNum == "" || this.customerCardNum == ""){
-        alert("请输入拓客人数成交人数后点击添加！")
+      if(this.customerCardNum == "" || this.customerNum == ""){
+        this.$Message.error("请输入拓客人数成交人数后点击添加！")
       }else{
-        if(this.customerCardsForm[0].type == ""){
-          this.customerCardsForm = [];
           this.customerCardsForm.push({ 
-              type:"微博", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId']
+              type:"微博", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId'],selection:this.customerCardSel
           })  
           this.customerCardSel = "";
           this.customerCardNum = "";
           this.customerNum = "";
-        } else{
-          this.customerCardsForm.push({ 
-              type:"微博", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId']
-          })   
-          this.customerCardSel = "";
-          this.customerCardNum = "";
-          this.customerNum = "";
-        }
+          this.showCustomerCard = false;
       }
     }else if(this.customerCardSel == 4){
-      if(this.customerCardNum == "" || this.customerCardNum == ""){
-        alert("请输入拓客人数成交人数后点击添加！")
+      if(this.customerCardNum == "" || this.customerNum == ""){
+        this.$Message.error("请输入拓客人数成交人数后点击添加！")
       }else{
-        if(this.customerCardsForm[0].type == ""){
-          this.customerCardsForm = [];
-          this.customerCardsForm.push({ 
-              type:"APP", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId']
+        this.customerCardsForm.push({ 
+              type:"APP", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId'],selection:this.customerCardSel
           })  
           this.customerCardSel = "";
           this.customerCardNum = "";
           this.customerNum = "";
-        } else{
-          this.customerCardsForm.push({ 
-              type:"APP", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId']
-          })   
-          this.customerCardSel = "";
-          this.customerCardNum = "";
-          this.customerNum = "";
-        }
+          this.showCustomerCard = false;
       }
     }else if(this.customerCardSel == 5){
-      if(this.customerCardNum == "" || this.customerCardNum == ""){
-        alert("请输入拓客人数成交人数后点击添加！")
+      if(this.customerCardNum == "" || this.customerNum == ""){
+        this.$Message.error("请输入拓客人数成交人数后点击添加！")
       }else{
-        if(this.customerCardsForm[0].type == ""){
-          this.customerCardsForm = [];
-          this.customerCardsForm.push({ 
-              type:"地推", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId']
+        this.customerCardsForm.push({ 
+              type:"地推", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId'],selection:this.customerCardSel
           })  
           this.customerCardSel = "";
           this.customerCardNum = "";
           this.customerNum = "";
-        } else{
-          this.customerCardsForm.push({ 
-              type:"地推", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId']
-          })   
-          this.customerCardSel = "";
-          this.customerCardNum = "";
-          this.customerNum = "";
-        }
+          this.showCustomerCard = false;
       }
     }else if(this.customerCardSel == 6){
-      if(this.customerCardNum == "" || this.customerCardNum == ""){
-        alert("请输入拓客人数成交人数后点击添加！")
+      if(this.customerCardNum == "" || this.customerNum == ""){
+        this.$Message.error("请输入拓客人数成交人数后点击添加！")
       }else{
-        if(this.customerCardsForm[0].type == ""){
-          this.customerCardsForm = [];
-          this.customerCardsForm.push({ 
-              type:"异业联盟", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId']
+        this.customerCardsForm.push({ 
+              type:"异业联盟", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId'],selection:this.customerCardSel
           })  
           this.customerCardSel = "";
           this.customerCardNum = "";
           this.customerNum = "";
-        } else{
-          this.customerCardsForm.push({ 
-              stytypele:"异业联盟", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId']
-          })   
-          this.customerCardSel = "";
-          this.customerCardNum = "";
-          this.customerNum = "";
-        }
+          this.showCustomerCard = false;
       }
     }else if(this.customerCardSel == 7){
-      if(this.customerCardNum == "" || this.customerCardNum == ""){
-        alert("请输入拓客人数成交人数后点击添加！")
+      if(this.customerCardNum == "" || this.customerNum == ""){
+        this.$Message.error("请输入拓客人数成交人数后点击添加！")
       }else{
-        if(this.customerCardsForm[0].type == ""){
-          this.customerCardsForm = [];
-          this.customerCardsForm.push({ 
-              type:"会议营销", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId']
+        this.customerCardsForm.push({ 
+              type:"会议营销", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId'],selection:this.customerCardSel
           })  
           this.customerCardSel = "";
           this.customerCardNum = "";
           this.customerNum = "";
-        } else{
-          this.customerCardsForm.push({ 
-              type:"会议营销", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId']
-          })   
-          this.customerCardSel = "";
-          this.customerCardNum = "";
-          this.customerNum = "";
-        }
+          this.showCustomerCard = false;
       }
     }else if(this.customerCardSel == 8){
-      if(this.customerCardNum == "" || this.customerCardNum == ""){
-        alert("请输入拓客人数成交人数后点击添加！")
+      if(this.customerCardNum == "" || this.customerNum == ""){
+        this.$Message.error("请输入拓客人数成交人数后点击添加！")
       }else{
-        if(this.customerCardsForm[0].type == ""){
-          this.customerCardsForm = [];
           this.customerCardsForm.push({ 
-              type:"社区合作", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId']
+              type:"社区合作", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId'],selection:this.customerCardSel
           })  
           this.customerCardSel = "";
           this.customerCardNum = "";
           this.customerNum = "";
-        } else{
-          this.customerCardsForm.push({ 
-              type:"社区合作", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId']
-          })   
-          this.customerCardSel = "";
-          this.customerCardNum = "";
-          this.customerNum = "";
-        }
+          this.showCustomerCard = false;
       }
     }else if(this.customerCardSel == 9){
-      if(this.customerCardNum == "" || this.customerCardNum == ""){
-        alert("请输入拓客人数成交人数后点击添加！")
+      if(this.customerCardNum == "" || this.customerNum == ""){
+        this.$Message.error("请输入拓客人数成交人数后点击添加！")
       }else{
-        if(this.customerCardsForm[0].type == ""){
-          this.customerCardsForm = [];
-          this.customerCardsForm.push({ 
-              type:"行业合作", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId']
+        this.customerCardsForm.push({ 
+              type:"行业合作", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId'],selection:this.customerCardSel
           })  
           this.customerCardSel = "";
           this.customerCardNum = "";
           this.customerNum = "";
-        } else{
-          this.customerCardsForm.push({ 
-              type:"行业合作", exCount:this.customerCardNum, dealCount:this.customerNum, storeId:sessionStorage['storeId']
-          })   
-          this.customerCardSel = "";
-          this.customerCardNum = "";
-          this.customerNum = "";
-        }
+          this.showCustomerCard = false;
       }
     }else{
-      alert("请选择拓客方式后点击添加！")
+      this.$Message.error("请选择拓客方式后点击添加！")
     }
   },
   deleteCustomerCard(index) {
-    if(this.customerCardsForm.length == 1){
-       this.customerCardsForm = [{type:"", exCount:"", dealCount:""}];
-    }else{
-      this.customerCardsForm.splice(index,1);
-    }      
+      this.customerCardsForm.splice(index,1); 
+      if(this.customerCardsForm.length == 0){
+      this.showCustomerCard = true;
+        }else{
+          this.showCustomerCard = false;
+        }
+        this.customerCardSel = "";
+        this.customerCardNum = "";
+        this.customerNum = "";
   },
   nextPage(){
     const params = {
