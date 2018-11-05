@@ -333,18 +333,33 @@
         }
       },
       addPriceUnit(){
-        if(this.pis.itemPrice!='' && this.pis.itemPrice.indexOf("元/次")<0){
+        if(isNaN(Number(this.pis.itemPrice.value))){
+          this.$Message.error('项目单价请输入数字！');
+          this.pis.itemPrice = '';
+        }else{
+          if(this.pis.itemPrice!='' && this.pis.itemPrice.indexOf("元/次")<0){
           this.pis.itemPrice = this.pis.itemPrice + "元/次";
+          }
         }
       },
       addTimeUnit(){
-        if(this.pis.courseTimes!='' && this.pis.courseTimes.indexOf("次")<0){
-        this.pis.courseTimes = this.pis.courseTimes + "次";
+        if(isNaN(Number(this.pis.courseTimes.value))){
+          this.$Message.error('疗程次数请输入数字！');
+          this.pis.courseTimes = '';
+        }else{
+          if(this.pis.courseTimes!='' && this.pis.courseTimes.indexOf("次")<0){
+          this.pis.courseTimes = this.pis.courseTimes + "次";
+          }
         }
       },
       addCurePriceUnit(){
-        if(this.pis.coursePrice!='' && this.pis.coursePrice.indexOf("元")<0){
-        this.pis.coursePrice = this.pis.coursePrice + "元";
+        if(isNaN(Number(this.pis.coursePrice.value))){
+          this.$Message.error('疗程价格请输入数字！');
+          this.pis.coursePrice = '';
+        }else{
+          if(this.pis.coursePrice!='' && this.pis.coursePrice.indexOf("元")<0){
+          this.pis.coursePrice = this.pis.coursePrice + "元";
+          }
         }
       },
       ok() {
@@ -363,6 +378,15 @@
         }
         if(this.pis.designCourse == ''){
           validateMessage = validateMessage + "请选择是否设计疗程！<br/>";
+        }
+        if(this.pis.designCourse != '' && (this.pis.courseTimes == '' || this.pis.coursePrice == '')){
+          validateMessage = validateMessage + "请输入疗程价格和次数！<br/>";
+        }
+        if(this.pis.highFreq == false &&  this.pis.superposition == false && this.pis.strongEfficacy == false && this.pis.generalProps == false && this.pis.presents == false){
+          validateMessage = validateMessage + "请选择项目属性！<br/>";
+        }
+        if(this.pis.resolveProblem == '' ){
+          validateMessage = validateMessage + "请输入解决方案！<br/>";
         }
         if(validateMessage != ''){
           this.$Message.error(validateMessage);
