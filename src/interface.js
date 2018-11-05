@@ -164,7 +164,7 @@ export const logout  = function () {
 };
 //项目管理
 export const projectsave = function () {
-  const URL = '/app/api/project/save';
+  const URL = '/item/manage/add';
   const API = host + URL;
   return API;
 };
@@ -174,12 +174,12 @@ export const projectedit = function () {
   return API;
 };
 export const projectdelete = function () {
-  const URL = '/app/api/project/delete';
+  const URL = '/item/manage/delete';
   const API = host + URL;
   return API;
 };
 export const findProjectList = function () {
-  const URL = '/app/api/project/findProjectList';
+  const URL = '/item/manage/store';
   const API = host + URL;
   return API;
 };

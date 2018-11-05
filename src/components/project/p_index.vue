@@ -8,61 +8,68 @@
     </Row>
     <Table :columns="columns" :data="data"></Table>
 
-    <Modal  class="modalProjects" v-model="storeFlag" :mask-closable="false"  :title="store" @on-ok="ok">
+    <Modal class="modalProjects" v-model="storeFlag" :mask-closable="false"  :title="store">
       <div style="float:left;;margin-left: 63px;">项目类别：</div>
       <br/>
       <br/>
       <RadioGroup v-model="projectChoose" @on-change="changePro">
-          <Radio label="面部" style="float:left;">
+          <Radio label="1" style="float:left;">
               <span>面部</span>
           </Radio>
           <Select v-show="!showFace" style="float:right;width:300px;margin-top:-6px;" disabled>
           </Select>
-          <Select v-show="showFace" style="float:right;width:300px;margin-top:-6px;">
-            <Option value="清洁" >清洁</Option>
-            <Option value="补水" >补水</Option>
-            <Option value="美白" >美白</Option>
-            <Option value="修复" >修复</Option>
-            <Option value="抗敏" >抗敏</Option>
-            <Option value="痘痘" >痘痘</Option>
-            <Option value="紧致" >紧致</Option>
-            <Option value="除皱" >除皱</Option>
-            <Option value="祛斑" >祛斑</Option>
-            <Option value="毛孔管理" >毛孔管理</Option>
-            <Option value="V脸瘦脸" >V脸瘦脸</Option>
-            <Option value="眼部" >眼部</Option>
-            <Option value="整骨" >整骨</Option>
+          <Select v-model="pis.face" v-show="showFace" style="float:right;width:300px;margin-top:-6px;">
+            <Option value="1" >清洁</Option>
+            <Option value="2" >补水</Option>
+            <Option value="3" >美白</Option>
+            <Option value="4" >修复</Option>
+            <Option value="5" >抗敏</Option>
+            <Option value="6" >痘痘</Option>
+            <Option value="7" >紧致</Option>
+            <Option value="8" >除皱</Option>
+            <Option value="9" >祛斑</Option>
+            <Option value="10" >毛孔管理</Option>
+            <Option value="11" >V脸瘦脸</Option>
+            <Option value="12" >眼部</Option>
+            <Option value="13" >整骨</Option>
           </Select>
           <br/>
           <br/>
-          <Radio label="身体" style="float:left;">
+          <Radio label="2" style="float:left;">
               <span>身体</span>
           </Radio>
           <Select v-show="!showBody" style="float:right;width:300px;margin-top:-6px;" disabled>
           </Select>
-          <Select v-show="showBody" style="float:right;width:300px;margin-top:-6px;">
-            <Option value="头部" >头部</Option>
-            <Option value="肩颈" >肩颈</Option>
-            <Option value="背部" >背部</Option>
-            <Option value="胸部" >胸部</Option>
-            <Option value="腹部" >腹部</Option>
-            <Option value="腰部" >腰部</Option>
-            <Option value="臀部" >臀部</Option>
-            <Option value="大腿" >大腿</Option>
-            <Option value="小腿" >小腿</Option>
-            <Option value="足部" >足部</Option>
+          <Select v-model="pis.body" v-show="showBody" style="float:right;width:300px;margin-top:-6px;">
+            <Option value="1" >头部</Option>
+            <Option value="2" >肩颈</Option>
+            <Option value="3" >背部</Option>
+            <Option value="4" >胸部</Option>
+            <Option value="5" >腹部</Option>
+            <Option value="6" >腰部</Option>
+            <Option value="7" >臀部</Option>
+            <Option value="8" >大腿</Option>
+            <Option value="9" >小腿</Option>
+            <Option value="10" >足部</Option>
           </Select>
       </RadioGroup>
       <br/>
       <br/>
-      项目名称：<Input v-model="pis.projectName" placeholder="名称" style="width: 300px"/>
+      <div v-show="!(pis.face || pis.body)">
+      项目名称：<Input placeholder="名称" style="width: 300px" disabled/>
       <br/>
       <br/>
-      项目单价：<Input v-model="pis.courseMoney" @on-keyup="pis.courseMoney=check2(pis.courseMoney)" placeholder="项目单价 次/元" style="width: 300px"/>
+      项目单价：<Input placeholder="项目单价 次/元" style="width: 300px" @on-blur="addPriceUnit" disabled/>
+      </div>
+      <div v-show="pis.face || pis.body">
+      项目名称：<Input v-model="pis.itemName" placeholder="名称" style="width: 300px"/>
       <br/>
+      <br/>
+      项目单价：<Input v-model="pis.itemPrice" placeholder="项目单价 次/元" style="width: 300px" @on-blur="addPriceUnit"/>
+      </div>
       <br/>
       <div style="float:left;margin-left: 63px;">是否设计疗程：</div>
-      <RadioGroup v-model="healAgenda" @on-change="changeAgenda" style="margin-right:40%;">
+      <RadioGroup v-model="pis.designCourse" @on-change="changeAgenda" style="margin-right:40%;">
           <Radio label="是" style="float:left;">
               <span>是</span>
           </Radio>
@@ -72,23 +79,23 @@
       </RadioGroup>
           <div v-show="!showAgenda">
           <br/>
-            <div class="leftRadio">疗程次数：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" disabled/>
+          <div class="leftRadio">疗程次数：</div><Input placeholder="疗程次数" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;"disabled/>
           <br/>
           <br/>
-          <div class="leftRadio">疗程价：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" disabled/>
+          <div class="leftRadio">疗程价：</div><Input placeholder="疗程价" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;"disabled/>
           <br/>
           <br/>
-          <div class="leftRadio">间隔：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" disabled/>
+          <div class="leftRadio">间隔：</div><Input placeholder="疗程间隔" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;"disabled/>
           </div>
           <div v-show="showAgenda">
           <br/>
-            <div class="leftRadio">疗程次数：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;"/>
+          <div class="leftRadio">疗程次数：</div><Input v-model="pis.courseTimes" placeholder="疗程次数" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" @on-blur="addTimeUnit"/>
           <br/>
           <br/>
-          <div class="leftRadio">疗程价：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;"/>
+          <div class="leftRadio">疗程价：</div><Input v-model="pis.coursePrice" placeholder="疗程价" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" @on-blur="addCurePriceUnit"/>
           <br/>
           <br/>
-          <div class="leftRadio">间隔：</div><Input placeholder="项目单价 次/元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;"/>
+          <div class="leftRadio">间隔：</div><Input v-model="pis.courseInterval" placeholder="疗程间隔" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" />
           </div>
       <br/>
       <br/>
@@ -97,21 +104,25 @@
           <br/>
           <br/>
       <Checkbox-group>
-          <Checkbox label="高频到店"></Checkbox>
-          <Checkbox label="赠送属性"></Checkbox>
-          <Checkbox label="叠加属性"></Checkbox>
-          <Checkbox label="强功效"></Checkbox>
-          <Checkbox label="常规属性"></Checkbox>
+          <Checkbox v-model="pis.highFreq" label="高频到店"></Checkbox>
+          <Checkbox v-model="pis.presents" label="赠送属性"></Checkbox>
+          <Checkbox v-model="pis.superposition" label="叠加属性"></Checkbox>
+          <Checkbox v-model="pis.strongEfficacy" label="强功效"></Checkbox>
+          <Checkbox v-model="pis.generalProps" label="常规属性"></Checkbox>
       </Checkbox-group>
       <br/>
       <br/>
-      解决问题：<Input v-model="pis.technicalPoints" type="textarea" :rows="2" placeholder="解决问题" style="width:70%;"/>
+      解决问题：<Input v-model="pis.resolveProblem" type="textarea" :rows="2" placeholder="解决问题" style="width:70%;"/>
       <br/>
       <br/>
-      专业说明：<Input v-model="pis.projectDescription" type="textarea" :rows="2" placeholder="专业说明" style="width:70%;"/>
+      专业说明：<Input v-model="pis.proDescription" type="textarea" :rows="2" placeholder="专业说明" style="width:70%;"/>
       <br/>
       <br/>
       技术要点：<Input v-model="pis.technicalPoints" type="textarea" :rows="2" placeholder="技术要点" style="width:70%;"/>
+      <div slot="footer">
+          <Button type="primary" @click="ok">添加</Button>
+          <Button type="ghost" @click="close">取消</Button>
+      </div>
     </Modal>
   </div>
 </template>
@@ -123,8 +134,8 @@
     name: 'p_index',
     created() {
       this.getList();
-      this.getProblem();
-      this.getProject();
+      //this.getProblem();
+      //this.getProject();
     },
     data(){
       return {
@@ -135,50 +146,65 @@
         showAgenda: false,
         showTc: false,
         pis: {
-          projectName : '',
-          courseMoney: '',
-          intervalTime : '',
-          frequency : '',
-          cashMoney : '',
-          buckleMoney : '',
-          experienceMoney: '',
-          effect:[],
-          projectDescription: '',
-          technicalPoints: '',
-          collocationItems: '',
-          type: '',
-          projectAttributes: '',
-          isCalculate: '1',
-          storeId: this.$route.params.id,
+              // 门店id，本地测试 24，服务器测试可用 22
+              storeId: this.$route.params.id,
+              //面部, 1：清洁, 2:补水 ... 也可以传递字符串
+              face: '',
+              //身体, 1:头部, 2:肩部 ... 也可以传递字符串
+              body: '',
+              //项目名
+              itemName: '',
+              //项目单价 
+              itemPrice:'',
+              //是否设计疗程, 0:否, 1:是
+              designCourse:'',
+              //疗程次数
+              courseTimes:'',
+              //疗程单价
+              coursePrice:'',
+              //疗程间隔
+              courseInterval:'',
+              //高频到店, 0:未选中, 1:选中
+              highFreq:'0',
+              //赠送属性, 0:未选中, 1:选中
+              presents:'0',
+              //叠加属性, 0:未选中, 1:选中
+              superposition:'0',
+              //强功效, 0:未选中, 1:选中
+              strongEfficacy:'0',
+              //常规属性, 0:未选中, 1:选中
+              generalProps:'0',
+              //解决问题, 字数应限制在 512 个字符
+              resolveProblem:'',
+              //专业说明, 字数应限制在 512 个字符
+              proDescription:'',
+              //技术要点, 字数应限制在 512 个字符
+              technicalPoints:''
         },
         columns: [
           {
             title: '项目',
-            key: 'projectName'
-          },
-          {
-            title: '疗程次数',
-            key: 'frequency'
-          },
-          {
-            title: '间隔',
-            key: 'intervalTime'
+            key: 'itemName'
           },
           {
             title: '单价',
-            key: 'courseMoney'
+            key: 'itemPrice'
           },
           {
-            title: '现金价格',
-            key: 'cashMoney'
+            title: '项目类别',
+            key: 'projectCategory'
           },
           {
-            title: '卡扣价格',
-            key: 'buckleMoney'
+            title: '是否设计疗程',
+            key: 'designCourse'
           },
           {
-            title: '体验价格',
-            key: 'experienceMoney'
+            title: '疗程次数',
+            key: 'courseTimes'
+          },
+          {
+            title: '疗程价格',
+            key: 'coursePrice'
           },
           {
             title: '操作',
@@ -226,34 +252,49 @@
       newEm() {
         this.storeFlag = true;
         this.store = '新建项目';
+        this.showFace = false;
+        this.showBody = false;
+        this.showAgenda = false;
+        this.showTc = false;
+        this.projectChoose = '';
         this.pis = {
-          projectName : '',
-          courseMoney: '',
-          intervalTime : '',
-          frequency : '',
-          cashMoney : '',
-          buckleMoney : '',
-          experienceMoney: '',
-          effect:[],
-          projectDescription: '',
-          technicalPoints: '',
-          collocationItems: '',
-          type: '',
-          projectAttributes: '',
-          storeId: this.$route.params.id,
-          isCalculate: false,
+              // 门店id，本地测试 24，服务器测试可用 22
+              storeId: this.$route.params.id,
+              //面部, 1：清洁, 2:补水 ... 也可以传递字符串
+              face: '',
+              //身体, 1:头部, 2:肩部 ... 也可以传递字符串
+              body: '',
+              //项目名
+              itemName: '',
+              //项目单价 
+              itemPrice:'',
+              //是否设计疗程, 0:否, 1:是
+              designCourse:'',
+              //疗程次数
+              courseTimes:'',
+              //疗程单价
+              coursePrice:'',
+              //疗程间隔
+              courseInterval:'',
+              //高频到店, 0:未选中, 1:选中
+              highFreq:false,
+              //赠送属性, 0:未选中, 1:选中
+              presents:false,
+              //叠加属性, 0:未选中, 1:选中
+              superposition:false,
+              //强功效, 0:未选中, 1:选中
+              strongEfficacy:false,
+              //常规属性, 0:未选中, 1:选中
+              generalProps:false,
+              //解决问题, 字数应限制在 512 个字符
+              resolveProblem:'',
+              //专业说明, 字数应限制在 512 个字符
+              proDescription:'',
+              //技术要点, 字数应限制在 512 个字符
+              technicalPoints:''
         };
-        if(this.pis.isCalculate == true){
-          this.$refs.exs.disabled= true;
-        }else{
-          this.$refs.exs.disabled= false;
-
-        }
-
       },
       getList() {
-        // 73d04ca9-8fa9-419f-a2d2-cc19da374dc6-s
-        console.log(sessionStorage.getItem('authToken'))
         this.$ajax({
           method: 'GET',
           dataType: 'JSON',
@@ -261,78 +302,127 @@
           headers: {
             "authToken": sessionStorage.getItem('authToken')
           },
-          url: findProjectList()+'?id='+this.$route.params.id,
+          url: findProjectList()+'/'+this.$route.params.id,
         }).then((res) => {
-          this.data = res.data.results;
+          this.data = res.data.itemManages;
+          for(var i=0;i<this.data.length;i++){
+            if(this.data[i].face != ''){
+              this.data[i].projectCategory = "面部";
+            }else{
+              this.data[i].projectCategory = "身体";
+            }
+            this.data[i].itemPrice = this.data[i].itemPrice + "元/次";
+            this.data[i].courseTimes = this.data[i].courseTimes + "次";
+            this.data[i].coursePrice = this.data[i].coursePrice + "元";
+          }
         }).catch((error) => {
         });
       },
-      getProblem(){
+      transfer(b){
+        if(b == true){
+          return 1;
+        }else{
+          return 0;
+        }
+      },
+      transferBack(c){
+        if(c == 1){
+          return true;
+        }else{
+          return false;
+        }
+      },
+      addPriceUnit(){
+        if(this.pis.itemPrice!='' && this.pis.itemPrice.indexOf("元/次")<0){
+          this.pis.itemPrice = this.pis.itemPrice + "元/次";
+        }
+      },
+      addTimeUnit(){
+        if(this.pis.courseTimes!='' && this.pis.courseTimes.indexOf("次")<0){
+        this.pis.courseTimes = this.pis.courseTimes + "次";
+        }
+      },
+      addCurePriceUnit(){
+        if(this.pis.coursePrice!='' && this.pis.coursePrice.indexOf("元")<0){
+        this.pis.coursePrice = this.pis.coursePrice + "元";
+        }
+      },
+      ok() {
+        var validateMessage = '';
+        if(this.projectChoose == ''){
+          validateMessage = validateMessage + "请选择项目类型！<br/>";
+        }
+        if(this.pis.face == '' && this.pis.body == ''){
+          validateMessage = validateMessage + "请选择具体项目类别！<br/>";
+        }
+        if(this.pis.itemName == ''){
+          validateMessage = validateMessage + "请输入项目名称！<br/>";
+        }
+        if(this.pis.itemPrice == ''){
+          validateMessage = validateMessage + "请输入项目单价！<br/>";
+        }
+        if(this.pis.designCourse == ''){
+          validateMessage = validateMessage + "请选择是否设计疗程！<br/>";
+        }
+        if(validateMessage != ''){
+          this.$Message.error(validateMessage);
+          validateMessage = '';
+        }else{
+          this.pis.highFreq = this.transfer(this.pis.highFreq);
+          this.pis.presents = this.transfer(this.pis.presents);
+          this.pis.superposition = this.transfer(this.pis.superposition);
+          this.pis.strongEfficacy = this.transfer(this.pis.strongEfficacy);
+          this.pis.generalProps = this.transfer(this.pis.generalProps);
+          this.pis.itemPrice = this.pis.itemPrice.replace("元/次","");
+          this.pis.courseTimes = this.pis.courseTimes.replace("次","");
+          this.pis.coursePrice = this.pis.coursePrice.replace("元","");
+          var params = {
+              storeId:this.$route.params.id,
+              itemManage:this.pis
+          }
+          let URL = projectsave();
           this.$ajax({
-            method: 'GET',
+            method: 'POST',
             dataType: 'JSON',
             contentType: 'application/json;charset=UTF-8',
             headers: {
               "authToken": sessionStorage.getItem('authToken')
             },
-            url: findproblemList()+'?id='+this.$route.params.id,
+            data: params,
+            url: URL,
           }).then((res) => {
-            this.prds = res.data;
+            this.$Message.success('操作成功');
+            this.getList();
+            this.storeFlag=false;
           }).catch((error) => {
+            this.$Message.error('操作失败');
+
           });
-      },
-      getProject(){
-        this.$ajax({
-          method:'get',
-          url: findAllProject()+'?id='+this.$route.params.id,
-        }).then( (res) =>{
-          this.projectList = res.data;
-        }).catch( (error) =>{
-
-        });
-      },
-      ok() {
-        let URL = projectsave();
-        if( this.store == '修改') {
-          URL = projectedit();
-        };
-        if(this.pis.projectName == ''){
-          this.$Message.warning('名称不能为空');
-          return;
         }
-        this.pis.isCalculate = this.pis.isCalculate == true ? '0' :'1';
-        this.pis.effect = this.pis.effect.toString();
-        this.$ajax({
-          method: 'POST',
-          dataType: 'JSON',
-          contentType: 'application/json;charset=UTF-8',
-          headers: {
-            "authToken": sessionStorage.getItem('authToken')
-          },
-          data: this.pis,
-          url: URL,
-        }).then((res) => {
-          this.$Message.success('操作成功');
-          this.getList();
-          this.getProject();
-        }).catch((error) => {
-          this.$Message.error('操作失败');
-
-        });
       },
       mannger(data) {
-        this.pis = JSON.parse(JSON.stringify(data));
-        if (typeof data.effect == 'string') {
-          this.pis.effect = data.effect.split(',').map( (it, i) => {return +it});
-        }
-        this.pis.isCalculate = data.isCalculate == '0' ? true:false;
-        if(this.pis.isCalculate == true){
-          this.$refs.exs.disabled= true;
-        }else{
-          this.$refs.exs.disabled= false;
-        }
         this.storeFlag = true;
         this.store = '修改';
+        this.pis = JSON.parse(JSON.stringify(data));
+        this.pis.highFreq = this.transferBack(this.pis.highFreq);
+        this.pis.presents = this.transferBack(this.pis.presents);
+        this.pis.superposition = this.transferBack(this.pis.superposition);
+        this.pis.strongEfficacy = this.transferBack(this.pis.strongEfficacy);
+        this.pis.generalProps = this.transferBack(this.pis.generalProps);
+        if(this.pis.designCourse == "是"){
+          this.showAgenda = true;
+        }else{
+          this.showAgenda = false;
+        }
+        if(this.pis.face != ''){
+          this.projectChoose = "1";
+          this.showFace = true;
+          this.showBody = false;
+        }else{
+          this.showFace = false;
+          this.showBody = true;
+          this.projectChoose = "2";
+        }
       },
       Delete(data){
         this.$ajax({
@@ -342,7 +432,7 @@
           headers: {
             "authToken": sessionStorage.getItem('authToken')
           },
-          url: projectdelete()+'?id='+data.id,
+          url: projectdelete()+'/'+this.$route.params.id+"?itemName="+data.itemName,
         }).then((res) => {
           this.$Message.success('操作成功');
           this.getList();
@@ -350,34 +440,26 @@
           this.$Message.error('操作失败');
         })
       },
-      check(value){
-        return value.replace(/[^\d]/g,'');
-      },
-      check2(value){
-        return value.replace(/[^\d\.]/g,'');
-      },
       changePro(){
-        if(this.projectChoose == "面部"){
+        if(this.projectChoose == "1"){
           this.showFace = true;
           this.showBody = false;
+          this.pis.body = '';
         }else{
           this.showFace = false;
           this.showBody = true;
+          this.pis.face = '';
         }
       },
       changeAgenda(){
-        if(this.healAgenda == "是"){
+        if(this.pis.designCourse == "是"){
           this.showAgenda = true;
         }else{
           this.showAgenda = false;
         }
       },
-      changeTaocan(){
-        if(this.taoCan == "是"){
-          this.showTc = true;
-        }else{
-          this.showTc = false;
-        }
+      close(){
+        this.storeFlag=false;
       }
     }
   };
