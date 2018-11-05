@@ -145,6 +145,7 @@
         showBody: false,
         showAgenda: false,
         showTc: false,
+        projectChoose: '',
         pis: {
               // 门店id，本地测试 24，服务器测试可用 22
               storeId: this.$route.params.id,
