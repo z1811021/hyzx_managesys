@@ -59,21 +59,35 @@
       项目名称：<Input placeholder="名称" style="width: 300px" disabled/>
       <br/>
       <br/>
-      项目单价：<Input placeholder="项目单价 次/元" style="width: 300px" @on-blur="addPriceUnit" disabled/>
+      项目单价：<Input placeholder="项目单价 次/元" style="width: 300px" disabled/>
+      <br/>
+      <br/>
+      项目间隔：<Input placeholder="项目间隔 次" style="width: 300px" disabled/>
       </div>
       <div v-show="pis.face || pis.body">
       项目名称：<Input v-model="pis.itemName" placeholder="名称" style="width: 300px"/>
       <br/>
       <br/>
       项目单价：<Input v-model="pis.itemPrice" placeholder="项目单价 次/元" style="width: 300px" @on-blur="addPriceUnit"/>
+      <br/>
+      <br/>
+      项目间隔：<Input v-model="pis.courseInterval" placeholder="项目间隔" style="width: 300px" @on-blur="addPeriod"/>
       </div>
       <br/>
       <div style="float:left;margin-left: 63px;">是否设计疗程：</div>
-      <RadioGroup v-model="pis.designCourse" @on-change="changeAgenda" style="margin-right:40%;">
-          <Radio label="是" style="float:left;">
+      <RadioGroup v-show="!(pis.face || pis.body)" style="margin-right:40%;">
+          <Radio label="是" style="float:left;" disabled>
               <span>是</span>
           </Radio>
-          <Radio label="否" style="float:right;">
+          <Radio label="否" style="float:right;" disabled>
+              <span>否</span>
+          </Radio>
+      </RadioGroup>
+      <RadioGroup v-show="pis.face || pis.body" v-model="pis.designCourse" @on-change="changeAgenda" style="margin-right:40%;">
+          <Radio label="是" style="float:left;" >
+              <span>是</span>
+          </Radio>
+          <Radio label="否" style="float:right;" >
               <span>否</span>
           </Radio>
       </RadioGroup>
@@ -85,7 +99,6 @@
           <div class="leftRadio">疗程价：</div><Input placeholder="疗程价" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;"disabled/>
           <br/>
           <br/>
-          <div class="leftRadio">间隔：</div><Input placeholder="疗程间隔" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;"disabled/>
           </div>
           <div v-show="showAgenda">
           <br/>
@@ -93,12 +106,7 @@
           <br/>
           <br/>
           <div class="leftRadio">疗程价：</div><Input v-model="pis.coursePrice" placeholder="疗程价" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" @on-blur="addCurePriceUnit"/>
-          <br/>
-          <br/>
-          <div class="leftRadio">间隔：</div><Input v-model="pis.courseInterval" placeholder="疗程间隔" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" />
           </div>
-      <br/>
-      <br/>
       <div style="float: left;margin-left: 12%;margin-top:3%;">项目属性：</div>
           <br/>
           <br/>
@@ -126,7 +134,6 @@
     </Modal>
   </div>
 </template>
-
 <script type="text/ecmascript-6">
   import {findProjectList, projectedit, projectdelete, projectsave,findproblemList,findAllProject} from '../../interface';
 
@@ -206,6 +213,10 @@
           {
             title: '疗程价格',
             key: 'coursePrice'
+          },
+          {
+            title: '项目间隔',
+            key: 'courseInterval'
           },
           {
             title: '操作',
@@ -315,6 +326,7 @@
             this.data[i].itemPrice = this.data[i].itemPrice + "元/次";
             this.data[i].courseTimes = this.data[i].courseTimes + "次";
             this.data[i].coursePrice = this.data[i].coursePrice + "元";
+            this.data[i].courseInterval = this.data[i].courseInterval + "天";
           }
         }).catch((error) => {
         });
@@ -334,7 +346,7 @@
         }
       },
       addPriceUnit(){
-        if(isNaN(Number(this.pis.itemPrice.value))){
+        if(!(/^\d+$/.test(this.pis.itemPrice))){
           this.$Message.error('项目单价请输入数字！');
           this.pis.itemPrice = '';
         }else{
@@ -344,7 +356,7 @@
         }
       },
       addTimeUnit(){
-        if(isNaN(Number(this.pis.courseTimes.value))){
+        if(!(/^\d+$/.test(this.pis.courseTimes))){
           this.$Message.error('疗程次数请输入数字！');
           this.pis.courseTimes = '';
         }else{
@@ -352,14 +364,24 @@
           this.pis.courseTimes = this.pis.courseTimes + "次";
           }
         }
-      },
+      },    
       addCurePriceUnit(){
-        if(isNaN(Number(this.pis.coursePrice.value))){
+        if(!(/^\d+$/.test(this.pis.coursePrice))){
           this.$Message.error('疗程价格请输入数字！');
           this.pis.coursePrice = '';
         }else{
           if(this.pis.coursePrice!='' && this.pis.coursePrice.indexOf("元")<0){
           this.pis.coursePrice = this.pis.coursePrice + "元";
+          }
+        }
+      },
+      addPeriod(){
+        if(!(/^\d+$/.test(this.pis.courseInterval))){
+          this.$Message.error('请输入项目间隔天数！');
+          this.pis.courseInterval = '';
+        }else{
+          if(this.pis.courseInterval!='' && this.pis.courseInterval.indexOf("天")<0){
+          this.pis.courseInterval = this.pis.courseInterval + "天";
           }
         }
       },
@@ -389,6 +411,9 @@
         if(this.pis.resolveProblem == '' ){
           validateMessage = validateMessage + "请输入解决方案！<br/>";
         }
+        if(this.pis.courseInterval == '' ){
+          validateMessage = validateMessage + "请输入项目间隔天数！<br/>";
+        }
         if(validateMessage != ''){
           this.$Message.error(validateMessage);
           validateMessage = '';
@@ -401,6 +426,7 @@
           this.pis.itemPrice = this.pis.itemPrice.replace("元/次","");
           this.pis.courseTimes = this.pis.courseTimes.replace("次","");
           this.pis.coursePrice = this.pis.coursePrice.replace("元","");
+          this.pis.courseInterval = this.pis.courseInterval.replace("天","");
           var params = {
               storeId:this.$route.params.id,
               itemManage:this.pis
@@ -481,6 +507,8 @@
           this.showAgenda = true;
         }else{
           this.showAgenda = false;
+          this.pis.coursePrice = '';
+          this.pis.courseTimes = '';
         }
       },
       close(){
