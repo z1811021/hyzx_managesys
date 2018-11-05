@@ -8,7 +8,7 @@
     </Row>
     <Table :columns="columns" :data="data"></Table>
 
-    <Modal  class="modalProjects" v-model="storeFlag" :mask-closable="false"  :title="store" @on-ok="ok">
+    <Modal class="modalProjects" v-model="storeFlag" :mask-closable="false"  :title="store">
     </Modal>
   </div>
 </template>
@@ -20,8 +20,7 @@
     name: 'p_index',
     created() {
       this.getList();
-      this.getProblem();
-      this.getProject();
+      this.getStart();
     },
     data(){
       return {
@@ -91,6 +90,34 @@
       };
     },
     methods: {
+      newEm(){
+        this.storeFlag = true;
+      },
+      getList() {
+        this.$ajax({
+          method: 'GET',
+          dataType: 'JSON',
+          contentType: 'application/json;charset=UTF-8',
+          headers: {
+            "authToken": sessionStorage.getItem('authToken')
+          },
+          url: findProjectList()+'/'+this.$route.params.id,
+        }).then((res) => {
+          this.data = res.data.itemManages;
+          for(var i=0;i<this.data.length;i++){
+            if(this.data[i].face != ''){
+              this.data[i].projectCategory = "面部";
+            }else{
+              this.data[i].projectCategory = "身体";
+            }
+            this.data[i].itemPrice = this.data[i].itemPrice + "元/次";
+            this.data[i].courseTimes = this.data[i].courseTimes + "次";
+            this.data[i].coursePrice = this.data[i].coursePrice + "元";
+            this.data[i].courseInterval = this.data[i].courseInterval + "天";
+          }
+        }).catch((error) => {
+        });
+      }
     }
   };
 </script>
