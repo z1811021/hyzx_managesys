@@ -329,6 +329,7 @@
             this.data[i].courseInterval = this.data[i].courseInterval + "天";
           }
         }).catch((error) => {
+          this.$Message.error('获取失败');
         });
       },
       transfer(b){
@@ -447,7 +448,6 @@
             this.storeFlag=false;
           }).catch((error) => {
             this.$Message.error('操作失败');
-
           });
         }
       },

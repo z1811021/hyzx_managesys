@@ -8,13 +8,14 @@
     </Row>
     <Table :columns="columns" :data="data"></Table>
 
-    <Modal  class="modalProjects" v-model="storeFlag" :mask-closable="false"  :title="store" @on-ok="ok">
+    <Modal  class="modalProjects" v-model="storeFlag" :mask-closable="false"  :title="store" >
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import {findProjectList, projectedit, projectdelete, projectsave,findproblemList,findAllProject} from '../../interface';
+  import draggable from 'vuedraggable';
 
   export default {
     name: 'p_index',
