@@ -95,13 +95,14 @@
     };
     const validateTelephone = (rule, value, callback) => {
         const myreg=/0\d{2}-\d{7,8}/
-        if (!value) {
-            return callback(new Error('门店电话不能为空'));
-        }
+        const myreg2=/^[1][3,4,5,7,8][0-9]{9}$/
         setTimeout(() => {
-            if (!myreg.test(value)) {
+            if (!myreg.test(value) && value) {
                 callback(new Error('请输入正确的座机号码格式 例如xxx-xxxxxxxx'));
-            } else {
+            } else if (!myreg2.test(value) && value) {
+               callback(new Error('请输入正确的手机号码格式'));
+            }
+            else {
                 callback();
             }
         }, 1000);

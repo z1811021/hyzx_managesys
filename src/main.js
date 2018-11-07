@@ -9,11 +9,11 @@ import htmlToPdf from '@/components/user/htmlToPdf.js';
 Vue.config.productionTip = false
 Vue.use(VueResource);
 Vue.use(iView);
-Vue.use(htmlToPdf)
+Vue.use(htmlToPdf);
 Vue.prototype.$ajax = axios;
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
-  render: h => h(App)
+  render: h => h(App),
 })
