@@ -183,9 +183,25 @@ export const findProjectList = function () {
   const API = host + URL;
   return API;
 };
+//方案管理
+export const projectPlansave = function () {
+  const URL = '/program/manage/add';
+  const API = host + URL;
+  return API;
+};
+export const findProjectPlanList = function () {
+  const URL = '/program/manage/store';
+  const API = host + URL;
+  return API;
+};
+export const projectPlandelete = function () {
+  const URL = '/program/manage/delete';
+  const API = host + URL;
+  return API;
+};
 //查找症状
 export const findproblemList = function () {
-  const URL = '/app/api/problem/findProblemList';
+  const URL = '/program/manage/store';
   const API = host + URL;
   return API;
 };

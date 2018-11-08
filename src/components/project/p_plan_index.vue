@@ -13,7 +13,7 @@
         方案名称：<Input v-model="planName" placeholder="方案名称" style="width: 300px" />
         <br/>
         <br/>
-        方案价格：<Input v-model="planPrice" placeholder="方案价格 元" style="width: 300px" />
+        方案价格：<Input v-model="planPrice" placeholder="方案价格 元" style="width: 300px" @on-blur="checkPrice"/>
         <br/>
         <br/>
         <div style="float:left;margin-left: 63px;">选择项目：</div>
@@ -22,19 +22,19 @@
           <Option v-for="(item,index) in projectList" :value="index" :key="index">{{ item.itemName }}</Option>
         </Select>
         <br/>
-        <div style="float:left;margin-left: 63px;">套餐设计：</div>
+        <div v-show="showDataTable" style="float:left;margin-left: 63px;">套餐设计：</div>
         <br/>
-        <div class="dataTableDiv">
-          <li class="specialLiTitle"><div class="liLeft">项目名称</div><div class="liCenter">项目价格</div><div class="liRightTitle">项目间隔</div><div class="liMostRight">修改间隔</div><br/></li>
+        <div v-show="showDataTable" class="dataTableDiv">
+          <li class="specialLiTitle"><div class="liOrderLeft">序列</div><div class="liLeft">项目名称</div><div class="liCenter">项目价格</div><div class="liRightTitle">项目间隔</div><div class="liMostRight">修改间隔</div><br/></li>
           <draggable element="ul" v-model="planData">
-            <li v-for="(item,index) in planData" class="specialLi"><div class="liLeft">{{item.itemName}}</div><div class="liCenter">{{item.itemPrice}}</div><Input v-show="!showModify" v-model="item.courseInterval" class="liRight" disabled/><Input v-show="showModify" v-model="item.courseInterval" class="liRight" @on-blur="disableModify(item.courseInterval,index)"/><div class="liMostRight"><Button :size="buttonSize" type="primary" @click="mannger">修改</Button><Button :size="buttonSize" type="warning" @click="Delete(item.itemName)">删除</Button></div><br/></li>
+            <li v-for="(item,index) in planData" class="specialLi"><div class="liOrderLeft">{{index+1}}</div><div class="liLeft">{{item.itemName}}</div><div class="liCenter">{{item.itemPrice}}</div><Input v-show="!showModify" v-model="item.courseInterval" class="liRight" disabled/><Input v-show="showModify" v-model="item.courseInterval" class="liRight" @on-blur="disableModify(item.courseInterval,index)"/><div class="liMostRight"><Button :size="buttonSize" type="primary" @click="mannger(index)">修改</Button><Button :size="buttonSize" type="warning" @click="Delete(item.itemName)">删除</Button></div><br/></li>
           </draggable>
           <li v-show="showBlank" class="specialLi"></li>
         </div> 
         <br/>
         <div class="timeLineDiv">
           <Timeline v-model="planData">
-            <TimelineItem v-for="item in planData">
+            <TimelineItem v-for="item in planData" :key="key">
                 <p class="time">{{item.itemName}}</p>
                 <br/>
                 <p class="content">{{item.courseInterval}}</p>
@@ -50,17 +50,18 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {findProjectList, projectedit, projectdelete, projectsave,findproblemList,findAllProject} from '../../interface';
+  import {findProjectList, projectedit, projectdelete, projectPlansave, findProjectPlanList, projectPlandelete} from '../../interface';
   import draggable from 'vuedraggable';
 
   export default {
-    name: 'p_index',
+    name: 'p_plan_index',
     components: {
       //调用组件
       draggable,
     },
     created() {
       this.getList();
+      this.getPlanList();
     },
     data(){
       return {
@@ -70,6 +71,9 @@
         buttonSize: 'small',
         showBlank: false,
         showModify: false,
+        showDataTable: false,
+        planName:'',
+        planPrice: '',
         plan: {
           projects: [],
           price: ''
@@ -77,23 +81,15 @@
         columns: [
           {
             title: '方案名称',
-            key: 'projectName'
+            key: 'programName'
           },
           {
             title: '项目数量',
             key: 'projectNumber'
           },
           {
-            title: '单价',
-            key: 'courseMoney'
-          },
-          {
-            title: '现金价格',
-            key: 'cashMoney'
-          },
-          {
-            title: '卡扣价格',
-            key: 'buckleMoney'
+            title: '方案总价',
+            key: 'programPrice'
           },
           {
             title: '操作',
@@ -110,10 +106,24 @@
                   },
                   on: {
                     click: () => {
-                      this.mannger(params.row)
+                      this.manngerPlan(params.row)
                     }
                   }
                 }, '修改'),
+                h('Button', {
+                  props: {
+                    type: 'warning',
+                    size: 'small'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.DeletePlan(params.row)
+                    }
+                  }
+                }, '删除'),
               ]);
             }
           }
@@ -129,12 +139,17 @@
         this.storeFlag = true;
         this.planData = [];
         this.selectedProjects = [];
+        this.planName='';
+        this.planPrice='';
+        this.showDataTable = false;
+        this.showBlank = false;
       },
       pushSelectProjects(value, index, ar){
         this.projectList[value].index = value;
         this.projectList[value].showBlank = true;
         this.planData.push(this.projectList[value]);
         this.showBlank = false;
+        this.showDataTable = true;
       },
       distinct(arr){
           var result = [],
@@ -149,7 +164,7 @@
          }
          return result;
       },
-      mannger(){
+      mannger(value,index){
         this.showModify = true;
       },
       disableModify(value,index){
@@ -176,17 +191,118 @@
         if(this.selectedProjects.length == 0){
           this.showBlank = true;
         }
+        if(this.planData.length>0){
+          this.showDataTable = true;
+        }else{
+          this.showDataTable = false;
+        }
       },
       close(){
         this.storeFlag = false;
       },
       ok(){
-        this.storeFlag = false;
+        var programItems = [];
+        for(var i=0;i<this.planData.length;i++){
+          var item = {storeId:this.$route.params.id, programId:0, itemOrder:i+1, itemName:this.planData[i].itemName, itemPrice:this.planData[i].itemPrice.replace("元/次",""), itemInterval:this.planData[i].courseInterval.replace("天","")};
+          programItems.push(item);
+        }
+        var programManage = {
+            storeId: this.$route.params.id,
+            // 方案名称
+            programName: this.planName,
+            // 方案价格
+            programPrice: this.planPrice.replace("元",""),
+            // 与方案关联的项目
+            programItems: programItems
+        };
+        var params = {
+            storeId:this.$route.params.id,
+            programManage:programManage
+        }
+        let URL = projectPlansave();
+        if(this.planName == '' || this.planPrice == ''){
+          this.$Message.error('请填写方案名称或者价格！');
+        }else{
+          this.$ajax({
+            method: 'POST',
+            dataType: 'JSON',
+            contentType: 'application/json;charset=UTF-8',
+            headers: {
+              "authToken": sessionStorage.getItem('authToken')
+            },
+            data: params,
+            url: URL,
+          }).then((res) => {
+            this.$Message.success('操作成功');
+            this.getPlanList();
+            this.storeFlag=false;
+          }).catch((error) => {
+            this.$Message.error('操作失败');
+          });
+        }
       },
       changeProjects(){
         this.planData = [];
         this.selectedProjects.forEach(this.pushSelectProjects);
         },
+      getPlanList(){
+          this.$ajax({
+            method: 'GET',
+            dataType: 'JSON',
+            contentType: 'application/json;charset=UTF-8',
+            headers: {
+              "authToken": sessionStorage.getItem('authToken')
+            },
+            url: findProjectPlanList()+'/'+this.$route.params.id,
+          }).then((res) => {
+            this.data = res.data.programManage;
+            for(var i = 0; i < this.data.length; i++){
+              this.data[i].projectNumber = this.data[i].programItems.length+"个";
+              this.data[i].programPrice = this.data[i].programPrice+"元";
+            }
+        }).catch((error) => {
+          this.$Message.error('获取失败');
+        });
+      },
+      DeletePlan(data){
+        this.$ajax({
+          method: 'GET',
+          dataType: 'JSON',
+          contentType: 'application/json;charset=UTF-8',
+          headers: {
+            "authToken": sessionStorage.getItem('authToken')
+          },
+          url: projectPlandelete()+'/'+this.$route.params.id+"?programName="+data.programName,
+        }).then((res) => {
+          this.$Message.success('操作成功');
+          this.getPlanList();
+        }).catch((error) => {
+          this.$Message.error('操作失败');
+        })
+      },
+      checkPrice(){
+        if(!(/^\d+$/.test(this.planPrice))){
+          this.$Message.error('方案价格只能输入数字！');
+        }else{
+          this.planPrice = this.planPrice+"元";
+        }
+      },
+      manngerPlan(data){
+        this.selectedProjects = [];
+        this.planData = [];
+        data.programItems.forEach(this.getProjectsBack);
+        this.selectedProjects.forEach(this.pushSelectProjects);
+        this.planName = data.programName;
+        this.planPrice = data.programPrice;
+        this.storeFlag = true;
+      },
+      getProjectsBack(value, index, ar){
+        for(var i = 0; i < this.projectList.length; i++){
+          if(value.itemName == this.projectList[i].itemName){
+            this.selectedProjects.push(i);
+          }
+        }
+      },
       getList() {
         this.$ajax({
           method: 'GET',
@@ -230,7 +346,7 @@
     margin: 0 auto;
     margin-top:2%;            
     text-align: center;    
-    width:80%;
+    width:82%;
     background-color: #F8F8F8;
     border: 1px solid #dddee1;
   }
@@ -259,18 +375,24 @@
   }
   .liLeft{
     float:left;
-    width:40%;
-    min-width: 40%
+    width:37%;
+    min-width: 37%
+  }
+  .liOrderLeft{
+    float:left;
+    margin-left:2%;
+    width:7%;
+    min-width: 7%
   }
   .liCenter{
     float:left;
     margin-left:1%;
-    width:15%;
+    width:13%;
   }
   .liRight{
     float:left;
     margin-left:3%;
-    width:15%;
+    width:12%;
     margin-top:9px;
   }
   .specialLi{
@@ -280,6 +402,7 @@
     color: #495060;
     background-color: #fff;
     border-bottom: 1px solid #efefef;
+    cursor:pointer;
   }
   .specialLiTitle{
     height: 30px;
