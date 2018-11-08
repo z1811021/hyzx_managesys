@@ -3,41 +3,41 @@
     <Form ref="formValidate" :model="roomVal" :rules="ruleValidate" :label-width="100">
       <div class="layout-logo-left">房间</div>
       <FormItem label="店平方数：" prop="roomSize"  class="formItemStyle" >
-            <Input v-model="roomVal.roomSize" placeholder="店平方数"></Input>
+            <Input v-model="roomVal.roomSize" placeholder="店平方数(平方米)"></Input>
       </FormItem>
-      <FormItem label="年租房：" prop="annualRent"  class="formItemStyle" >
-            <Input v-model="roomVal.annualRent" placeholder="年租房"></Input>
+      <FormItem label="年房租：" prop="annualRent"  class="formItemStyle" >
+            <Input v-model="roomVal.annualRent" placeholder="年房租(元)"></Input>
       </FormItem>
       <FormItem label="房间总数详情"  class="formItemStyle" prop="roomCount">
           <RadioGroup v-model="roomRadio" @on-change="hiddenDetailLabel()">
               <Radio label="displayDetail">输入具体房间数量</Radio>
               <Radio label="noDisplayDetail">直接输入房间总数</Radio>
           </RadioGroup>
-          <Input v-model="roomVal.roomCount" placeholder="请输入房间总数" :disabled="showroomCountDisabled" :ifShow="showroomCount"></Input>
+          <Input v-model="roomVal.roomCount" placeholder="请输入房间总数(间)" :disabled="showroomCountDisabled" :ifShow="showroomCount"></Input>
       </FormItem>
       <div v-if="showRoomDetail">
         <div class="layout-logo-left">单人间数量</div>
         <div class="container1">
           <FormItem :label="value.lableName" v-for='(value, index) in roomVal.singleRoom' class="formItemStyle2" :key="index">
-            <Input v-model="roomVal.singleRoom[index].count" :placeholder="value.lableName"></Input>
+            <Input v-model="roomVal.singleRoom[index].count" :placeholder="value.lableName+' '+'(间)'"></Input>
           </FormItem>
         </div>
         <div class="layout-logo-left">双人间数量</div>
         <div class="container1">
           <FormItem :label="value.lableName" v-for='(value, index) in roomVal.doubleRoom' class="formItemStyle2" :key="index">
-            <Input v-model="roomVal.doubleRoom[index].count" :placeholder="value.lableName"></Input>
+            <Input v-model="roomVal.doubleRoom[index].count" :placeholder="value.lableName+' '+'(间)'"></Input>
           </FormItem>
         </div>
         <div class="layout-logo-left">三人间数量</div>
         <div class="container1">
           <FormItem :label="value.lableName" v-for='(value, index) in roomVal.tribleRoom' class="formItemStyle2" :key="index">
-            <Input v-model="roomVal.tribleRoom[index].count" :placeholder="value.lableName"></Input>
+            <Input v-model="roomVal.tribleRoom[index].count" :placeholder="value.lableName+' '+'(间)'"></Input>
           </FormItem>
         </div>
         <div class="layout-logo-left">三人间以上数量</div>
         <div class="container1">
           <FormItem :label="value.lableName" v-for='(value, index) in roomVal.aboveTribleRoom' class="formItemStyle2" :key="index">
-            <Input v-model="roomVal.aboveTribleRoom[index].count" :placeholder="value.lableName"></Input>
+            <Input v-model="roomVal.aboveTribleRoom[index].count" :placeholder="value.lableName+' '+'(间)'"></Input>
           </FormItem>
         </div>
       </div>
@@ -127,6 +127,32 @@
         showroomCount: false,
         showcounselor: true,
         showmanager: true,
+                ttt: {
+        label: 'Demo title',
+        inputOptions: { uppercase: true, isRequired: false },
+        buttonOption: { textLeft: 'Move All', textRight: 'Move All' },
+        resizeBox: "md",
+        items: [
+          { 'id': '1', 'name': 'Alundra' },
+          { 'id': '2', 'name': 'Jess' },
+          { 'id': '3', 'name': 'Meia' },
+          { 'id': '4', 'name': 'Melzas' },
+          { 'id': '5', 'name': 'Septimus' },
+
+          { 'id': '6', 'name': 'Rudy Roughknight' },
+          { 'id': '7', 'name': 'Jack Van Burace' },
+          { 'id': '8', 'name': 'Hanpan' },
+          { 'id': '9', 'name': 'Cecilia Adlehyde' },
+
+          { 'id': '10', 'name': 'Serge' },
+          { 'id': '11', 'name': 'Kid' },
+          { 'id': '12', 'name': 'Lynx' },
+          { 'id': '13', 'name': 'Harle' },
+
+        ],
+        colorItems: '#1E90FF',
+        selectedItems: []
+      },
         ruleValidate: {
           roomSize: [
             { validator: valueEqualNumber, trigger: 'blur' }

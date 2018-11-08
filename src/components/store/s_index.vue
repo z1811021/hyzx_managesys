@@ -704,7 +704,6 @@
       getList(name,page,pagesize) {
         if(name==''||name==null){
           var URL = findStoreList()+page+'?status=1';
-          console.log(URL)
         }else{
           URL = findStoreList()+'?id='+name+'&page='+page+'&pageSize='+pagesize ;
         }
@@ -717,6 +716,12 @@
           },
           url:URL,
         }).then((res) => {
+          res.data.content.map((item,index)=>{
+            res.data.content[index].storeType = this.storeTypeTransfer(item.storeType)
+            res.data.content[index].operationMode = this.operationModeTransfer(item.operationMode)
+            res.data.content[index].franchType = this.franchTypeTransfer(item.franchType)
+            res.data.content[index].managementCycle = res.data.content[index].managementCycle+'个月'
+          })
           this.data1 = res.data.content;
         }).catch((error) => {
         });
