@@ -1,4 +1,9 @@
-/**
+
+export const verifyCode  = function () {
+  const URL = '/verification/code/';
+  const API = host + URL;
+  return API;
+};/**
  * Created by Benson on 2017/12/27.
  */
 const host = 'http://116.62.201.135:8080';
@@ -97,6 +102,11 @@ export const audit = function () {
   const API = host + URL;
   return API;
 };
+export const checkRegisterStatus = function () {
+  const URL = '/store/register/status/';
+  const API = host + URL;
+  return API;
+};
 export const extendSalaryInfo = function () {
   const URL = '/store/extendSalaryInfo';
   const API = host + URL;
@@ -122,6 +132,11 @@ export const getCities  = function () {
   const API = host + URL;
   return API;
 };
+export const verifyCode  = function () {
+  const URL = '/verification/code/';
+  const API = host + URL;
+  return API;
+};
 export const getRoomInfo  = function () {
   const URL = '/store/getRoomInfo/';
   const API = host + URL;
@@ -133,7 +148,7 @@ export const findStoreByPhone  = function () {
   return API;
 };
 export const checkStorePhone  = function () {
-  const URL = '/verification/code';
+  const URL = '/customer/account/';
   const API = host + URL;
   return API;
 };

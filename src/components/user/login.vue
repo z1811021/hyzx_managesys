@@ -1,6 +1,6 @@
 <template>
   <div class="login" @keyup.enter="checkLogin()">
-    <div class="layout-logo-left">田杨美业管理咨询表</div>
+    <div class="layout-logo-left">华杨汇美后台管理系统</div>
     <div style="padding:50px 20px 0 20px;" >
       <span class="txt">用户名：</span><Input v-model="data.account" placeholder="用户名" style="width: 70%;" />
       <br><br><br>

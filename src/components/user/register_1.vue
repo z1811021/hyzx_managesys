@@ -76,7 +76,7 @@
 </template>
 
 <script>
-  import { getProvinces,getCities ,userRegister, checkStorePhone, validatePhone} from '../../interface';
+  import { getProvinces,getCities ,userRegister, checkStorePhone, validatePhone, checkRegisterStatus, verifyCode} from '../../interface';
   export default{
     name: 'register_1',
     data(){
@@ -138,6 +138,9 @@
         provincesData:[],
         citiesData:[],
         successTag:'',
+        registerBefore: false,
+        registItem: '',
+        registStoreid: '',
         ruleValidate: {
             staffName: [
                 { required: true, message: '联系人不能为空', trigger: 'blur' }
@@ -201,31 +204,101 @@
       validatePhone(name){
         this.$refs[name].validate((valid) => {
           if (valid) {
-            this.validatePhoneVal.time=60;
-            this.validatePhoneVal.disabled=true;
-            this.timer();
-            if(valid){
-              this.$ajax({
-                method: 'post',
-                url: checkStorePhone(),
-                withCredentials: true,
-                data: {
-                  account: this.validatePhoneVal.phoneNumber,
+            const f1 = () => {
+              return new Promise((resolve, reject)=> {
+                this.$ajax({
+                  method: 'GET',
+                  url: checkStorePhone()+this.validatePhoneVal.phoneNumber,
+                  withCredentials: true,
+                }).then((res) => {
+                  if(res.data.customer){
+                    resolve(res.data.customer.id)
+                  } else {
+                    resolve(null)
+                  }
+                  // if (res.data.msg === 0) {
+                  //     this.$Message.success({content: '联系人电话可以注册', duration: 3});
+                  // } else if (res.data.msg === 1) {
+                  //   this.$Message.error({content: '联系人电话已被注册！', duration: 3});
+                  //   return;
+                  // } else {
+                  //   this.$Message.error({content: '请求验证码失败', duration: 3});
+                  //   return;
+                  // }
+                }).catch((error) =>{
+                  reject();
+                })
+              }); 
+            }
+            const f2 = (customerId) => {
+              return new Promise((resolve, reject)=> {
+                if(customerId){
+                  this.$ajax({
+                    method: 'GET',
+                    url: checkRegisterStatus()+customerId,
+                    withCredentials: true,
+                  }).then((res) => {
+                    console.log(res)
+                    if(res.data.registItem){
+                      this.$Modal.confirm({
+                        title: '注册',
+                        content: '<p>我们检测到您有一些信息没有填完，点击下一步我们将发送验证码</p>',
+                        okText: '下一步',
+                        cancelText: '返回',
+                        onOk: () => {
+                          this.registItem = res.data.registItem;
+                          this.registStoreid = res.data.storeId;
+                          sessionStorage['storeId'] = res.data.storeId
+                          this.registerBefore = true;
+                          this.validatePhoneVal.time=60;
+                          this.validatePhoneVal.disabled=true;
+                          this.timer();
+                          resolve(this.validatePhoneVal.phoneNumber)
+                        },
+                        onCancel: () => {
+                            this.$router.push({name: 'register'});
+                        }
+                      });
+                    } else {
+                      this.$Message.error({content: '联系人电话已被注册！', duration: 3});
+                    }
+                  }).catch((error) =>{
+                    this.$Message.error({content: '注册失败！', duration: 3});
+                  })
+                }else {
+                  this.$Message.success({content: '联系人电话可以注册', duration: 3});
+                  this.validatePhoneVal.time=60;
+                  this.validatePhoneVal.disabled=true;
+                  this.timer();
+                  resolve(this.validatePhoneVal.phoneNumber)
                 }
-              }).then((res) => {
-                if (res.data.msg === 0) {
-                    this.$Message.success({content: '联系人电话可以注册', duration: 3});
-                } else if (res.data.msg === 1) {
-                  this.$Message.error({content: '联系人电话已被注册！', duration: 3});
-                  return;
-                } else {
-                  this.$Message.error({content: '请求验证码失败', duration: 3});
-                  return;
-                }
-              }).catch((error) =>{
-                this.$Message.error({content: '注册失败！', duration: 3});
               })
-            } 
+            }
+            const f3 = (phone) => {
+              return new Promise((resolve, reject)=>{
+                this.$ajax({
+                  method: 'GET',
+                  url: verifyCode()+phone,
+                  withCredentials: true,
+                }).then((res) => {
+                  console.log(res)
+                  if(res.data.msg === 0){
+                    resolve(this.validatePhoneVal.phoneNumber)
+                  } else {
+                    this.$Message.error({content: '我们检测到短信发送有问题，我们研发人员正在加速处理，请稍后', duration: 3});
+                  }
+                }).catch((error) =>{
+                  this.$Message.error({content: '注册失败！', duration: 3});
+                })
+              })
+            }
+            f1()
+            .then((result)=>{
+              return f2(result);
+            })
+            .then((result)=>{
+              return f3(result);
+            })
           }
         })
       },
@@ -254,7 +327,7 @@
                 code: this.validatePhoneVal.validatePhoneNumber,
               }
             }).then((res) => {
-              if (res.data.msg === 0) {
+              if (res.data.msg === 0 && !this.registerBefore) {
               this.validatePhoneVal.footer1 = 'footer1Display2'
               this.validatePhoneVal.form1 = 'form1Display2'
               this.form2 = 'form2Display2'
@@ -263,6 +336,11 @@
               } else if (res.data.msg === 1) {
                 this.$Message.error({content :'验证码不正确', duration: 3});
                 return;
+              } else if (this.registerBefore && res.data.msg === 0){
+                  this.$Message.info('进行下一步填写');
+                  this.$router.push({name: this.registItem, params:{storeid:this.registStoreid}});
+                  this.$emit('changeActivename',this.registItem)
+                  return;
               }
             }).catch((error) =>{
               this.$Message.error({content: '注册失败！', duration: 3});
