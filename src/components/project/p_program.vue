@@ -3,26 +3,26 @@
     <h2 style="padding: .6rem;">解决方案管理</h2>
     <Row :gutter="24" class="option">
       <Col span="2">
-      <Button class="hy_btn" @click="newEm">新建</Button>
+      <Button class="hy_btn" @click="newEm">新建解决方案</Button>
       </Col>
     </Row>
     <Table :columns="columns" :data="data"></Table>
 
     <Modal  v-model="storeFlag" :mask-closable="false" :title="store" @on-ok="ok">
-      症状：<Select v-model="pis.problemId" placeholder="症状" style="width:323px" :transfer=true>
-      <Option v-for="item in prds" :value="item.id" :key="item.id">{{ item.problem }}</Option>
+      症状：<Select v-model="selectProblem" placeholder="症状" style="width:323px" :transfer=true>
+      <Option v-for="item in problemData" :value="item.symName" :key="index">{{ item.symName }}</Option>
     </Select>
       <br><br>
-      方案名称：<Input v-model="pis.schemeName" placeholder="方案名称" style="width: 300px"/>
+      方案名称：<Input placeholder="方案名称" style="width: 300px"/>
       <br/>
       <br/>
-      基础解决方案：<Select v-model="pis.basicProgrammeIds" placeholder="基础解决方案" :multiple=true style="width:275px" :transfer=true>
-      <Option v-for="item in projectList" :value="item.id" :key="item.id">{{ item.projectName }}</Option>
+      基础解决方案：<Select v-model="selectBaseProgram" placeholder="基础解决方案" :multiple=true style="width:275px" :transfer=true>
+      <Option v-for="item in projectList" :value="item.programName" :key="index">{{ item.programName }}</Option>
     </Select>
       <br/>
       <br/>
-      最优解决方案：<Select v-model="pis.optimalSchemeIds" placeholder="最优解决方案" :multiple=true style="width:275px" :transfer=true>
-      <Option v-for="item in projectList" :value="item.id" :key="item.id">{{ item.projectName }}</Option>
+      最优解决方案：<Select v-model="selectBestProgram" placeholder="最优解决方案" :multiple=true style="width:275px" :transfer=true>
+      <Option v-for="item in projectList" :value="item.programName" :key="index">{{ item.programName }}</Option>
     </Select>
       <br/>
       <br/>
@@ -31,35 +31,24 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {saveSolution,editSolution,findSolutionList,deleteSolution,findproblemList,findAllProject,} from '../../interface';
+  import {saveSolution,editSolution,findSolutionList,deleteSolution,findproblemList,findAllProject,findProjectPlanList,} from '../../interface';
 
   export default {
     name: 'p_program',
     created() {
       this.getProject();
       this.getProblem();
-      this.getData();
+      //this.getData();
     },
     data(){
       return {
         storeFlag: false,
         store: '',
         card: '',
-        pis: {
-          storeId: this.$route.params.id,
-          basicProgramme: "",
-          basicProgrammeIds: [],
-          enable: true,
-          handlingDetails: "",
-          id: "",
-          optimalScheme: "",
-          optimalSchemeIds: [],
-          problemId:'' ,
-          problemName: "",
-          schemeName: "",
-          storeName: "",
-          symptomType: ""
-        },
+        selectProblem: '',
+        selectBaseProgram: '',
+        selectBestProgram: '',
+        problemData: [],
         columns: [
           {
             title: '症状',
@@ -142,13 +131,36 @@
         };
       },
       getProject(){
-        this.$ajax({
-          method:'get',
-          url: findAllProject()+'?id='+this.$route.params.id,
-        }).then( (res) =>{
-          this.projectList = res.data;
-        }).catch( (error) =>{
-
+          this.$ajax({
+            method: 'GET',
+            dataType: 'JSON',
+            contentType: 'application/json;charset=UTF-8',
+            headers: {
+              "authToken": sessionStorage.getItem('authToken')
+            },
+            url: findProjectPlanList()+'/'+this.$route.params.id+'?programType=0',
+          }).then((res) => {
+            this.projectList = res.data.programManage;
+            this.getMeal();
+        }).catch((error) => {
+          this.$Message.error('获取失败');
+        });
+      },
+      getMeal(){
+          this.$ajax({
+            method: 'GET',
+            dataType: 'JSON',
+            contentType: 'application/json;charset=UTF-8',
+            headers: {
+              "authToken": sessionStorage.getItem('authToken')
+            },
+            url: findProjectPlanList()+'/'+this.$route.params.id+'?programType=1',
+          }).then((res) => {
+            for(var i=0;i<res.data.programManage.length;i++){
+              this.projectList.push(res.data.programManage[i]);
+            }
+        }).catch((error) => {
+          this.$Message.error('获取失败');
         });
       },
       getProblem(){
@@ -159,13 +171,13 @@
           headers: {
             "authToken": sessionStorage.getItem('authToken')
           },
-          url: findproblemList()+'?id='+this.$route.params.id,
+          url: findproblemList() + '/'+this.$route.params.id,
         }).then((res) => {
-          this.prds = res.data;
+          this.problemData = res.data.symptomManageInfo;
         }).catch((error) => {
         });
       },
-      getData(){
+/*      getData(){
         this.$ajax({
           method: 'GET',
           dataType: 'JSON',
@@ -178,35 +190,8 @@
           this.data = res.data;
         }).catch((error) => {
         });
-
-      },
+      },*/
       ok() {
-        let URL = saveSolution();
-        if( this.store == '修改') {
-          URL = editSolution();
-        };
-        if(this.pis.schemeName == ''){
-          this.$Message.warning('名称不能为空');
-          return;
-        }
-        this.pis.basicProgrammeIds = this.pis.basicProgrammeIds.toString();
-        this.pis.optimalSchemeIds = this.pis.optimalSchemeIds.toString();
-        console.log(this.pis);
-        this.$ajax({
-          method: 'POST',
-          dataType: 'JSON',
-          contentType: 'application/json;charset=UTF-8',
-          headers: {
-            "authToken": sessionStorage.getItem('authToken')
-          },
-          data: this.pis,
-          url: URL,
-        }).then((res) => {
-          this.$Message.success('操作成功');
-          this.getData();
-        }).catch((error) => {
-          this.$Message.error('操作失败');
-        });
       },
       mannger(data) {
         this.pis = JSON.parse(JSON.stringify(data));

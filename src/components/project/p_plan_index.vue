@@ -3,7 +3,7 @@
     <h2 style="padding: .6rem;">项目方案</h2>
     <Row :gutter="24" class="option">
       <Col span="2">
-        <Button class="hy_btn" @click="newEm">新建</Button>
+        <Button class="hy_btn" @click="newEm">新建方案</Button>
       </Col>
     </Row>
     <Table :columns="columns" :data="data"></Table>
@@ -18,19 +18,20 @@
         <br/>
         <div style="float:left;margin-left: 63px;">选择项目：</div>
         <br/>
-        <Select v-model="selectedProjects" placeholder="请选择方案包含项目" :multiple=true style="width:360px;margin-bottom:5%;margin-top:2%;" :transfer=true @on-change="changeProjects()" filterable draggable=true>
+        <Select v-model="selectedProjects" placeholder="请选择方案包含项目" :multiple=true style="width:360px;margin-top:2%;" :transfer=true @on-change="changeProjects()" filterable draggable=true>
           <Option v-for="(item,index) in projectList" :value="index" :key="index">{{ item.itemName }}</Option>
         </Select>
         <br/>
-        <div v-show="showDataTable" style="float:left;margin-left: 63px;">套餐设计：</div>
+        <div v-show="showDataTable" style="float:left;margin-left: 63px;">方案设计：</div>
         <br/>
         <div v-show="showDataTable" class="dataTableDiv">
           <li class="specialLiTitle"><div class="liOrderLeft">序列</div><div class="liLeft">项目名称</div><div class="liCenter">项目价格</div><div class="liRightTitle">项目间隔</div><div class="liMostRight">修改间隔</div><br/></li>
           <draggable element="ul" v-model="planData">
-            <li v-for="(item,index) in planData" class="specialLi"><div class="liOrderLeft">{{index+1}}</div><div class="liLeft">{{item.itemName}}</div><div class="liCenter">{{item.itemPrice}}</div><Input v-show="!showModify" v-model="item.courseInterval" class="liRight" disabled/><Input v-show="showModify" v-model="item.courseInterval" class="liRight" @on-blur="disableModify(item.courseInterval,index)"/><div class="liMostRight"><Button :size="buttonSize" type="primary" @click="mannger(index)">修改</Button><Button :size="buttonSize" type="warning" @click="Delete(item.itemName)">删除</Button></div><br/></li>
+            <li v-for="(item,index) in planData" class="specialLi"><div class="liOrderLeft">{{index+1}}</div><div class="liLeft">{{item.itemName}}</div><div class="liCenter">{{item.itemPrice}}</div><Input v-show="!item.showBlank" v-model="item.courseInterval" class="liRight" disabled/><Input v-show="item.showBlank" v-model="item.courseInterval" class="liRight" @on-blur="disableModify(item,index)"/><div class="liMostRight"><Button :size="buttonSize" type="primary" @click="mannger(item)">修改</Button><Button :size="buttonSize" type="warning" @click="Delete(item.itemName)">删除</Button></div><br/></li>
           </draggable>
           <li v-show="showBlank" class="specialLi"></li>
         </div> 
+        <br/>
         <br/>
         <div class="timeLineDiv">
           <Timeline v-model="planData">
@@ -146,7 +147,7 @@
       },
       pushSelectProjects(value, index, ar){
         this.projectList[value].index = value;
-        this.projectList[value].showBlank = true;
+        this.projectList[value].showBlank = false;
         this.planData.push(this.projectList[value]);
         this.showBlank = false;
         this.showDataTable = true;
@@ -164,18 +165,20 @@
          }
          return result;
       },
-      mannger(value,index){
+      mannger(item){
         this.showModify = true;
+        item.courseInterval = '';
+        item.showBlank = true;
       },
-      disableModify(value,index){
-        if(!(/^\d+$/.test(value))){
+      disableModify(item,index){
+        if(!(/^\d+$/.test(item.courseInterval))){
           this.$Message.error('请输入新的间隔天数！');
-          this.planData[index].courseInterval = '';
+          item.courseInterval = '';
         }else{
-          if(value !='' && value.indexOf("天")<0){
-          this.planData[index].courseInterval = this.planData[index].courseInterval + "天";
+          if(item.courseInterval !='' && item.courseInterval.indexOf("天")<0){
+          item.courseInterval = item.courseInterval + "天";
           }
-          this.showModify = false;
+          item.showBlank = false; 
         }
       },
       Delete(itemName){
@@ -202,14 +205,18 @@
       },
       ok(){
         var programItems = [];
+        //this.planData = this.planData.sort(this.compare("itemOrder"));
         for(var i=0;i<this.planData.length;i++){
           var item = {storeId:this.$route.params.id, programId:0, itemOrder:i+1, itemName:this.planData[i].itemName, itemPrice:this.planData[i].itemPrice.replace("元/次",""), itemInterval:this.planData[i].courseInterval.replace("天","")};
           programItems.push(item);
         }
+        programItems.sort(this.compare("itemOrder"));
         var programManage = {
             storeId: this.$route.params.id,
             // 方案名称
             programName: this.planName,
+            // 类别： 0,方案，1， 套餐
+            programType:0,
             // 方案价格
             programPrice: this.planPrice.replace("元",""),
             // 与方案关联的项目
@@ -253,12 +260,14 @@
             headers: {
               "authToken": sessionStorage.getItem('authToken')
             },
-            url: findProjectPlanList()+'/'+this.$route.params.id,
+            url: findProjectPlanList()+'/'+this.$route.params.id+'?programType=0',
           }).then((res) => {
             this.data = res.data.programManage;
             for(var i = 0; i < this.data.length; i++){
               this.data[i].projectNumber = this.data[i].programItems.length+"个";
               this.data[i].programPrice = this.data[i].programPrice+"元";
+              this.data[i].programItems = this.data[i].programItems.sort(this.compare("itemOrder"));
+              this.data[i].courseInterval = this.data[i].programItems.itemInterval;
             }
         }).catch((error) => {
           this.$Message.error('获取失败');
@@ -272,7 +281,7 @@
           headers: {
             "authToken": sessionStorage.getItem('authToken')
           },
-          url: projectPlandelete()+'/'+this.$route.params.id+"?programName="+data.programName,
+          url: projectPlandelete()+'/'+this.$route.params.id+"?programType=0&programName="+data.programName,
         }).then((res) => {
           this.$Message.success('操作成功');
           this.getPlanList();
@@ -291,11 +300,19 @@
         this.selectedProjects = [];
         this.planData = [];
         data.programItems.forEach(this.getProjectsBack);
+        //this.planData = data.programItems;
         this.selectedProjects.forEach(this.pushSelectProjects);
         this.planName = data.programName;
         this.planPrice = data.programPrice;
         this.storeFlag = true;
       },
+      compare(property) {
+            return function(a, b) {
+                var value1 = a[property];
+                var value2 = b[property];
+                return value1 - value2;
+            }
+        },
       getProjectsBack(value, index, ar){
         for(var i = 0; i < this.projectList.length; i++){
           if(value.itemName == this.projectList[i].itemName){

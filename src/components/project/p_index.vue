@@ -3,7 +3,7 @@
     <h2 style="padding: .6rem;">项目列表</h2>
     <Row :gutter="24" class="option">
       <Col span="2">
-        <Button class="hy_btn" @click="newEm">新建</Button>
+        <Button class="hy_btn" @click="newEm">新建项目</Button>
       </Col>
     </Row>
     <Table :columns="columns" :data="data"></Table>

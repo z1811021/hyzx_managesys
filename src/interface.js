@@ -1,9 +1,9 @@
 
-export const verifyCode  = function () {
+/*export const verifyCode  = function () {
   const URL = '/verification/code/';
   const API = host + URL;
   return API;
-};/**
+};*//**
  * Created by Benson on 2017/12/27.
  */
 const host = 'http://116.62.201.135:8080';
@@ -216,22 +216,17 @@ export const projectPlandelete = function () {
 };
 //查找症状
 export const findproblemList = function () {
-  const URL = '/program/manage/store';
+  const URL = '/symptom/manage/store';
   const API = host + URL;
   return API;
 };
 export const saveproblem = function () {
-  const URL = '/app/api/problem/save';
-  const API = host + URL;
-  return API;
-};
-export const editproblem = function () {
-  const URL = '/app/api/problem/edit';
+  const URL = '/symptom/manage/add';
   const API = host + URL;
   return API;
 };
 export const deleteproblem = function () {
-  const URL = '/app/api/problem/delete';
+  const URL = '/symptom/manage/delete';
   const API = host + URL;
   return API;
 };
