@@ -12,7 +12,7 @@
       <div style="float:left;;margin-left: 63px;">项目类别：</div>
       <br/>
       <br/>
-      <RadioGroup v-model="projectChoose" @on-change="changePro">
+      <RadioGroup v-model="projectChoose" @on-change="changePro" prop="test">
           <Radio label="1" style="float:left;">
               <span>面部</span>
           </Radio>
@@ -68,10 +68,20 @@
       项目名称：<Input v-model="pis.itemName" placeholder="名称" style="width: 300px"/>
       <br/>
       <br/>
-      项目单价：<Input v-model="pis.itemPrice" placeholder="项目单价 次/元" style="width: 300px" @on-blur="addPriceUnit"/>
+<!--       项目单价：<InputNumber v-model="pis.itemPrice" placeholder="项目单价 次/元" style="width: 300px" @on-blur="addPriceUnit"/></InputNumber> -->
+      项目单价：<InputNumber
+            :min="0"
+            v-model="pis.itemPrice"
+            :formatter="value => `${value}元/次`"
+            :parser="value => value.replace('元/次', '')" placeholder="元/次" style="width: 300px"></InputNumber>
       <br/>
       <br/>
-      项目间隔：<Input v-model="pis.courseInterval" placeholder="项目间隔" style="width: 300px" @on-blur="addPeriod"/>
+ <!--      项目间隔：<Input v-model="pis.courseInterval" placeholder="项目间隔" style="width: 300px" @on-blur="addPeriod"/> -->
+      项目间隔：<InputNumber
+            :min="0"
+            v-model="pis.courseInterval"
+            :formatter="value => `${value}天`"
+            :parser="value => value.replace('天', '')" placeholder="天" style="width: 300px"></InputNumber>
       </div>
       <br/>
       <div style="float:left;margin-left: 63px;">是否设计疗程：</div>
@@ -102,10 +112,22 @@
           </div>
           <div v-show="showAgenda">
           <br/>
-          <div class="leftRadio">疗程次数：</div><Input v-model="pis.courseTimes" placeholder="疗程次数" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" @on-blur="addTimeUnit"/>
+          <!-- <div class="leftRadio">疗程次数：</div><Input v-model="pis.courseTimes" placeholder="疗程次数" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" @on-blur="addTimeUnit"/> -->
+          <div class="leftRadio">疗程次数：</div><InputNumber
+            :min="0"
+            v-model="pis.courseTimes"
+            :formatter="value => `${value}次`"
+            :parser="value => value.replace('次', '')" placeholder="疗程次数：次" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;">
+          </InputNumber>
           <br/>
           <br/>
-          <div class="leftRadio">疗程价：</div><Input v-model="pis.coursePrice" placeholder="疗程价" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" @on-blur="addCurePriceUnit"/>
+          <!-- <div class="leftRadio">疗程价：</div><Input v-model="pis.coursePrice" placeholder="疗程价：元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" @on-blur="addCurePriceUnit"/> -->
+          <div class="leftRadio">疗程价：</div><InputNumber
+            :min="0"
+            v-model="pis.coursePrice"
+            :formatter="value => `${value}元`"
+            :parser="value => value.replace('元', '')" placeholder="疗程价：元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;">
+          </InputNumber>
           </div>
       <div style="float: left;margin-left: 12%;margin-top:3%;">项目属性：</div>
           <br/>
@@ -346,7 +368,7 @@
           return false;
         }
       },
-      addPriceUnit(){
+/*      addPriceUnit(){
         if(!(/^\d+$/.test(this.pis.itemPrice))){
           this.$Message.error('项目单价请输入数字！');
           this.pis.itemPrice = '';
@@ -375,8 +397,8 @@
           this.pis.coursePrice = this.pis.coursePrice + "元";
           }
         }
-      },
-      addPeriod(){
+      },*/
+/*      addPeriod(){
         if(!(/^\d+$/.test(this.pis.courseInterval))){
           this.$Message.error('请输入项目间隔天数！');
           this.pis.courseInterval = '';
@@ -385,7 +407,7 @@
           this.pis.courseInterval = this.pis.courseInterval + "天";
           }
         }
-      },
+      },*/
       ok() {
         var validateMessage = '';
         if(this.projectChoose == ''){
@@ -397,13 +419,13 @@
         if(this.pis.itemName == ''){
           validateMessage = validateMessage + "请输入项目名称！<br/>";
         }
-        if(this.pis.itemPrice == ''){
+        if(this.pis.itemPrice == null){
           validateMessage = validateMessage + "请输入项目单价！<br/>";
         }
         if(this.pis.designCourse == ''){
           validateMessage = validateMessage + "请选择是否设计疗程！<br/>";
         }
-        if(this.pis.designCourse != '' && (this.pis.courseTimes == '' || this.pis.coursePrice == '')){
+        if(this.pis.designCourse != '' && (this.pis.courseTimes == null || this.pis.coursePrice == null)){
           validateMessage = validateMessage + "请输入疗程价格和次数！<br/>";
         }
         if(this.pis.highFreq == false &&  this.pis.superposition == false && this.pis.strongEfficacy == false && this.pis.generalProps == false && this.pis.presents == false){
@@ -412,7 +434,7 @@
         if(this.pis.resolveProblem == '' ){
           validateMessage = validateMessage + "请输入解决方案！<br/>";
         }
-        if(this.pis.courseInterval == '' ){
+        if(this.pis.courseInterval == null ){
           validateMessage = validateMessage + "请输入项目间隔天数！<br/>";
         }
         if(validateMessage != ''){
@@ -424,10 +446,10 @@
           this.pis.superposition = this.transfer(this.pis.superposition);
           this.pis.strongEfficacy = this.transfer(this.pis.strongEfficacy);
           this.pis.generalProps = this.transfer(this.pis.generalProps);
-          this.pis.itemPrice = this.pis.itemPrice.replace("元/次","");
-          this.pis.courseTimes = this.pis.courseTimes.replace("次","");
-          this.pis.coursePrice = this.pis.coursePrice.replace("元","");
-          this.pis.courseInterval = this.pis.courseInterval.replace("天","");
+          //this.pis.itemPrice = this.pis.itemPrice.replace("元/次","");
+          //this.pis.courseTimes = this.pis.courseTimes.replace("次","");
+          //this.pis.coursePrice = this.pis.coursePrice.replace("元","");
+          //this.pis.courseInterval = this.pis.courseInterval.replace("天","");
           var params = {
               storeId:this.$route.params.id,
               itemManage:this.pis
@@ -455,6 +477,10 @@
         this.storeFlag = true;
         this.store = '修改';
         this.pis = JSON.parse(JSON.stringify(data));
+        this.pis.itemPrice = this.pis.itemPrice.replace("元/次","");
+        this.pis.courseInterval = this.pis.courseInterval.replace("天","");
+        this.pis.courseTimes = this.pis.courseTimes.replace("次","");
+        this.pis.coursePrice = this.pis.coursePrice.replace("元","");
         this.pis.highFreq = this.transferBack(this.pis.highFreq);
         this.pis.presents = this.transferBack(this.pis.presents);
         this.pis.superposition = this.transferBack(this.pis.superposition);

@@ -22,6 +22,7 @@
           <Option v-for="(item,index) in projectList" :value="index" :key="index">{{ item.itemName }}</Option>
         </Select>
         <br/>
+        <br/>
         <div v-show="showDataTable" style="float:left;margin-left: 63px;">方案设计：</div>
         <br/>
         <div v-show="showDataTable" class="dataTableDiv">
@@ -296,12 +297,21 @@
           this.planPrice = this.planPrice+"元";
         }
       },
+      getInterBack(value, index, ar){
+        for(var k = 0; k < this.planData.length; k++){
+          if(value.itemName == this.planData[k].itemName){
+            this.planData[k].courseInterval = value.itemInterval+"天";
+          } 
+        }
+      },
       manngerPlan(data){
         this.selectedProjects = [];
         this.planData = [];
         data.programItems.forEach(this.getProjectsBack);
         //this.planData = data.programItems;
         this.selectedProjects.forEach(this.pushSelectProjects);
+        console.log(JSON.parse(JSON.stringify(data.programItems)));
+        data.programItems.forEach(this.getInterBack);
         this.planName = data.programName;
         this.planPrice = data.programPrice;
         this.storeFlag = true;
@@ -363,7 +373,7 @@
     margin: 0 auto;
     margin-top:2%;            
     text-align: center;    
-    width:82%;
+    width:88%;
     background-color: #F8F8F8;
     border: 1px solid #dddee1;
   }
