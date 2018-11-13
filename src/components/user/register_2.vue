@@ -75,7 +75,7 @@
       <div class="footer">
   <!--     <Button class="hy_btn" style="margin-left:20px;" size="large" @click="ok">注册</Button>
       <Button class="hy_btn" style="margin-left:20px;" size="large" @click="search">查询注册结果</Button> -->
-        <Button class="hy_btn" size="large" @click="priviousPage">上一步</Button>
+        <!-- <Button class="hy_btn" size="large" @click="priviousPage">上一步</Button> -->
         <Button class="hy_btn" style="margin-left:20px;" size="large" @click="nextPage('formValidate')">下一步</Button>
       </div>
   </div>    

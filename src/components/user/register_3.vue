@@ -33,7 +33,7 @@
       </div>
     </Form>    
 <div class="footer">
-     <Button class="hy_btn" size="large" @click="priviousPage">上一步</Button>
+     <!-- <Button class="hy_btn" size="large" @click="priviousPage">上一步</Button> -->
     <Button class="hy_btn" style="margin-left:20px;" size="large" @click="nextPage('formValidate1', 'formValidate2', 'formValidate3', 'formValidate4')">下一步</Button>
   </div>
   </div>

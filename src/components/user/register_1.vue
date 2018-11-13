@@ -161,7 +161,7 @@
                 { required: true, message: '地址不能为空', trigger: 'blur' }
             ],
             telephone: [
-                { validator: validateTelephone, trigger: 'blur', required: true }
+                { validator: validateTelephone, trigger: 'blur' }
             ],
             storeType: [
                 { required: true, message: '门店类型不能为空', trigger: 'change' }
@@ -239,7 +239,9 @@
                     withCredentials: true,
                   }).then((res) => {
                     console.log(res)
-                    if(res.data.registItem){
+                    if(res.data.registItem === 0){
+                      this.$Message.error({content: '联系人电话已被注册！', duration: 3});
+                    } else {
                       this.$Modal.confirm({
                         title: '注册',
                         content: '<p>我们检测到您有一些信息没有填完，点击下一步我们将发送验证码</p>',
@@ -259,8 +261,6 @@
                             this.$router.push({name: 'register'});
                         }
                       });
-                    } else {
-                      this.$Message.error({content: '联系人电话已被注册！', duration: 3});
                     }
                   }).catch((error) =>{
                     this.$Message.error({content: '注册失败！', duration: 3});
