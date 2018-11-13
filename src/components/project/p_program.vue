@@ -8,24 +8,28 @@
     </Row>
     <Table :columns="columns" :data="data"></Table>
 
-    <Modal  v-model="storeFlag" :mask-closable="false" :title="store" @on-ok="ok">
+    <Modal class="modalProgram" v-model="storeFlag" :mask-closable="false" :title="store">
       症状：<Select v-model="selectProblem" placeholder="症状" style="width:323px" :transfer=true>
       <Option v-for="item in problemData" :value="item.symName" :key="index">{{ item.symName }}</Option>
     </Select>
       <br><br>
-      方案名称：<Input placeholder="方案名称" style="width: 300px"/>
+      方案名称：<Input v-model="solutionName" placeholder="方案名称" style="width: 300px"/>
       <br/>
       <br/>
-      基础解决方案：<Select v-model="selectBaseProgram" placeholder="基础解决方案" :multiple=true style="width:275px" :transfer=true>
+      基础解决方案：<Select v-model="selectBasePrograms" placeholder="基础解决方案" :multiple=true style="width:275px" :transfer=true>
       <Option v-for="item in projectList" :value="item.programName" :key="index">{{ item.programName }}</Option>
     </Select>
       <br/>
       <br/>
-      最优解决方案：<Select v-model="selectBestProgram" placeholder="最优解决方案" :multiple=true style="width:275px" :transfer=true>
+      最优解决方案：<Select v-model="selectBestPrograms" placeholder="最优解决方案" :multiple=true style="width:275px" :transfer=true>
       <Option v-for="item in projectList" :value="item.programName" :key="index">{{ item.programName }}</Option>
     </Select>
       <br/>
       <br/>
+      <div slot="footer">
+          <Button type="primary" @click="ok">{{store}}</Button>
+          <Button type="ghost" @click="close">取消</Button>
+      </div>
     </Modal>
   </div>
 </template>
@@ -38,6 +42,7 @@
     created() {
       this.getProject();
       this.getProblem();
+      this.getSolutionList();
       //this.getData();
     },
     data(){
@@ -45,27 +50,28 @@
         storeFlag: false,
         store: '',
         card: '',
+        solutionName: '',
         selectProblem: '',
-        selectBaseProgram: '',
-        selectBestProgram: '',
+        selectBaseProgram: [],
+        selectBestProgram: [],
         problemData: [],
         columns: [
           {
             title: '症状',
-            key: 'problemName'
+            key: 'symptom'
 
           },
           {
             title: '方案名称',
-            key: 'schemeName'
+            key: 'solutionName'
           },
           {
             title: '基础解决方案',
-            key: 'basicProgramme'
+            key: 'basicSolution'
           },
           {
             title: '最优解决方案',
-            key: 'optimalScheme'
+            key: 'bestSolution'
           },
           {
             title: '操作',
@@ -96,7 +102,7 @@
                   },
                   on: {
                     click: () => {
-                      this.del(params.row, params.index)
+                      this.del(params.row)
                     }
                   }
                 }, '删除'),
@@ -113,22 +119,25 @@
       newEm() {
         this.storeFlag = true;
         this.store = '新建';
-        this.pis = {
-          storeId: this.$route.params.id,
-          basicProgramme: "",
-          basicProgrammeIds: [],
-          enable: true,
-          handlingDetails: "",
-          id: "",
-          optimalScheme: "",
-          optimalSchemeIds: [],
-          problemId:'' ,
-          problemName: "",
-          schemeName: "",
-          storeName: "",
-          symptomType: ""
-
-        };
+        this.solutionName = '';
+        this.selectProblem ='';
+        this.selectBasePrograms = [];
+        this.selectBestPrograms = [];
+      },
+      getSolutionList(){
+          this.$ajax({
+            method: 'GET',
+            dataType: 'JSON',
+            contentType: 'application/json;charset=UTF-8',
+            headers: {
+              "authToken": sessionStorage.getItem('authToken')
+            },
+            url: findSolutionList()+'/'+this.$route.params.id,
+          }).then((res) => {
+            this.data = res.data.solutionInfo;
+        }).catch((error) => {
+          this.$Message.error('获取失败');
+        });
       },
       getProject(){
           this.$ajax({
@@ -192,41 +201,84 @@
         });
       },*/
       ok() {
-      },
-      mannger(data) {
-        this.pis = JSON.parse(JSON.stringify(data));
-        if (typeof data.basicProgramme == 'string') {
-          this.pis.basicProgrammeIds = data.basicProgrammeIds.split(',').map( (it, i) => {return +it});
-        }
-        if (typeof data.optimalScheme == 'string') {
-          this.pis.optimalSchemeIds = data.optimalSchemeIds.split(',').map( (it, i) => {return +it});
-        }
-        this.storeFlag = true;
-        this.store = '修改';
-      },
-      del(data, i) {
-        let mess = confirm('确认删除？');
-        if (mess) {
+          var selectBaseProgramsString = '';
+          var selectBestProgramsString = '';
+          for(var i=0;i<this.selectBasePrograms.length;i++){
+            selectBaseProgramsString = selectBaseProgramsString + this.selectBasePrograms[i] + ',';
+          }
+          for(var j=0;j<this.selectBestPrograms.length;j++){
+            selectBestProgramsString = selectBestProgramsString + this.selectBestPrograms[j] + ',';
+          }
+          var solutionManage = {
+              storeId: this.$route.params.id,
+              // 症状
+              symptom: this.selectProblem,
+              // 方案名
+              solutionName: this.solutionName,
+              // 基本方案
+              basicSolution: selectBaseProgramsString.substring(0,selectBaseProgramsString.length-1),
+              // 最佳方案
+              bestSolution: selectBestProgramsString.substring(0,selectBestProgramsString.length-1)
+          }
+          var params = {
+              storeId: this.$route.params.id,
+              solutionManage: solutionManage
+          }
+          let URL = saveSolution();
           this.$ajax({
-            method: 'GET',
-            url:deleteSolution()+"?id=" + data.id,
+            method: 'POST',
             dataType: 'JSON',
             contentType: 'application/json;charset=UTF-8',
             headers: {
               "authToken": sessionStorage.getItem('authToken')
             },
+            data: params,
+            url: URL,
           }).then((res) => {
-            this.data.splice(i, 1);
-            this.$Message.success('删除成功');
+            this.$Message.success('操作成功');
+            this.getProject();
+            this.getSolutionList();
+            this.storeFlag=false;
           }).catch((error) => {
-            this.$Message.error('删除失败');
+            this.$Message.error('操作失败');
           });
-        }
+      },
+      mannger(data) {
+        this.selectProblem = data.symptom;
+        this.solutionName = data.solutionName;
+        this.selectBasePrograms = data.basicSolution.split(",");
+        this.selectBestPrograms = data.bestSolution.split(",");
+        this.storeFlag = true;
+        this.store = '修改';
+      },
+      close(){
+        this.storeFlag = false;
+      },
+      del(data) {
+        this.$ajax({
+          method: 'GET',
+          dataType: 'JSON',
+          contentType: 'application/json;charset=UTF-8',
+          headers: {
+            "authToken": sessionStorage.getItem('authToken')
+          },
+          url: deleteSolution()+'/'+this.$route.params.id+"?symptom="+data.symptom+"&solutionName="+data.solutionName,
+        }).then((res) => {
+          this.$Message.success('操作成功');
+          this.getProject();
+          this.getSolutionList();
+        }).catch((error) => {
+          this.$Message.error('操作失败');
+        })
       },
     }
   };
 </script>
 
 <style scoped>
+  .modalProgram {
+    margin: 0 auto;            
+    text-align: center;    
+  }
 
 </style>

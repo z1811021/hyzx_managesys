@@ -7,26 +7,31 @@
       <br/>
       <Table :columns="columns" :data="data"></Table>
       <Modal v-model="addF" title="添加" :mask-closable="false" @on-ok="ok" class="mod">
-        <div class='com'>会员级别名称：<Input v-model="addData.membershipName" style="width: 252px"></Input></div>
-        <div class='com'>会员价格：<Input v-model="addData.membershipMoney" placeholder="单位元" style="width: 275px;ime-mode:disabled" @on-keyup="addData.membershipMoney=check2(addData.membershipMoney)" ></Input>
+        <div class='com'>会员级别名称：<Input v-model="addData.membershipName" placeholder="会员级别名称" style="width: 252px"></Input></div>
+        <div class='com'>会员价格：
+          <InputNumber
+            :min="0"
+            v-model="addData.membershipMoney"addData.membershipMoney
+            :formatter="value=> `${value}元`"
+            :parser="value => value.replace('元', '')" placeholder="会员价格 元" style="width: 275px;ime-mode:disabled"></InputNumber>
         </div>
-        <div class='com'>单次折扣：0.
-          <Select v-model="DA" style="width:40px" size="small" placeholder="" :transfer=true>
-          <Option :value="item" :key="item" v-for="item in num" style="height: 18px;line-height: 18px;margin-top: 0; padding-top: 0;" >{{item}}</Option>
-        </Select>
-          <Select v-model="DB" style="width:40px" size="small" placeholder="" :transfer=true>
-            <Option :value="item" :key="item" v-for="item in num" style="height: 18px;line-height: 18px;margin-top: 0; padding-top: 0;" >{{item}}</Option>
-          </Select>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;产品折扣：0.
-          <Select v-model="DC" style="width:40px" size="small" placeholder="" :transfer=true>
-            <Option :value="item" :key="item" v-for="item in num" style="height: 18px;line-height: 18px;margin-top: 0; padding-top: 0;" >{{item}}</Option>
-          </Select>
-          <Select v-model="DD" style="width:40px" size="small" placeholder="" :transfer=true>
-            <Option :value="item" :key="item" v-for="item in num" style="height: 18px;line-height: 18px;margin-top: 0; padding-top: 0;" >{{item}}</Option>
-          </Select>
+        <div class='com' style="margin-top:20px;"><div class="disLeft">单次折扣：<InputNumber
+            :min="0"
+            :max="100"
+            v-model="addData.productDiscount" 
+            :formatter="value => `${value}%`"
+            :parser="value => value.replace('%', '')" size="small" placeholder="折扣百分比"></InputNumber></div>
+            <div class="disRight">产品折扣：<InputNumber
+            :min="0"
+            :max="100"
+            v-model="addData.projectDiscount"
+            :formatter="value => `${value}%`"
+            :parser="value => value.replace('%', '')" size="small" placeholder="折扣百分比"></InputNumber></div>
         </div>
+        <br/>
+        <br/>
         <div class='com'>有效期：<Input v-model="addData.membershipValidity" placeholder="单位月" style="width: 288px;ime-mode:disabled" onpaste="return false;" @on-keyup="addData.membershipValidity=check(addData.membershipValidity)"></Input></div>
-        <div class='com'>升卡原则：
+        <div class='com' style="margin-top:20px;">升卡原则：
           <Select v-model="addData.liftCardType" style="width:275px" :transfer=true>
             <Option value="累计现金">累计现金</Option>
             <Option value="累计充值">累计充值</Option>
@@ -38,14 +43,14 @@
         <div class='group'>
           <h3>会员尊享<!--<Button class="hy_btn" size="small" @click="Addproject">添加</Button>--></h3>
           <div class="projectone"  v-for="item in addData.enjoy">
-            <div class='com'>有效期：<Input v-model="item.enjoyValidity" style="width: 288px" placeholder="单位月" @on-keyup="item.enjoyValidity=check(item.enjoyValidity)"></Input></div>
-            <div class='com'>尊享项目：
-              <Select v-model="item.projectId" style="width:275px" :transfer=true>
-                <Option :value="items.id" :key="items.id"  v-for="items in projectList">{{items.projectName}}</Option>
+            <div class='com' style="margin-top:20px;">有效期：<Input v-model="item.enjoyValidity" style="width: 288px" placeholder="单位月" @on-keyup="item.enjoyValidity=check(item.enjoyValidity)"></Input></div>
+            <div class='com' style="margin-top:20px;">尊享项目：
+              <Select v-model="selectedProject" style="width:275px" :transfer=true>
+                <Option v-for="item in projectList" :value="item.programName" :key="index">{{ item.programName }}</Option>
               </Select>
             </div>
-            <div class='com'>尊享次数：<Input v-model="item.enjoyNumber" style="width: 275px" @on-keyup="item.enjoyNumber=check(item.enjoyNumber)"></Input></div>
-            <div class='com'><Checkbox v-model="addData.settingTime" size="large">在门店系统选择生效时间</Checkbox></div>
+            <div class='com' style="margin-top:20px;">尊享次数：<Input v-model="item.enjoyNumber" style="width: 275px" @on-keyup="item.enjoyNumber=check(item.enjoyNumber)"></Input></div>
+            <div class='com' style="margin-top:20px;"><Checkbox v-model="addData.settingTime" size="large">在门店系统选择生效时间</Checkbox></div>
           </div>
 
         </div>
@@ -85,7 +90,7 @@
 </template>
 
 <script>
-import {findMembership,saveMembership,editMembership,deleteMembership,findAllProject} from '../../interface'
+import {findProjectPlanList,findMembership,saveMembership,editMembership,deleteMembership,findAllProject} from '../../interface'
     export default {
       name: "cr_m",
       data() {
@@ -201,13 +206,36 @@ import {findMembership,saveMembership,editMembership,deleteMembership,findAllPro
       },
       methods: {
         getProject(){
-          this.$ajax({
-            method:'get',
-            url: findAllProject()+'?id='+this.$route.params.id,
-          }).then( (res) =>{
-            this.projectList = res.data;
-          }).catch( (error) =>{
-
+            this.$ajax({
+              method: 'GET',
+              dataType: 'JSON',
+              contentType: 'application/json;charset=UTF-8',
+              headers: {
+                "authToken": sessionStorage.getItem('authToken')
+              },
+              url: findProjectPlanList()+'/'+this.$route.params.id+'?programType=0',
+            }).then((res) => {
+              this.projectList = res.data.programManage;
+              this.getMeal();
+          }).catch((error) => {
+            this.$Message.error('获取失败');
+          });
+        },
+        getMeal(){
+            this.$ajax({
+              method: 'GET',
+              dataType: 'JSON',
+              contentType: 'application/json;charset=UTF-8',
+              headers: {
+                "authToken": sessionStorage.getItem('authToken')
+              },
+              url: findProjectPlanList()+'/'+this.$route.params.id+'?programType=1',
+            }).then((res) => {
+              for(var i=0;i<res.data.programManage.length;i++){
+                this.projectList.push(res.data.programManage[i]);
+              }
+          }).catch((error) => {
+            this.$Message.error('获取失败');
           });
         },
         getData(){
@@ -253,6 +281,7 @@ import {findMembership,saveMembership,editMembership,deleteMembership,findAllPro
           this.DB = 0;
           this.DC = 0;
           this.DD = 0;
+          this.addData.projectDiscount = '';
           this.addData={
             enjoy: [
               {
@@ -282,8 +311,6 @@ import {findMembership,saveMembership,editMembership,deleteMembership,findAllPro
               storeId: this.$route.params.id,
               storeName: "",
             settingTime:false,
-
-
           };
         },
         Addproject(){
@@ -369,6 +396,16 @@ import {findMembership,saveMembership,editMembership,deleteMembership,findAllPro
   }
   .mod{
     line-height: 60px;
+    margin: 0 auto;            
+    text-align: center;    
+  }
+  .disLeft{
+    float:left;
+    margin-left:18%;
+  }
+  .disRight{
+    float:right;
+    margin-right:18%;
   }
   .com{
     margin: 10px 0;

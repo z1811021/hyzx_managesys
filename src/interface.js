@@ -231,22 +231,17 @@ export const deleteproblem = function () {
   return API;
 };
 export const saveSolution = function () {
-  const URL = '/app/api/problem/solution/save';
-  const API = host + URL;
-  return API;
-};
-export const editSolution = function () {
-  const URL = '/app/api/problem/solution/edit';
+  const URL = '/solution/manage/add';
   const API = host + URL;
   return API;
 };
 export const findSolutionList = function () {
-  const URL = '/app/api/problem/solution/findSolutionList';
+  const URL = '/solution/manage/store';
   const API = host + URL;
   return API;
 };
 export const deleteSolution = function () {
-  const URL = '/app/api/problem/Solution/delete';
+  const URL = '/solution/manage/delete';
   const API = host + URL;
   return API;
 };
