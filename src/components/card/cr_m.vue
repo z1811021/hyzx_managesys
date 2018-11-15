@@ -8,30 +8,30 @@
       <Table :columns="columns" :data="data"></Table>
       <Modal v-model="addF" title="添加" :mask-closable="false" @on-ok="ok" class="mod">
         <div class='com'>会员级别名称：<Input v-model="addData.membershipName" placeholder="会员级别名称" style="width: 252px"></Input></div>
-        <div class='com'>会员价格：
+        <div class='com' style="margin-top:10px;">会员价格：
           <InputNumber
             :min="0"
             v-model="addData.membershipMoney"addData.membershipMoney
             :formatter="value=> `${value}元`"
             :parser="value => value.replace('元', '')" placeholder="会员价格 元" style="width: 275px;ime-mode:disabled"></InputNumber>
         </div>
-        <div class='com' style="margin-top:20px;"><div class="disLeft">单次折扣：<InputNumber
-            :min="0"
+        <div class='com' style="margin-top:10px;"><div class="disLeft">单次折扣：<InputNumber
+            :min="-1"
             :max="100"
             v-model="addData.productDiscount" 
             :formatter="value => `${value}%`"
-            :parser="value => value.replace('%', '')" size="small" placeholder="折扣百分比"></InputNumber></div>
+            :parser="value => value.replace('%', '')" size="small" style="width: 50px" placeholder="折扣百分比" ></InputNumber></div>
             <div class="disRight">产品折扣：<InputNumber
             :min="0"
             :max="100"
             v-model="addData.projectDiscount"
             :formatter="value => `${value}%`"
-            :parser="value => value.replace('%', '')" size="small" placeholder="折扣百分比"></InputNumber></div>
+            :parser="value => value.replace('%', '')" size="small" style="width: 50px" placeholder="折扣百分比" ></InputNumber></div>
         </div>
         <br/>
         <br/>
         <div class='com'>有效期：<Input v-model="addData.membershipValidity" placeholder="单位月" style="width: 288px;ime-mode:disabled" onpaste="return false;" @on-keyup="addData.membershipValidity=check(addData.membershipValidity)"></Input></div>
-        <div class='com' style="margin-top:20px;">升卡原则：
+        <div class='com' style="margin-top:10px;">升卡原则：
           <Select v-model="addData.liftCardType" style="width:275px" :transfer=true>
             <Option value="累计现金">累计现金</Option>
             <Option value="累计充值">累计充值</Option>
@@ -41,34 +41,57 @@
           </Select>
         </div>
         <div class='group'>
-          <h3>会员尊享<!--<Button class="hy_btn" size="small" @click="Addproject">添加</Button>--></h3>
-          <div class="projectone"  v-for="item in addData.enjoy">
-            <div class='com' style="margin-top:20px;">有效期：<Input v-model="item.enjoyValidity" style="width: 288px" placeholder="单位月" @on-keyup="item.enjoyValidity=check(item.enjoyValidity)"></Input></div>
-            <div class='com' style="margin-top:20px;">尊享项目：
-              <Select v-model="selectedProject" style="width:275px" :transfer=true>
-                <Option v-for="item in projectList" :value="item.programName" :key="index">{{ item.programName }}</Option>
+          <h3>会员尊享</h3>
+          <br/>
+          <div style="margin-left:-240px;"><Button type="primary" size="small"><Icon type="plus-round"></Icon> 添加尊享项目</Button></div>
+          <div style="float:left;margin-left:63px;"><InputNumber placeholder="有效期(月)：" class="enjoyInputTime"></InputNumber></div>
+          <div style="float:right;margin-right:80px;margin-top:-1px;">
+              <Input class="enjoyInput" placeholder="尊享次数：" readonly>
+              <Select v-model="selectedProject" placeholder="请选择尊享项目" slot="prepend" style="width: 180px">
+                  <Option v-for="item in projectList" :value="item.itemName" :key="index">{{item.itemName}}</Option>
               </Select>
-            </div>
-            <div class='com' style="margin-top:20px;">尊享次数：<Input v-model="item.enjoyNumber" style="width: 275px" @on-keyup="item.enjoyNumber=check(item.enjoyNumber)"></Input></div>
-            <div class='com' style="margin-top:20px;"><Checkbox v-model="addData.settingTime" size="large">在门店系统选择生效时间</Checkbox></div>
+            </Input>
           </div>
-
         </div>
+        <br/>
+        <br/>
+        <br/>
+        <!-- <div class='group'>
+          <h3>会员尊享</h3>
+          <div class="projectone" >
+            <div class='com' style="margin-top:10px;">有效期：<Input style="width: 288px" placeholder="单位月"></Input></div>
+            <div class='com' style="margin-top:10px;">尊享项目：
+            </div>
+            <div class='com' style="margin-top:10px;">尊享次数：<Input style="width: 275px"></Input></div>
+            <div class='com' style="margin-top:10px;"><Checkbox v-model="addData.settingTime" size="large">在门店系统选择生效时间</Checkbox></div>
+          </div>
+        </div> -->
         <div class='group'>
           <h3>会员日</h3>
-          <div class='com'>会员日：每月<Input v-model="addData.memberDay" style="width: 30px"/>日，或 第 <Input v-model="addData.memberDayNtoStore" style="width: 30px"/> 次到店第 <Input v-model="addData.memberDayNProject" style="width: 30px"/> 个项目，折扣0.<Select v-model="DE" style="width:40px" size="small"  :transfer=true>
-            <Option :value="item" :key="item" v-for="item in num" style="height: 18px;line-height: 18px;margin-top: 0; padding-top: 0;" >{{item}}</Option>
-          </Select>
-            <Select v-model="DF" style="width:40px" size="small"  :transfer=true>
-              <Option :value="item" :key="item" v-for="item in num" style="height: 18px;line-height: 18px;margin-top: 0; padding-top: 0;" >{{item}}</Option>
-            </Select></div>
+          <div class='com' style="margin-top: 20px;">会员日：每月<Input size="small" v-model="addData.memberDay" style="width: 30px"/>日，或 第 <Input size="small" style="width: 30px"/> 次到店第 <Input size="small" v-model="addData.memberDayNProject" style="width: 30px"/> 个项目，
+            <br/>
+              <div class='com' style="margin-top:10px;">
+                <div class="disLeft">折扣：<InputNumber
+                :min="0"
+                :max="100"
+                v-model="addData.productDiscount" 
+                :formatter="value => `${value}%`"
+                :parser="value => value.replace('%', '')" size="small" placeholder="折扣百分比"></InputNumber></div>
+              </div>
+            </div>
         </div>
+        <br/>
         <div class='group'>
           <h3>会员返现</h3>
-          <div class='com'> 第 <Input v-model="addData.memberReturnNtoStore" style="width: 30px"/> 次到店第 <Input v-model="addData.memberReturnNProject" style="width: 30px"/> 个项目，返现 <Input v-model="addData.returnAmount" @on-keyup="addData.returnAmount=check2(addData.returnAmount)" style="width: 80px"/>元，有效期 <Input v-model="addData.returnValidity" @on-keyup="addData.returnValidity=check(addData.returnValidity)" style="width: 30px"/> 个月</div>
+          <div class='com'> 第 <Input v-model="addData.memberReturnNtoStore" size="small" style="width: 30px"/> 次到店第 <Input size="small" v-model="addData.memberReturnNProject" style="width: 30px"/> 个项目，返现 <Input size="small" v-model="addData.returnAmount" style="width: 80px"/>元，
+            <br/>
+            <br/>
+            有效期 <Input v-model="addData.returnValidity" style="width: 30px"/> 个月</div>
         </div>
-        <div class='com' style="margin-bottom:100px;">
-          <span style="float: left;">注意事项：</span>
+       <!--  <div class='com' style="margin-bottom:100px;">
+          <span>注意事项：</span>
+          <br/>
+          <br/>
           <Select v-model="addData.precautions" placeholder="注意事项" :multiple=true style="width:400px;margin-bottom:50px;" :transfer=true >
           <Option :value="1" style="word-wrap: break-word"> ● 会员尊享必须每月到店护理两次以上（每次最少两个项目），<br>第三次到店方可尊享免费项目。</Option>
           <Option :value="2" > ● 会员尊享是从会员充值之日起连续十二个月内有效。</Option>
@@ -84,13 +107,13 @@
           <Option :value="12" > ● 返现现金必须当月使用，不得累计，逾期无效。</Option>
           <Option :value="13" > ● 返现日时限与会员尊享同步。</Option>
         </Select>
-        </div>
+        </div> -->
       </Modal>
     </div>
 </template>
 
 <script>
-import {findProjectPlanList,findMembership,saveMembership,editMembership,deleteMembership,findAllProject} from '../../interface'
+import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMembership,deleteMembership,findAllProject} from '../../interface'
     export default {
       name: "cr_m",
       data() {
@@ -181,8 +204,8 @@ import {findProjectPlanList,findMembership,saveMembership,editMembership,deleteM
             membershipName: "",
             membershipValidity: '',
             precautions: [],
-            productDiscount: "",
-            projectDiscount: "",
+            productDiscount: "0",
+            projectDiscount: "0",
             returnAmount: "",
             returnValidity: '',
             storeId: this.$route.params.id,
@@ -193,19 +216,11 @@ import {findProjectPlanList,findMembership,saveMembership,editMembership,deleteM
           type: '',
           projectList:[],
           notice:[],
-          DA:0,
-          DB:0,
-          DC:0,
-          DD:0,
-          DE:0,
-          DF:0,
-          num:[0,1,2,3,4,5,6,7,8,9],
-          model1:'',
-          model2:'',
+          selectedProject: ''
         }
       },
       methods: {
-        getProject(){
+        getList() {
             this.$ajax({
               method: 'GET',
               dataType: 'JSON',
@@ -213,15 +228,14 @@ import {findProjectPlanList,findMembership,saveMembership,editMembership,deleteM
               headers: {
                 "authToken": sessionStorage.getItem('authToken')
               },
-              url: findProjectPlanList()+'/'+this.$route.params.id+'?programType=0',
+              url: findProjectList()+'/'+this.$route.params.id,
             }).then((res) => {
-              this.projectList = res.data.programManage;
-              this.getMeal();
-          }).catch((error) => {
-            this.$Message.error('获取失败');
-          });
-        },
-        getMeal(){
+              this.projectList = res.data.itemManages;
+            }).catch((error) => {
+              this.$Message.error('获取失败');
+            });
+          },
+/*        getMeal(){
             this.$ajax({
               method: 'GET',
               dataType: 'JSON',
@@ -237,7 +251,7 @@ import {findProjectPlanList,findMembership,saveMembership,editMembership,deleteM
           }).catch((error) => {
             this.$Message.error('获取失败');
           });
-        },
+        },*/
         getData(){
           this.$ajax({
             method:'get',
@@ -245,7 +259,7 @@ import {findProjectPlanList,findMembership,saveMembership,editMembership,deleteM
           }).then( (res) =>{
             this.data = res.data;
           }).catch( (error) =>{
-
+            this.$Message.error('获取失败');
           })
         },
         ok() {
@@ -275,13 +289,7 @@ import {findProjectPlanList,findMembership,saveMembership,editMembership,deleteM
           })
         },
         Add(){
-          this.type = 1;
           this.addF = true;
-          this.DA =0 ;
-          this.DB = 0;
-          this.DC = 0;
-          this.DD = 0;
-          this.addData.projectDiscount = '';
           this.addData={
             enjoy: [
               {
@@ -304,8 +312,8 @@ import {findProjectPlanList,findMembership,saveMembership,editMembership,deleteM
               membershipName: "",
               membershipValidity: '',
               precautions: [],
-              productDiscount: "",
-              projectDiscount: "",
+              productDiscount: "100",
+              projectDiscount: "100",
               returnAmount: "",
               returnValidity: '',
               storeId: this.$route.params.id,
@@ -331,14 +339,6 @@ import {findProjectPlanList,findMembership,saveMembership,editMembership,deleteM
           if (typeof data.precautions == 'string') {
             this.addData.precautions = data.precautions.split(',').map( (it, i) => {return +it});
           }
-          this.DA = this.splitNum(data.projectDiscount)[0];
-          this.DB = this.splitNum(data.projectDiscount)[1];
-          this.DC = this.splitNum(data.productDiscount)[0];
-          this.DD = this.splitNum(data.productDiscount)[1];
-          this.DE = this.splitNum(data.memberDayDiscount)[0];
-          this.DF = this.splitNum(data.memberDayDiscount)[1];
-          this.addData.settingTime = data.settingTime=='true' ? true:false;
-
         },
         del(data, i) {
           var c = confirm('确认删除？');
@@ -354,16 +354,6 @@ import {findProjectPlanList,findMembership,saveMembership,editMembership,deleteM
           }).catch( (res) =>{
             this.$Message.error('删除失败');
           })
-        },
-        check(value){
-          return value.replace(/[^\d]/g,'');
-        },
-        check2(value){
-          return value.replace(/[^\d\.]/g,'');
-        },
-        checkNum(value){
-          if(value.match(/[\d]+[\%]/g) == null) return true;
-          else return false;
         },
         splitNum(num){
           if(typeof num !='string'){
@@ -384,8 +374,8 @@ import {findProjectPlanList,findMembership,saveMembership,editMembership,deleteM
         }
       },
       created(){
-        this.getProject();
-        this.getData();
+        this.getList();
+        //this.getData();
       }
     }
 </script>
@@ -412,5 +402,13 @@ import {findProjectPlanList,findMembership,saveMembership,editMembership,deleteM
   }
   .group{
     padding: 10px;
+  }
+  .enjoyInput{
+    width: 250px;
+    margin-top: 10px;           
+  }
+  .enjoyInputTime{
+    width: 75px;
+    margin-top: 10px; 
   }
 </style>

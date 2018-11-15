@@ -35,13 +35,13 @@
         <br/>
         <br/>
         <div class="timeLineDiv">
-          <Timeline v-model="planData">
-            <TimelineItem v-for="item in planData" :key="key">
+          <draggable element="Timeline" v-model="planData">
+            <TimelineItem style="cursor:pointer;" v-for="item in planData" :key="key">
                 <p class="time">{{item.itemName}}</p>
                 <br/>
                 <p class="content">{{item.courseInterval}}</p>
             </TimelineItem>
-          </Timeline>
+          </draggable>
         </div>
       <div slot="footer">
           <Button type="primary" @click="ok">添加</Button>
@@ -229,7 +229,7 @@
         }
         let URL = projectPlansave();
         if(this.planName == '' || this.planPrice == ''){
-          this.$Message.error('请填写方案名称或者价格！');
+          this.$Message.warning('请填写方案名称或者价格！');
         }else{
           this.$ajax({
             method: 'POST',

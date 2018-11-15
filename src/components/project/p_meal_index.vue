@@ -18,7 +18,7 @@
         <br/>
         <div style="float:left;margin-left: 63px;">选择项目：</div>
         <br/>
-        <Select v-model="selectedProject" placeholder="请选择套餐项目" style="width:360px;margin-bottom:5%;margin-top:2%;" :transfer=true @on-change="changeProjects()" filterable>
+        <Select v-model="selectedProject" ref="setHouseQuery" clearable placeholder="请选择套餐项目" style="width:360px;margin-bottom:5%;margin-top:2%;" :transfer=true @on-change="changeProjects()" filterable>
           <Option v-for="(item,index) in projectList" :value="index" :key="index">{{ item.itemName }}</Option>
         </Select>
         <br/>
@@ -31,20 +31,20 @@
         <br/>
         <br/>
         <div class="timeLineDiv">
-          <Timeline v-model="planData">
-            <TimelineItem v-for="item in planData" :key="key">
+          <draggable element="Timeline" v-model="planData">
+            <TimelineItem style="cursor:pointer;" v-for="item in planData" :key="key">
                 <p class="time">{{item.itemName}}</p>
                 <br/>
                 <p class="content">{{item.itemInterval}}</p>
             </TimelineItem>
-          </Timeline>
+          </draggable>
         </div>
         <div slot="footer">
             <Button type="primary" @click="ok">添加</Button>
             <Button type="ghost" @click="close">取消</Button>
         </div>
     </Modal>
-          <Modal v-model="inputTimesFlag">
+          <Modal v-model="inputTimesFlag" :mask-closable="false">
               <p slot="header" style="color:#000;text-align:center">
                   <Icon type="ios-information-circle"></Icon>
                   <span>{{showModalTitle}}</span>
@@ -154,13 +154,13 @@
       newEm(){
         this.storeFlag = true;
         this.planData = [];
-        this.selectedProjects = [];
         this.mealName='';
         this.mealPrice='';
         this.showDataTable = false;
         this.showModalTitle = '';
         this.inputTimesFlag = false;
         this.selectedProject = '';
+        this.$refs.setHouseQuery.$data.query = '';
       },
       getMealList(){
           this.$ajax({
@@ -203,7 +203,8 @@
         var cIndex = '';
         var currentItem = {};
         if(this.selectedProjectTimes == ''){
-          this.$Message.error('请输入该项目次数！');
+          this.$Message.warning('请输入该项目次数！');
+          this.inputTimesFlag = true;
         }else{
             var oriIndex = this.planData.length;
             var indeLen = Number(oriIndex)+Number(this.selectedProjectTimes);
@@ -215,6 +216,8 @@
             this.inputTimesFlag = false;
             this.showDataTable = true;
             this.selectedProjectTimes = '';
+            this.selectedProject = '';
+            this.$refs.setHouseQuery.$data.query = '';
           }
       },
       compare(property) {
@@ -252,8 +255,13 @@
         });
       },
       changeProjects(){
-        this.inputTimesFlag=true;
-        this.showModalTitle=this.projectList[this.selectedProject].itemName;
+        console.log(this.selectedProject);
+        if(this.selectedProject == undefined){
+          this.inputTimesFlag=false;
+        }else{
+          this.inputTimesFlag=true;
+          this.showModalTitle=this.projectList[this.selectedProject].itemName;
+        }
       },
       manngerMeal(data){
         this.showDataTable = true;
@@ -291,7 +299,6 @@
           programItems.push(item);
         }
         programItems.sort(this.compare("itemOrder"));
-        console.log(programItems);
         var programManage = {
             storeId: this.$route.params.id,
             // 方案名称
@@ -309,7 +316,7 @@
         }
         let URL = projectPlansave();
         if(this.mealName == '' || this.mealPrice == ''){
-          this.$Message.error('请填写方案名称或者价格！');
+          this.$Message.warning('请填写方案名称或者价格！');
         }else{
           this.$ajax({
             method: 'POST',
@@ -357,7 +364,7 @@
     margin: 0 auto;
     margin-top:2%;            
     text-align: center;    
-    width:82%;
+    width:90%;
     background-color: #F8F8F8;
     border: 1px solid #dddee1;
   }

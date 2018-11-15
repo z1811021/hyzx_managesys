@@ -186,20 +186,6 @@
         }).catch((error) => {
         });
       },
-/*      getData(){
-        this.$ajax({
-          method: 'GET',
-          dataType: 'JSON',
-          contentType: 'application/json;charset=UTF-8',
-          headers: {
-            "authToken": sessionStorage.getItem('authToken')
-          },
-          url: findSolutionList()+'?id='+this.$route.params.id,
-        }).then((res) => {
-          this.data = res.data;
-        }).catch((error) => {
-        });
-      },*/
       ok() {
           var selectBaseProgramsString = '';
           var selectBestProgramsString = '';
@@ -224,7 +210,24 @@
               storeId: this.$route.params.id,
               solutionManage: solutionManage
           }
+          var validateMessage = '';
           let URL = saveSolution();
+          if(this.selectProblem == ''){
+            validateMessage = validateMessage + "请选择症状！<br/>";
+          }
+          if(this.solutionName == ''){
+            validateMessage = validateMessage + "请输入解决方案名称！<br/>";
+          }
+          if(selectBaseProgramsString == ''){
+            validateMessage = validateMessage + "请选择基础解决方案配置！<br/>";
+          }
+          if(selectBestProgramsString == ''){
+            validateMessage = validateMessage + "请选择最优解决方案配置！<br/>";
+          }
+          if(validateMessage != ''){
+          this.$Message.warning(validateMessage);
+          validateMessage = '';
+        }else{
           this.$ajax({
             method: 'POST',
             dataType: 'JSON',
@@ -242,6 +245,7 @@
           }).catch((error) => {
             this.$Message.error('操作失败');
           });
+        }
       },
       mannger(data) {
         this.selectProblem = data.symptom;

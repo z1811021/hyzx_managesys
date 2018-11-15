@@ -368,46 +368,6 @@
           return false;
         }
       },
-/*      addPriceUnit(){
-        if(!(/^\d+$/.test(this.pis.itemPrice))){
-          this.$Message.error('项目单价请输入数字！');
-          this.pis.itemPrice = '';
-        }else{
-          if(this.pis.itemPrice!='' && this.pis.itemPrice.indexOf("元/次")<0){
-          this.pis.itemPrice = this.pis.itemPrice + "元/次";
-          }
-        }
-      },
-      addTimeUnit(){
-        if(!(/^\d+$/.test(this.pis.courseTimes))){
-          this.$Message.error('疗程次数请输入数字！');
-          this.pis.courseTimes = '';
-        }else{
-          if(this.pis.courseTimes!='' && this.pis.courseTimes.indexOf("次")<0){
-          this.pis.courseTimes = this.pis.courseTimes + "次";
-          }
-        }
-      },    
-      addCurePriceUnit(){
-        if(!(/^\d+$/.test(this.pis.coursePrice))){
-          this.$Message.error('疗程价格请输入数字！');
-          this.pis.coursePrice = '';
-        }else{
-          if(this.pis.coursePrice!='' && this.pis.coursePrice.indexOf("元")<0){
-          this.pis.coursePrice = this.pis.coursePrice + "元";
-          }
-        }
-      },*/
-/*      addPeriod(){
-        if(!(/^\d+$/.test(this.pis.courseInterval))){
-          this.$Message.error('请输入项目间隔天数！');
-          this.pis.courseInterval = '';
-        }else{
-          if(this.pis.courseInterval!='' && this.pis.courseInterval.indexOf("天")<0){
-          this.pis.courseInterval = this.pis.courseInterval + "天";
-          }
-        }
-      },*/
       ok() {
         var validateMessage = '';
         if(this.projectChoose == ''){
@@ -438,7 +398,7 @@
           validateMessage = validateMessage + "请输入项目间隔天数！<br/>";
         }
         if(validateMessage != ''){
-          this.$Message.error(validateMessage);
+          this.$Message.warning(validateMessage);
           validateMessage = '';
         }else{
           this.pis.highFreq = this.transfer(this.pis.highFreq);
