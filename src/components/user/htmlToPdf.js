@@ -67,6 +67,38 @@ export default{
           return "无"
         }
     }
+    Vue.prototype.storeTypeTransferBack = (storeType) => {
+        if(storeType =="美容院"){
+          return '1'
+        }
+        else if(storeType =="皮肤管理"){
+          return '2'
+        }
+        else if(storeType =="SPA会所"){
+          return '3'
+        }
+        else if(storeType =="养发"){
+          return '4'
+        }
+        else if(storeType =="理疗"){
+          return '5'
+        }
+        else if(storeType =="产后修复"){
+          return '6'
+        }
+        else if(storeType =="减肥馆"){
+          return '7'
+        }
+        else if(storeType =="祛痘馆"){
+          return '8'
+        }
+        else if(storeType =="整骨小颜"){
+          return '9'
+        }
+        else{
+          return ""
+        }
+    }
     Vue.prototype.operationModeTransfer = (operationMode)=>{
       if(operationMode ==1){
         return "单店"
@@ -74,6 +106,15 @@ export default{
         return "连锁"
       }else{
         return "无"
+      }
+    }
+    Vue.prototype.operationModeTransferBack = (operationMode)=>{
+      if(operationMode =="单店"){
+        return '1'
+      }else if(operationMode =="连锁"){
+        return '2'
+      }else{
+        return ""
       }
     }
     Vue.prototype.franchTypeTransfer = (franchType)=>{
@@ -87,6 +128,16 @@ export default{
         return "无"
       }
     }
-    
+    Vue.prototype.franchTypeTransferBack = (franchType)=>{
+      if(franchType =="直营"){
+        return '1'
+      }else if(franchType =="加盟"){
+        return '2'
+      }else if(franchType == "总部"){
+        return '3'
+      }else{
+        return ""
+      }
+    }  
   }
 }

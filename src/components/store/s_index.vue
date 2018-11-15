@@ -21,30 +21,32 @@
 
     <Modal  footer-hide v-model="storeFlag" :title="store" :mask-closable="false" >
       <div class="modalInsideForm">
-        联系人：<Input v-model="storeVal.staffName" placeholder="联系人" style="width: 310px"/>
+        联系人：<Input v-model="storeVal.name" placeholder="联系人" style="width: 310px" disabled />
         <br/>
         <br/>
-        联系人电话：<Input v-model="storeVal.phoneNumber" @on-keyup="storeVal.phoneNumber=check1(storeVal.phoneNumber)" placeholder="联系人电话" style="width: 290px"/>
+        联系人电话：<Input v-model="storeVal.account" @on-keyup="storeVal.account=check2(storeVal.account)" placeholder="联系人电话" style="width: 290px" disabled />
         <br/>
         <br/>
         门店品牌：<Input v-model="storeVal.storeName" placeholder="门店品牌" style="width: 300px"/>
         <br/>
         <br/>
-        门店省市：<select id="s_province" name="province" class="sus" v-model="storeVal.provinceName" placeholder="门店所在省" ></select>&nbsp;&nbsp;
-        <select id="s_city" name="city" v-model="storeVal.cityName" class="sus" ></select>&nbsp;&nbsp;
-        <select id="s_county" name="area"  v-model="storeVal.area" class="sus"></select>
+        门店省市：<Select id="s_province" name="province" class="sus" v-model="storeVal.provinceName" placeholder="门店所在省" disabled :placeholder="storeVal.provinceName"></Select>&nbsp;&nbsp;
+        <Select id="s_city" name="city" v-model="storeVal.cityName" class="sus" disabled :placeholder="storeVal.cityName"></Select>&nbsp;&nbsp;
+        <Select id="s_county" name="area"  v-model="storeVal.area" class="sus" disabled :placeholder="storeVal.area"></Select>
         <br/>
         <br/>
-        门店地址：<Input v-model="storeVal.address" placeholder="门店地址" style="width: 300px"/>
+        门店地址：<Input v-model="storeVal.address" placeholder="门店地址" style="width: 300px" disabled />
         <br/>
         <br/>
-        门店电话：<Input v-model="storeVal.telephone" @on-keyup="storeVal.telephone=check1(storeVal.telephone)"  placeholder="门店电话" style="width: 300px"/>
+        门店电话：<Input v-model="storeVal.telephone" @on-keyup="storeVal.telephone=check1(storeVal.telephone)"  placeholder="门店电话" style="width: 300px" disabled />
         <br/>
         <br/>
-        管理周期：<Input v-model="storeVal.managementCycle" @on-keyup="storeVal.managementCycle=check1(storeVal.managementCycle)" placeholder="管理周期" style="width: 300px"/>
+        管理周期：<Select v-model="storeVal.managementCycle" placeholder="管理周期" style="width: 300px">
+          <Option v-for="(value, index) in managementCycleArr" :value="value" :key="index">{{value}}</Option>
+        </Select>
         <br/>
         <br/>
-        门店类型：<Select v-model="storeVal.storeType" style="width:300px" :transfer=true  placeholder="门店类型">
+        门店类型：<Select v-model="storeVal.storeType" style="width:300px" :transfer=true disabled   :placeholder="storeVal.storeType">
           <Option value="1">美容院</Option>
           <Option value="2">皮肤管理</Option>
           <Option value="3">SPA会所</Option>
@@ -57,9 +59,9 @@
         </Select>
         <br/>
         <br/>
-        经营业态：<Select v-model="storeVal.operationMode" style="width:300px" :transfer=true  placeholder="经营业态">
-          <Option value="1">单店</Option>
-          <Option value="2">连锁</Option>
+        经营业态：<Select v-model="storeVal.operationMode" style="width:300px" :transfer=true>
+          <Option value="单店">单店</Option>
+          <Option value="连锁">连锁</Option>
         </Select>
         <br/>
         <br/>
@@ -471,11 +473,20 @@
 </template>
 
 <script>
-  import { findStoreList,findStoreListById, newStore, editStore,deleteStore,getProvinces,getCities,checkStorePhone, getRoomInfo } from '../../interface';
+  import { findStoreList,findStoreListById, newStore, editStore,deleteStore,getProvinces,getCities,checkStorePhone, getRoomInfo, infoUpdate} from '../../interface';
 
   export default {
     name: 's_index',
     data () {
+      // set 24 month for managementCycle
+      const managementCycleArr = () =>{
+        let arr =[]
+        for (let i=1;i<=24;i++){
+          arr.push(i+"个月")
+        }
+        return arr
+      }
+
       return {
         mdstaus: 1,
         storeFlag: false,
@@ -560,6 +571,7 @@
           memberColumns: [],
           member: []
         },
+        managementCycleArr:managementCycleArr(),
         columns1: [
           {
             title: '编号',
@@ -754,7 +766,6 @@
         }else if(this.tag == 2){
           this.getSearch(this.serch,this.page,this.pagesize);
         }
-
       },
       getProvinces(){
         this.$ajax({
@@ -927,6 +938,52 @@
         this.storeFlag = true;
         this.store = '新建门店';
         this.clearNew();
+      },
+      newStoret(){
+        let { id,
+              customerId,
+              telephone,
+              storeName,
+              franchType,
+              address,
+              provinceId,
+              cityId,
+              managementCycle,
+              storeType,
+              operationMode,
+              storeStatus,
+              storeDesc } = this.storeVal
+        franchType = this.franchTypeTransferBack(franchType)
+        operationMode = this.operationModeTransferBack(operationMode)
+        storeType = this.storeTypeTransferBack(storeType)
+        managementCycle = managementCycle.split("个月")[0]
+        const params = {
+              id,
+              customerId,
+              telephone,
+              storeName,
+              franchType,
+              address,
+              provinceId,
+              cityId,
+              managementCycle,
+              storeType,
+              operationMode,
+              storeStatus,
+              storeDesc}
+              console.log(params)
+        this.$ajax({
+          method: 'POST',
+          url: infoUpdate(),
+          data: {store: params},
+          withCredentials: true,
+        }).then((res) => {
+          this.$Message.success({content: '更新信息成功'});
+          this.storeFlag = false;
+          console.log(res)
+        }).catch((error) => {
+        });           
+
       },
       ok() {
         this.$ajax({
