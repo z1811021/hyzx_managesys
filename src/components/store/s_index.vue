@@ -957,7 +957,7 @@
         operationMode = this.operationModeTransferBack(operationMode)
         storeType = this.storeTypeTransferBack(storeType)
         managementCycle = managementCycle.split("个月")[0]
-        const params = {
+        const store = {
               id,
               customerId,
               telephone,
@@ -971,16 +971,15 @@
               operationMode,
               storeStatus,
               storeDesc}
-              console.log(params)
         this.$ajax({
           method: 'POST',
           url: infoUpdate(),
-          data: {store: params},
+          data: store,
           withCredentials: true,
         }).then((res) => {
           this.$Message.success({content: '更新信息成功'});
           this.storeFlag = false;
-          console.log(res)
+          this.getData();
         }).catch((error) => {
         });           
 
