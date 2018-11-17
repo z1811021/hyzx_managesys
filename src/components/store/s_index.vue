@@ -9,9 +9,9 @@
       <Col span="2" v-if="searchActive">
       <Button class="hy_btn" @click="Return">返回列表</Button>
       </Col>
-      <Col span="2">
+      <!-- <Col span="2">
         <Button class="hy_btn"  @click="newEm">新建门店</Button>
-      </Col>
+      </Col> -->
     </Row>
     <Table :row-class-name="rowClassName" :columns="columns1" :data="data1"></Table>
     <div class="page" v-if="isSystem == 'true'">
@@ -65,10 +65,10 @@
         </Select>
         <br/>
         <br/>
-        <RadioGroup v-model="storeVal.storeStatus" type="button" v-show="store=='编辑门店'">
-          <Radio label="1">正在管理</Radio>
-          <Radio label="2">经营不善</Radio>
-          <Radio label="3">不再管理</Radio>
+        <RadioGroup v-model="storeVal.manageStatus" type="button" v-show="store=='编辑门店'">
+          <Radio label="0">正在管理</Radio>
+          <Radio label="1">经营不善</Radio>
+          <Radio label="2">不再管理</Radio>
         </RadioGroup> 
         <br/>
         <br/>
@@ -523,10 +523,11 @@
           storeType: '',
           managementCycle: '',
           address: '',
-          storeStatus: '',
+          storeStatus: '1',
           provinceName:'',
           cityName:'',
           area:'',
+          manageStatus: '0'
         },
         question: {
           id: '',
@@ -603,13 +604,13 @@
           },
           {
             title: '状态',
-            key: 'storeStatus',
+            key: 'manageStatus',
             render:(h,params)=>{
-              if(params.row.storeStatus=='1'){
+              if(params.row.manageStatus=='0'){
                 return h('div','正在管理')
-              }else if(params.row.storeStatus=='2'){
+              }else if(params.row.manageStatus=='1'){
                 return h('div','经营不善')
-              }else if(params.row.storeStatus=='3'){
+              }else if(params.row.manageStatus=='2'){
                 return h('div','不再管理')
               }
             }
@@ -717,7 +718,7 @@
         if(name==''||name==null){
           var URL = findStoreList()+page+'?status=1';
         }else{
-          URL = findStoreList()+'?id='+name+'&page='+page+'&pageSize='+pagesize ;
+          URL = findStoreList()+page+'?status=1&storeName='+name;
         }
         this.$ajax({
           method: 'GET',
@@ -735,15 +736,16 @@
             res.data.content[index].managementCycle = res.data.content[index].managementCycle+'个月'
           })
           this.data1 = res.data.content;
+          this.pages = res.data.totalPages;
         }).catch((error) => {
         });
       },
       getSearch(name,page,pagesize) {
         this.tag = 2;
         if(name==''||name==null){
-          var URL = findStoreList()+'?page='+page+'&pageSize='+pagesize;
+          var URL = findStoreList()+page+'?status=1';
         }else{
-          URL = findStoreList()+'?name='+name+'&page='+page+'&pageSize='+pagesize;
+          URL = findStoreList()+page+'?status=1&storeName='+name;
         }
         this.$ajax({
           method: 'GET',
@@ -754,8 +756,8 @@
           },
           url:URL,
         }).then((res) => {
-          this.data1 = res.data.results;
-          this.pages = res.data.pages;
+          this.data1 =  res.data.content;
+          this.pages = res.data.totalPages;
         }).catch((error) => {
         });
       },
@@ -784,11 +786,11 @@
         })
       },
       rowClassName (row, index) {
-        if (row.storeStatus == '1') {
+        if (row.manageStatus == '0') {
           return 'jyinfo';
-        } else if (row.storeStatus == '2') {
+        } else if (row.manageStatus == '1') {
           return 'jydanger';
-        } else if (row.storeStatus == '3') {
+        } else if (row.manageStatus == '2') {
           return 'jydis';
         }
         return '';
@@ -952,7 +954,8 @@
               storeType,
               operationMode,
               storeStatus,
-              storeDesc } = this.storeVal
+              storeDesc,
+              manageStatus } = this.storeVal
         franchType = this.franchTypeTransferBack(franchType)
         operationMode = this.operationModeTransferBack(operationMode)
         storeType = this.storeTypeTransferBack(storeType)
@@ -970,7 +973,8 @@
               storeType,
               operationMode,
               storeStatus,
-              storeDesc}
+              storeDesc,
+            manageStatus}
         this.$ajax({
           method: 'POST',
           url: infoUpdate(),
@@ -1047,7 +1051,8 @@
             storeType: '',
             managementCycle: '',
             address: '',
-            storeStatus: '',
+            storeStatus: '1',
+            manageStatus: '0'
         };
       },
       check1(value){

@@ -162,10 +162,11 @@ import { findStoreList,getProvinces,getCities,auditStoreCustomer,review,customer
     },
     methods:{
       serc() {
+        console.log(this.serch)
         if(this.serch == '') {
           this.data1 = this.orData;
         }else{
-          this.data1 = this.orData.filter((it)=>it.storeName == this.serch);
+          this.data1 = this.orData.filter((it)=>it.storeName.includes(this.serch));
         }
       },
       getList(){
@@ -173,8 +174,13 @@ import { findStoreList,getProvinces,getCities,auditStoreCustomer,review,customer
           method:'GET',
           url:review(),
         }).then( (res)=>{
-          console.log(res)
           if (res.data.stores.storeStatus !== 1) {
+            res.data.stores.map((item,index)=>{
+              res.data.stores[index].storeType = this.storeTypeTransfer(item.storeType)
+              res.data.stores[index].operationMode = this.operationModeTransfer(item.operationMode)
+              res.data.stores[index].franchType = this.franchTypeTransfer(item.franchType)
+              res.data.stores[index].managementCycle = res.data.stores[index].managementCycle+'个月'
+            })
             this.data1 = res.data.stores;
             this.orData = res.data.stores;
           }
