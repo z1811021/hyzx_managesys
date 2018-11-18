@@ -90,7 +90,7 @@
         showModalTitle: '',
         columns: [
           {
-            title: '方案名称',
+            title: '套餐名称',
             key: 'programName'
           },
           {
@@ -98,9 +98,13 @@
             key: 'projectNumber'
           },
           {
-            title: '方案总价',
+            title: '套餐总价',
             key: 'programPrice'
           },
+          /*{
+            title: '套餐总时长',
+            key: 'programDuring'
+          },*/
           {
             title: '操作',
             key: 'action',

@@ -340,10 +340,52 @@
         }).then((res) => {
           this.data = res.data.itemManages;
           for(var i=0;i<this.data.length;i++){
-            if(this.data[i].face != ''){
-              this.data[i].projectCategory = "面部";
-            }else{
-              this.data[i].projectCategory = "身体";
+            if(this.data[i].face != '' && this.data[i].face == 1){
+              this.data[i].projectCategory = "面部 - 清洁";
+            }else if(this.data[i].face != '' && this.data[i].face == 2){
+                  this.data[i].projectCategory = "面部 - 补水";
+            }else if(this.data[i].face != '' && this.data[i].face == 3){
+                  this.data[i].projectCategory = "面部 - 美白";
+            }else if(this.data[i].face != '' && this.data[i].face == 4){
+                  this.data[i].projectCategory = "面部 - 修复";
+            }else if(this.data[i].face != '' && this.data[i].face == 5){
+                  this.data[i].projectCategory = "面部 - 抗敏";
+            }else if(this.data[i].face != '' && this.data[i].face == 6){
+                  this.data[i].projectCategory = "面部 - 痘痘";
+            }else if(this.data[i].face != '' && this.data[i].face == 7){
+                  this.data[i].projectCategory = "面部 - 紧致";
+            }else if(this.data[i].face != '' && this.data[i].face == 8){
+                  this.data[i].projectCategory = "面部 - 除皱";
+            }else if(this.data[i].face != '' && this.data[i].face == 9){
+                  this.data[i].projectCategory = "面部 - 祛斑";
+            }else if(this.data[i].face != '' && this.data[i].face == 10){
+                  this.data[i].projectCategory = "面部 - 毛孔管理";
+            }else if(this.data[i].face != '' && this.data[i].face == 11){
+                  this.data[i].projectCategory = "面部 - V脸瘦脸";
+            }else if(this.data[i].face != '' && this.data[i].face == 12){
+                  this.data[i].projectCategory = "面部 - 眼部";
+            }else if(this.data[i].face != '' && this.data[i].face == 13){
+                  this.data[i].projectCategory = "面部 - 整骨";
+            }else if(this.data[i].face == '' && this.data[i].body == 1){
+                  this.data[i].projectCategory = "身体 - 头部";
+            }else if(this.data[i].face != '' && this.data[i].body == 2){
+                  this.data[i].projectCategory = "身体 - 肩颈";
+            }else if(this.data[i].face != '' && this.data[i].body == 3){
+                  this.data[i].projectCategory = "身体 - 背部";
+            }else if(this.data[i].face != '' && this.data[i].body == 4){
+                  this.data[i].projectCategory = "身体 - 胸部";
+            }else if(this.data[i].face != '' && this.data[i].body == 5){
+                  this.data[i].projectCategory = "身体 - 腹部";
+            }else if(this.data[i].face != '' && this.data[i].body == 6){
+                  this.data[i].projectCategory = "身体 - 腰部";
+            }else if(this.data[i].face != '' && this.data[i].body == 7){
+                  this.data[i].projectCategory = "身体 - 臀部";
+            }else if(this.data[i].face != '' && this.data[i].body == 8){
+                  this.data[i].projectCategory = "身体 - 大腿";
+            }else if(this.data[i].face != '' && this.data[i].body == 9){
+                  this.data[i].projectCategory = "身体 - 小腿";
+            }else if(this.data[i].face != '' && this.data[i].body == 10){
+                  this.data[i].projectCategory = "身体 - 足部";
             }
             this.data[i].itemPrice = this.data[i].itemPrice + "元/次";
             this.data[i].courseTimes = this.data[i].courseTimes + "次";

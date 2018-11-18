@@ -8,14 +8,14 @@
       <Table :columns="columns" :data="data"></Table>
       <Modal v-model="addF" title="添加" :mask-closable="false" @on-ok="ok" class="mod">
         <div class='com'>会员级别名称：<Input v-model="addData.membershipName" placeholder="会员级别名称" style="width: 252px"></Input></div>
-        <div class='com' style="margin-top:10px;">会员价格：
+<!--         <div class='com' style="margin-top:10px;">会员价格：
           <InputNumber
             :min="0"
             v-model="addData.membershipMoney"addData.membershipMoney
             :formatter="value=> `${value}元`"
             :parser="value => value.replace('元', '')" placeholder="会员价格 元" style="width: 275px;ime-mode:disabled"></InputNumber>
-        </div>
-        <div class='com' style="margin-top:10px;"><div class="disLeft">单次折扣：<InputNumber
+        </div> -->
+        <div class='com' style="margin-top:20px;"><div class="disLeft">单次折扣：<InputNumber
             :min="-1"
             :max="100"
             v-model="addData.productDiscount" 
@@ -32,45 +32,67 @@
         <br/>
         <div class='com'>有效期：<Input v-model="addData.membershipValidity" placeholder="单位月" style="width: 288px;ime-mode:disabled" onpaste="return false;" @on-keyup="addData.membershipValidity=check(addData.membershipValidity)"></Input></div>
         <div class='com' style="margin-top:10px;">升卡原则：
-          <Select v-model="addData.liftCardType" style="width:275px" :transfer=true>
+          <Select v-model="addData.liftCardType" :multiple=true style="width:275px" :transfer=true>
             <Option value="累计现金">累计现金</Option>
             <Option value="累计充值">累计充值</Option>
-            <Option value="增量充值">增量充值</Option>
+            <!-- <Option value="增量充值">增量充值</Option> -->
             <Option value="单次充值">单次充值</Option>
-            <Option value="充值金额">充值金额</Option>
+            <!-- <Option value="充值金额">充值金额</Option> -->
           </Select>
         </div>
+        <div style="float:left;margin-left:63px;"><Checkbox v-model="single">是否允许增量充值</Checkbox></div>
+        <div style="margin-top:35px;">
+          <Input style="margin-left:63px;margin-top:10px;width: 280px;" v-model="value13">
+              <Select v-model="select3" slot="prepend" style="width: 180px">
+                  <Option value="1">升级到XXX卡</Option>
+                  <Option value="2">升级到XXX卡</Option>
+                  <Option value="3">升级到XXX卡</Option>
+              </Select>
+          </Input>
+          <Input style="margin-left:63px;margin-top:10px;width: 280px;" v-model="value13">
+              <Select v-model="select3" slot="prepend" style="width: 180px">
+                  <Option value="1">升级到XXX卡</Option>
+                  <Option value="2">升级到XXX卡</Option>
+                  <Option value="3">升级到XXX卡</Option>
+              </Select>
+          </Input>
+        </div>
         <div class='group'>
           <h3>会员尊享</h3>
-          <br/>
-          <div style="margin-left:-240px;"><Button type="primary" size="small"><Icon type="plus-round"></Icon> 添加尊享项目</Button></div>
-          <div style="float:left;margin-left:63px;"><InputNumber placeholder="有效期(月)：" class="enjoyInputTime"></InputNumber></div>
-          <div style="float:right;margin-right:80px;margin-top:-1px;">
-              <Input class="enjoyInput" placeholder="尊享次数：" readonly>
-              <Select v-model="selectedProject" placeholder="请选择尊享项目" slot="prepend" style="width: 180px">
-                  <Option v-for="item in projectList" :value="item.itemName" :key="index">{{item.itemName}}</Option>
+          <div style="margin-left:-280px;"><Button type="primary" size="small"><Icon type="plus-round"></Icon> 添加尊享项目</Button></div>
+            <div v-for="item in projectList"> 
+              <div style="float:left;margin-left:44px;margin-top:-1px;">
+                  <Input class="enjoyInput" placeholder="尊享次数：">
+                  <Select v-model="selectedProject" placeholder="请选择尊享项目" slot="prepend" style="width: 200px">
+                      <Option v-for="item in projectList" :value="item.itemName" :key="index">{{item.itemName}}</Option>
+                  </Select>
+                </Input>
+              </div>
+              <div >
+                <Select style="width:90px;margin-right:40px;margin-top:10px;" placeholder="有效期：">
+                  <Option v-for="item in monthList" :value="item.value" :key="item.value">{{item.label}}</Option>
               </Select>
-            </Input>
+              </div>
           </div>
         </div>
         <br/>
-        <br/>
-        <br/>
-        <!-- <div class='group'>
-          <h3>会员尊享</h3>
-          <div class="projectone" >
-            <div class='com' style="margin-top:10px;">有效期：<Input style="width: 288px" placeholder="单位月"></Input></div>
-            <div class='com' style="margin-top:10px;">尊享项目：
-            </div>
-            <div class='com' style="margin-top:10px;">尊享次数：<Input style="width: 275px"></Input></div>
-            <div class='com' style="margin-top:10px;"><Checkbox v-model="addData.settingTime" size="large">在门店系统选择生效时间</Checkbox></div>
-          </div>
-        </div> -->
         <div class='group'>
           <h3>会员日</h3>
-          <div class='com' style="margin-top: 20px;">会员日：每月<Input size="small" v-model="addData.memberDay" style="width: 30px"/>日，或 第 <Input size="small" style="width: 30px"/> 次到店第 <Input size="small" v-model="addData.memberDayNProject" style="width: 30px"/> 个项目，
+          <div class='com' style="margin-top: 20px;">每月
+            <Select size="small" v-model="model1" style="width:70px" placeholder="第几日">
+                <Option v-for="item in dayList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+            日，或 第 
+            <Select size="small" v-model="model1" style="width:70px" placeholder="第几次">
+                <Option v-for="item in dayList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+             次到店第 
+             <Select size="small" v-model="model1" style="width:70px" placeholder="第几个">
+                <Option v-for="item in dayList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select> 
+            个项目，
             <br/>
-              <div class='com' style="margin-top:10px;">
+              <div class='com' style="margin-top:20px;">
                 <div class="disLeft">折扣：<InputNumber
                 :min="0"
                 :max="100"
@@ -81,14 +103,33 @@
             </div>
         </div>
         <br/>
+        <br/>
         <div class='group'>
           <h3>会员返现</h3>
-          <div class='com'> 第 <Input v-model="addData.memberReturnNtoStore" size="small" style="width: 30px"/> 次到店第 <Input size="small" v-model="addData.memberReturnNProject" style="width: 30px"/> 个项目，返现 <Input size="small" v-model="addData.returnAmount" style="width: 80px"/>元，
+          <div class='com'> 第 
+            <Select size="small" v-model="model1" style="width:70px" placeholder="第几次">
+                <Option v-for="item in dayList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select> 
+           次到店第 
+            <Select size="small" v-model="model1" style="width:70px" placeholder="第几个">
+                <Option v-for="item in dayList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select> 
+            个项目，返现 
+            <InputNumber
+            :min="0"
+            v-model="addData.moneyBack"
+            :formatter="value => `${value}元/次`"
+            :parser="value => value.replace('元/次', '')" placeholder="元/次" size="small"></InputNumber>
+            元，
             <br/>
             <br/>
-            有效期 <Input v-model="addData.returnValidity" style="width: 30px"/> 个月</div>
+            有效期 
+            <Select size="small" v-model="model1" style="width:70px" placeholder="第几个">
+                <Option v-for="item in dayList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select> 
+             个月</div>
         </div>
-       <!--  <div class='com' style="margin-bottom:100px;">
+        <div class='com' style="margin-bottom:100px;">
           <span>注意事项：</span>
           <br/>
           <br/>
@@ -107,7 +148,7 @@
           <Option :value="12" > ● 返现现金必须当月使用，不得累计，逾期无效。</Option>
           <Option :value="13" > ● 返现日时限与会员尊享同步。</Option>
         </Select>
-        </div> -->
+        </div>
       </Modal>
     </div>
 </template>
@@ -118,6 +159,57 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
       name: "cr_m",
       data() {
         return {
+          monthList: [
+                    {
+                        value: '1个月',
+                        label: '1个月'
+                    },
+                    {
+                        value: '2个月',
+                        label: '2个月'
+                    },
+                    {
+                        value: '3个月',
+                        label: '3个月'
+                    },
+                    {
+                        value: '4个月',
+                        label: '4个月'
+                    },
+                    {
+                        value: '5个月',
+                        label: '5个月'
+                    },
+                    {
+                        value: '6个月',
+                        label: '6个月'
+                    },
+                    {
+                        value: '7个月',
+                        label: '7个月'
+                    },
+                    {
+                        value: '8个月',
+                        label: '8个月'
+                    },
+                    {
+                        value: '9个月',
+                        label: '9个月'
+                    },
+                    {
+                        value: '10个月',
+                        label: '10个月'
+                    },
+                    {
+                        value: '11个月',
+                        label: '11个月'
+                    },
+                    {
+                        value: '12个月',
+                        label: '12个月'
+                    },
+                ],
+          dayList: [],
           columns: [
             {
               title: '会员级别名称',
@@ -193,6 +285,7 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
                 projectName: ""
               }
             ],
+            moneyBack: '',
             id: '',
             memberDay: "",
             memberDayDiscount: '',
@@ -252,6 +345,16 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
             this.$Message.error('获取失败');
           });
         },*/
+        insertDayList(){
+          var currentItem = {};
+          for(var i = 0; i < 30; i++){
+            currentItem = {
+                value: i+1,
+                label: i+1
+            }
+            this.dayList.push(currentItem);
+          }
+        },
         getData(){
           this.$ajax({
             method:'get',
@@ -301,6 +404,7 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
                 projectName: ""
               }
             ],
+              moneyBack: '',
               id: '',
               memberDay: "",
               memberDayDiscount: '',
@@ -375,6 +479,7 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
       },
       created(){
         this.getList();
+        this.insertDayList();
         //this.getData();
       }
     }
@@ -391,11 +496,11 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
   }
   .disLeft{
     float:left;
-    margin-left:18%;
+    margin-left:22%;
   }
   .disRight{
     float:right;
-    margin-right:18%;
+    margin-right:22%;
   }
   .com{
     margin: 10px 0;
@@ -404,7 +509,7 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
     padding: 10px;
   }
   .enjoyInput{
-    width: 250px;
+    width: 290px;
     margin-top: 10px;           
   }
   .enjoyInputTime{
