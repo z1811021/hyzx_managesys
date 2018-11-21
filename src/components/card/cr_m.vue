@@ -7,98 +7,90 @@
       <br/>
       <Table :columns="columns" :data="data"></Table>
       <Modal v-model="addF" title="添加" :mask-closable="false" @on-ok="ok" class="mod">
-        <div class='com'>会员级别名称：<Input v-model="addData.membershipName" placeholder="会员级别名称" style="width: 252px"></Input></div>
-<!--         <div class='com' style="margin-top:10px;">会员价格：
-          <InputNumber
+        <div class='com'>会员级别名称：<Input v-model="addData.cardName" placeholder="会员级别名称" style="width: 252px"></Input></div>
+        <div class='com' style="margin-top:20px;">
+        会员价格：<InputNumber
             :min="0"
-            v-model="addData.membershipMoney"addData.membershipMoney
-            :formatter="value=> `${value}元`"
-            :parser="value => value.replace('元', '')" placeholder="会员价格 元" style="width: 275px;ime-mode:disabled"></InputNumber>
-        </div> -->
-        <div class='com' style="margin-top:20px;"><div class="disLeft">单次折扣：<InputNumber
-            :min="-1"
-            :max="100"
-            v-model="addData.productDiscount" 
-            :formatter="value => `${value}%`"
-            :parser="value => value.replace('%', '')" size="small" style="width: 50px" placeholder="折扣百分比" ></InputNumber></div>
-            <div class="disRight">产品折扣：<InputNumber
-            :min="0"
-            :max="100"
-            v-model="addData.projectDiscount"
-            :formatter="value => `${value}%`"
-            :parser="value => value.replace('%', '')" size="small" style="width: 50px" placeholder="折扣百分比" ></InputNumber></div>
+            v-model="addData.memPrice"
+            :formatter="value => `${value}元`"
+            :parser="value => value.replace('元', '')" placeholder="元" style="width:275px" @on-change="changeThisPrice"></InputNumber>
+        </div>
+        <div class='com' style="margin-top:20px;"><div class="disLeft">单次折扣：
+            <Select size="small" v-model="addData.singleDiscount" style="width:90px" placeholder="单次折扣" filterable>
+                <Option v-for="item in hunList" :value="item.value" :key="item.value">{{item.label}}%</Option>
+            </Select> 
+          </div>
+            <div class="disRight">产品折扣：
+            <Select size="small" v-model="addData.productDiscount" style="width:90px" placeholder="产品折扣" filterable>
+                <Option v-for="item in hunList" :value="item.value" :key="item.value">{{item.label}}%</Option>
+            </Select> 
+            </div>
         </div>
         <br/>
         <br/>
-        <div class='com'>有效期：<Input v-model="addData.membershipValidity" placeholder="单位月" style="width: 288px;ime-mode:disabled" onpaste="return false;" @on-keyup="addData.membershipValidity=check(addData.membershipValidity)"></Input></div>
+        <div class='com'>有效期：
+          <Select v-model="addData.expiryDate" style="width:288px" placeholder="单位月" filterable>
+              <Option v-for="item in dayList" :value="item.value" :key="item.value">{{item.label}} 个月</Option>
+          </Select> 
+        </div>
         <div class='com' style="margin-top:10px;">升卡原则：
-          <Select v-model="addData.liftCardType" :multiple=true style="width:275px" :transfer=true>
+          <Select v-model="selectedRisCardRule" :multiple=true :transfer=true @on-change="changeStyle" style="width:275px">
             <Option value="累计现金">累计现金</Option>
             <Option value="累计充值">累计充值</Option>
-            <!-- <Option value="增量充值">增量充值</Option> -->
+            <Option value="增量充值">增量充值</Option>
             <Option value="单次充值">单次充值</Option>
-            <!-- <Option value="充值金额">充值金额</Option> -->
           </Select>
         </div>
-        <div style="float:left;margin-left:63px;"><Checkbox v-model="single">是否允许增量充值</Checkbox></div>
-        <div style="margin-top:35px;">
-          <Input style="margin-left:63px;margin-top:10px;width: 280px;" v-model="value13">
-              <Select v-model="select3" slot="prepend" style="width: 180px">
-                  <Option value="1">升级到XXX卡</Option>
-                  <Option value="2">升级到XXX卡</Option>
-                  <Option value="3">升级到XXX卡</Option>
+        <div v-show="addData.allowRecharge" style="margin-top:15px;">
+         <div style="float:left;margin-left: 63px;padding-top:4px;">增量充值细节：</div>
+         <div style="margin-right:280px;"><Button type="success" size="small" @click="addUpgrade"><Icon type="plus-round"></Icon>项目</Button></div>
+          <Input v-for="item in upgradeList" v-model="item.risingCardMoney" type="number" style="margin-left:63px;margin-top:4px;width: 280px;" placeholder="元">
+              <Select v-model="item.risingCardName" slot="prepend" style="width: 180px">
+                  <Option v-for="item in curData" :value="item.cardName" :key="item.id">升级到{{item.cardName}}</Option>
               </Select>
           </Input>
-          <Input style="margin-left:63px;margin-top:10px;width: 280px;" v-model="value13">
-              <Select v-model="select3" slot="prepend" style="width: 180px">
-                  <Option value="1">升级到XXX卡</Option>
-                  <Option value="2">升级到XXX卡</Option>
-                  <Option value="3">升级到XXX卡</Option>
-              </Select>
-          </Input>
-        </div>
-        <div class='group'>
-          <h3>会员尊享</h3>
-          <div style="margin-left:-280px;"><Button type="primary" size="small"><Icon type="plus-round"></Icon> 添加尊享项目</Button></div>
-            <div v-for="item in projectList"> 
-              <div style="float:left;margin-left:44px;margin-top:-1px;">
-                  <Input class="enjoyInput" placeholder="尊享次数：">
-                  <Select v-model="selectedProject" placeholder="请选择尊享项目" slot="prepend" style="width: 200px">
-                      <Option v-for="item in projectList" :value="item.itemName" :key="index">{{item.itemName}}</Option>
-                  </Select>
-                </Input>
-              </div>
-              <div >
-                <Select style="width:90px;margin-right:40px;margin-top:10px;" placeholder="有效期：">
-                  <Option v-for="item in monthList" :value="item.value" :key="item.value">{{item.label}}</Option>
-              </Select>
-              </div>
-          </div>
         </div>
         <br/>
-        <div class='group'>
+        <div class='group' style="display:inline-block;">
+          <h3>会员尊享</h3> 
+          <div style="margin-left:-320px;"><Button type="success" size="small" @click="addHonor"><Icon type="plus-round"></Icon>项目</Button></div>
+            <div style="display:block;margin-bottom:20px;" v-for="(item,index) in honorList" > 
+                  <Input type="number" v-model="item.itemTimes" class="enjoyInput" placeholder="尊享次数：">
+                  <Select v-model="item.itemName" ref="setHouseQuery" clearable placeholder="请选择尊享项目" slot="prepend" style="width: 160px" @on-change="changeHonor(index)">
+                      <Option v-for="item in projectList" :value="item.itemName" :key="item.id">{{item.itemName}}</Option>
+                  </Select>
+                </Input>
+                <div style="float:left;margin-left:5px;margin-top:11px;">
+                  <Select v-model="item.itemExpiry" style="width:90px;float:left;" placeholder="有效期：">
+                    <Option v-for="item in monthList" :value="item.value" :key="item.value">{{item.label}} 个月</Option>
+                  </Select>
+                  <Button style="float:right;margin-left:5px;" type="warning" @click="deleteHonor(index)">删除</Button>
+                </div>
+            </div>
+        </div>
+        <div class="blank"></div>
+        <div class="group" >
           <h3>会员日</h3>
           <div class='com' style="margin-top: 20px;">每月
-            <Select size="small" v-model="model1" style="width:70px" placeholder="第几日">
+            <Select :multiple=true size="small" v-model="selectedMemDate" style="width:92px" placeholder="第几日" >
                 <Option v-for="item in dayList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
             日，或 第 
-            <Select size="small" v-model="model1" style="width:70px" placeholder="第几次">
+            <Select size="small" v-model="addData.memTimes" style="width:70px" placeholder="第几次">
                 <Option v-for="item in dayList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
              次到店第 
-             <Select size="small" v-model="model1" style="width:70px" placeholder="第几个">
+             <Select size="small" v-model="addData.memItems" style="width:70px" placeholder="第几个">
                 <Option v-for="item in dayList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select> 
             个项目，
             <br/>
               <div class='com' style="margin-top:20px;">
-                <div class="disLeft">折扣：<InputNumber
-                :min="0"
-                :max="100"
-                v-model="addData.productDiscount" 
-                :formatter="value => `${value}%`"
-                :parser="value => value.replace('%', '')" size="small" placeholder="折扣百分比"></InputNumber></div>
+                <div class="disLeft">折扣：
+                  <Select size="small" v-model="addData.memDiscount" style="width:90px" placeholder="单次折扣" filterable>
+                      <Option v-for="item in hunList" :value="item.value" :key="item.value">{{item.label}}%</Option>
+                  </Select> 
+                </div>
               </div>
             </div>
         </div>
@@ -107,24 +99,23 @@
         <div class='group'>
           <h3>会员返现</h3>
           <div class='com'> 第 
-            <Select size="small" v-model="model1" style="width:70px" placeholder="第几次">
+            <Select size="small" v-model="addData.rebateTimes" style="width:70px" placeholder="第几次">
                 <Option v-for="item in dayList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select> 
            次到店第 
-            <Select size="small" v-model="model1" style="width:70px" placeholder="第几个">
+            <Select size="small" v-model="addData.rebateItems" style="width:70px" placeholder="第几个">
                 <Option v-for="item in dayList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select> 
             个项目，返现 
             <InputNumber
             :min="0"
-            v-model="addData.moneyBack"
-            :formatter="value => `${value}元/次`"
-            :parser="value => value.replace('元/次', '')" placeholder="元/次" size="small"></InputNumber>
+            v-model="addData.rebateCash"
+            placeholder="元" size="small"></InputNumber>
             元，
             <br/>
             <br/>
             有效期 
-            <Select size="small" v-model="model1" style="width:70px" placeholder="第几个">
+            <Select size="small" v-model="addData.rebateExpire" style="width:70px" placeholder="第几个">
                 <Option v-for="item in dayList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select> 
              个月</div>
@@ -133,7 +124,7 @@
           <span>注意事项：</span>
           <br/>
           <br/>
-          <Select v-model="addData.precautions" placeholder="注意事项" :multiple=true style="width:400px;margin-bottom:50px;" :transfer=true >
+          <Select v-model="selectedConsiderations" placeholder="注意事项" :multiple=true style="width:400px;margin-bottom:50px;" :transfer=true >
           <Option :value="1" style="word-wrap: break-word"> ● 会员尊享必须每月到店护理两次以上（每次最少两个项目），<br>第三次到店方可尊享免费项目。</Option>
           <Option :value="2" > ● 会员尊享是从会员充值之日起连续十二个月内有效。</Option>
           <Option :value="3" > ● 会员充值三个月内可补差额升卡，消费超过三个月升卡需全额。</Option>
@@ -149,6 +140,10 @@
           <Option :value="13" > ● 返现日时限与会员尊享同步。</Option>
         </Select>
         </div>
+        <div slot="footer">
+            <Button type="primary" @click="ok">添加</Button>
+            <Button type="ghost" @click="close">取消</Button>
+        </div>
       </Modal>
     </div>
 </template>
@@ -159,69 +154,52 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
       name: "cr_m",
       data() {
         return {
-          monthList: [
-                    {
-                        value: '1个月',
-                        label: '1个月'
-                    },
-                    {
-                        value: '2个月',
-                        label: '2个月'
-                    },
-                    {
-                        value: '3个月',
-                        label: '3个月'
-                    },
-                    {
-                        value: '4个月',
-                        label: '4个月'
-                    },
-                    {
-                        value: '5个月',
-                        label: '5个月'
-                    },
-                    {
-                        value: '6个月',
-                        label: '6个月'
-                    },
-                    {
-                        value: '7个月',
-                        label: '7个月'
-                    },
-                    {
-                        value: '8个月',
-                        label: '8个月'
-                    },
-                    {
-                        value: '9个月',
-                        label: '9个月'
-                    },
-                    {
-                        value: '10个月',
-                        label: '10个月'
-                    },
-                    {
-                        value: '11个月',
-                        label: '11个月'
-                    },
-                    {
-                        value: '12个月',
-                        label: '12个月'
-                    },
-                ],
+          upgradeList: [
+            {
+              // 门店 id, 写错也没关系
+              storeId: this.$route.params.id, 
+              // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
+              memCardId: 0,
+              // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
+              risingCardName: '',
+              // 客户为升级卡花费金额
+              risingCardMoney: ''
+            }
+          ],
+          selectedConsiderations: [],
+          selectedMemDate: [],
+          selectedRisCardRule: [],
+          monthList: [],
           dayList: [],
+          curData: [],
+          memberList: [],
+          honorList: [
+            {
+              // 门店 id, 写错也没关系
+              storeId: this.$route.params.id, 
+              // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
+              memCardId: 0,
+              // 尊享项目名, 推荐使用数字, 1->超微气泡毛孔清理, 2->DC透肌去黑头管理, 3->毛孔深层净化清洁管理
+              itemName: '',
+              // 尊享项目次数
+              itemTimes: '',
+              // 尊享项目过期时间
+              itemExpiry: ''
+            }
+          ],
+          hunList: [],
           columns: [
             {
               title: '会员级别名称',
-              key: 'membershipName',
+              key: 'cardName',
             },
             {
               title: '会员价格(元)',
-              key: 'membershipMoney',
+              key: 'memPrice',
             },
             {
               title: '项目单次折扣',
-              key: 'projectDiscount',
+              key: 'singleDiscount',
             },
             {
               title: '产品折扣',
@@ -229,11 +207,11 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
             },
             {
               title: '升卡原则',
-              key: 'liftCardType',
+              key: 'risCardRule',
             },
             {
               title: '有效期(月)',
-              key: 'membershipValidity',
+              key: 'expiryDate',
             },
             {
               title: '操作',
@@ -264,7 +242,7 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
                     },
                     on: {
                       click: () => {
-                        this.del(params.row, params.index)
+                        this.del(params.row)
                       }
                     }
                   }, '删除'),
@@ -274,37 +252,42 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
           ],
           data: [],
           addF: false,
+          showSingleHonor: true,
           addData: {
-            enjoy: [
-              {
-                agingType: "",
-                enjoyNumber: '',
-                enjoyValidity: "",
-                id: '',
-                projectId: '',
-                projectName: ""
-              }
-            ],
-            moneyBack: '',
-            id: '',
-            memberDay: "",
-            memberDayDiscount: '',
-            memberDayNProject: '',
-            memberDayNtoStore: '',
-            memberReturnNProject: '',
-            memberReturnNtoStore: '',
-            membershipMoney: "",
-            membershipName: "",
-            membershipValidity: '',
-            precautions: [],
-            productDiscount: "0",
-            projectDiscount: "0",
-            returnAmount: "",
-            returnValidity: '',
-            storeId: this.$route.params.id,
-            storeName: "",
-            liftCardType: '',
-            settingTime:false,
+            // 门店 id, 写错也没关系
+              storeId: this.$route.params.id,
+              // 会员级别名称
+              cardName: '',
+              // 会员价格
+              memPrice: '',
+              // 单次折扣
+              singleDiscount: '',
+              // 产品折扣
+              productDiscount:'',
+              // 有效期
+              expiryDate: '',
+              // 升卡原则
+              risCardRule: '',
+              // 是否允许增量充值, 0 未选中, 1 选中
+              allowRecharge: '',
+              // 会员日, 每月 ? 日
+              memDate: '',
+              // 会员日, 或第 ? 次到店
+              memTimes: '',
+              // 会员日, 第 ? 个项目
+              memItems: '',
+              // 会员日, 折扣
+              memDiscount: '',
+              // 会员返现, 第 ? 次到店
+              rebateTimes: '',
+              // 会员返现, 第 ? 个项目
+              rebateItems: '',
+              // 会员返现, 返现 ? 元/次
+              rebateCash: '',
+              // 会员返现, 有效期 ? 个月
+              rebateExpire: '',
+              // 注意事项, 分别从 1 到 6 对应 6 个选项
+              considerations: ''
           },
           type: '',
           projectList:[],
@@ -328,23 +311,6 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               this.$Message.error('获取失败');
             });
           },
-/*        getMeal(){
-            this.$ajax({
-              method: 'GET',
-              dataType: 'JSON',
-              contentType: 'application/json;charset=UTF-8',
-              headers: {
-                "authToken": sessionStorage.getItem('authToken')
-              },
-              url: findProjectPlanList()+'/'+this.$route.params.id+'?programType=1',
-            }).then((res) => {
-              for(var i=0;i<res.data.programManage.length;i++){
-                this.projectList.push(res.data.programManage[i]);
-              }
-          }).catch((error) => {
-            this.$Message.error('获取失败');
-          });
-        },*/
         insertDayList(){
           var currentItem = {};
           for(var i = 0; i < 30; i++){
@@ -355,132 +321,333 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
             this.dayList.push(currentItem);
           }
         },
+        insertHunList(){
+          var currentItem = {};
+          for(var i = 0; i < 100; i++){
+            currentItem = {
+                value: i+1,
+                label: i+1
+            }
+            this.hunList.push(currentItem);
+          }
+        },
+        insertMonthList(){
+          var currentItem = {};
+          for(var i = 0; i < 12; i++){
+            currentItem = {
+                value: i+1,
+                label: i+1
+            }
+            this.monthList.push(currentItem);
+          }
+        },
+        changeHonor(index){
+          for(var i = 0; i < index; i++){
+            if(this.honorList[i].itemName == this.honorList[index].itemName){
+              var errorMessageName = "请不要选择重复的尊享项目！";
+              this.honorList[index].itemName = '';
+              this.$refs.setHouseQuery.$data.query = '';
+              this.$Message.warning(errorMessageName);
+            }
+          }
+        },
         getData(){
           this.$ajax({
             method:'get',
-            url: findMembership()+'?storeId='+this.$route.params.id,
+            url: findMembership()+'/'+this.$route.params.id,
           }).then( (res) =>{
-            this.data = res.data;
+            this.data = res.data.memCardManageInfo;
+            var currentItem = {};
+            for(var i=0;i<this.data.length;i++){
+              this.data[i].memPrice = this.data[i].memPrice + "元";
+              this.data[i].singleDiscount = this.data[i].singleDiscount + "%";
+              this.data[i].productDiscount = this.data[i].productDiscount + "%";
+              this.data[i].expiryDate = this.data[i].expiryDate + "个月";
+              currentItem = {"cardName":this.data[i].cardName, "memPrice":this.data[i].memPrice};
+              this.curData.push(currentItem);
+            }
           }).catch( (error) =>{
             this.$Message.error('获取失败');
           })
         },
         ok() {
-          var Surl;
-          if(this.addData.membershipName == ''){
-            this.$Message.warning('会员级别名称不能为空');
-            return;
+          var selectedMemDateString = '';
+          var selectedConsiderationsDateString = '';
+          var selectedRisCardRuleString = '';
+          for(var i=0;i<this.selectedMemDate.length;i++){
+            selectedMemDateString = selectedMemDateString + this.selectedMemDate[i] + ',';
           }
-          if(this.type == 1){
-            Surl = saveMembership();
-          }else{
-            Surl = editMembership();
+          var selectedConsiderationsDateString = '';
+          for(var i=0;i<this.selectedConsiderations.length;i++){
+            selectedConsiderationsDateString = selectedConsiderationsDateString + this.selectedConsiderations[i] + ',';
           }
-          this.addData.projectDiscount = parseFloat('0.'+this.DA+this.DB);
-          this.addData.productDiscount = parseFloat('0.'+this.DC+this.DD);
-          this.addData.memberDayDiscount = parseFloat('0.'+this.DE+this.DF);
-          this.addData.precautions = this.addData.precautions.toString();
+          for(var i=0;i<this.selectedRisCardRule.length;i++){
+            selectedRisCardRuleString = selectedRisCardRuleString + this.selectedRisCardRule[i] + ',';
+          }
+          this.addData.memDate = selectedMemDateString.substring(0,selectedMemDateString.length-1);
+          this.addData.considerations = selectedConsiderationsDateString.substring(0,selectedConsiderationsDateString.length-1);
+          this.addData.risCardRule = selectedRisCardRuleString.substring(0,selectedRisCardRuleString.length-1);
+          this.addData.allowRecharge = this.transfer(this.addData.allowRecharge);
+          var memCardManage = this.addData;
+          var memCardRisings = this.upgradeList;
+          var memCardItems = this.honorList;
+          var params = {
+            // 门店 id, 此处的 storeId 一定不能错
+            storeId: this.$route.params.id,
+            memCardManage: memCardManage,
+            // 升级卡
+            memCardRisings: memCardRisings,
+            // 会员尊享项目
+            memCardItems: memCardItems
+        };
+        let URL = saveMembership();
           this.$ajax({
-            method: 'post',
-            url: Surl,
-            data: this.addData,
-          }).then( (res) =>{
-            this.$Message.success('保存成功');
-            this.getData();
-          }).catch( (error) =>{
-            this.$Message.error('保存失败');
-          })
+              method: 'POST',
+              dataType: 'JSON',
+              contentType: 'application/json;charset=UTF-8',
+              headers: {
+                "authToken": sessionStorage.getItem('authToken')
+              },
+              data: params,
+              url: URL,
+            }).then((res) => {
+              this.$Message.success('操作成功');
+              this.getData();
+              this.addF=false;
+            }).catch((error) => {
+              this.$Message.error('操作失败');
+            });
         },
         Add(){
           this.addF = true;
           this.addData={
-            enjoy: [
-              {
-                agingType: "",
-                enjoyNumber: '',
-                enjoyValidity: "",
-                id: '',
-                projectId: '',
-                projectName: ""
-              }
-            ],
-              moneyBack: '',
-              id: '',
-              memberDay: "",
-              memberDayDiscount: '',
-              memberDayNProject: '',
-              memberDayNtoStore: '',
-              memberReturnNProject: '',
-              memberReturnNtoStore: '',
-              membershipMoney: "",
-              membershipName: "",
-              membershipValidity: '',
-              precautions: [],
-              productDiscount: "100",
-              projectDiscount: "100",
-              returnAmount: "",
-              returnValidity: '',
+              // 门店 id, 写错也没关系
               storeId: this.$route.params.id,
-              storeName: "",
-            settingTime:false,
+              // 会员级别名称
+              cardName: '',
+              // 会员价格
+              memPrice: '',
+              // 单次折扣
+              singleDiscount: '',
+              // 产品折扣
+              productDiscount:'',
+              // 有效期
+              expiryDate: '',
+              // 升卡原则
+              risCardRule: '',
+              // 是否允许增量充值, 0 未选中, 1 选中
+              allowRecharge: '',
+              // 会员日, 每月 ? 日
+              memDate: '',
+              // 会员日, 或第 ? 次到店
+              memTimes: '',
+              // 会员日, 第 ? 个项目
+              memItems: '',
+              // 会员日, 折扣
+              memDiscount: '',
+              // 会员返现, 第 ? 次到店
+              rebateTimes: '',
+              // 会员返现, 第 ? 个项目
+              rebateItems: '',
+              // 会员返现, 返现 ? 元/次
+              rebateCash: '',
+              // 会员返现, 有效期 ? 个月
+              rebateExpire: '',
+              // 注意事项, 分别从 1 到 6 对应 6 个选项
+              considerations: ''
           };
+          this.honorList = [
+            {
+              // 门店 id, 写错也没关系
+              storeId: this.$route.params.id, 
+              // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
+              memCardId: 0,
+              // 尊享项目名, 推荐使用数字, 1->超微气泡毛孔清理, 2->DC透肌去黑头管理, 3->毛孔深层净化清洁管理
+              itemName: '',
+              // 尊享项目次数
+              itemTimes: '',
+              // 尊享项目过期时间
+              itemExpiry: ''
+            }
+          ];
+          this.selectedConsiderations = [];
+          this.selectedMemDate = [];
+          this.selectedRisCardRule = [];
         },
-        Addproject(){
-          this.addData.enjoy.push({
-            agingType: "",
-            enjoyNumber: '',
-            enjoyValidity: "",
-            id: '',
-            projectId: '',
-            projectName: ""
-          });
-
+        addUpgrade(){
+          var errorMessage = '';
+          var newItem = {
+              // 门店 id, 写错也没关系
+              storeId: this.$route.params.id, 
+              // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
+              memCardId: 0,
+              // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
+              risingCardName: '',
+              // 客户为升级卡花费金额
+              risingCardMoney: ''
+          }
+            for(var i = 0; i < this.upgradeList.length ; i++){
+              if(this.upgradeList[i].risingCardName == '' || this.upgradeList[i].risingCardMoney == ''){
+                //this.$Message.warning("请先完善已有尊享项目信息！");
+                errorMessage = "请先填写当前已有升级项目金额！"; 
+              }
+            }
+            if(errorMessage == ''){
+              this.upgradeList.push(newItem);
+            }else{
+              this.$Message.warning(errorMessage);
+            }
         },
-        mannger(data, i) {
-          this.type = 0;
-          this.addF =true;
-          this.addData = JSON.parse(JSON.stringify(data));
-          if (typeof data.precautions == 'string') {
-            this.addData.precautions = data.precautions.split(',').map( (it, i) => {return +it});
+        addHonor(){
+          var errorMessage = '';
+          var newItem = {
+            // 门店 id, 写错也没关系
+              storeId: this.$route.params.id, 
+              // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
+              memCardId: '',
+              // 尊享项目名, 推荐使用数字, 1->超微气泡毛孔清理, 2->DC透肌去黑头管理, 3->毛孔深层净化清洁管理
+              itemName: '',
+              // 尊享项目次数
+              itemTimes: '',
+              // 尊享项目过期时间
+              itemExpiry: ''
+          }
+            for(var i = 0; i < this.honorList.length ; i++){
+              if(this.honorList[i].itemName == '' || this.honorList[i].itemTimes == '' || this.honorList[i].itemExpiry == ''){
+                //this.$Message.warning("请先完善已有尊享项目信息！");
+                errorMessage = "请先完善已有尊享项目信息！"; 
+              }
+            }
+            if(errorMessage == ''){
+              this.honorList.push(newItem);
+            }else{
+              this.$Message.warning(errorMessage);
+            }
+        },
+        deleteHonor(index){
+            if(this.honorList.length > 1){
+              this.honorList.splice(index,index+1);
+            }
+        },
+        changeThisPrice(){
+            for(var i = 0; i < this.curData.length; i++){
+              if(((parseInt(this.curData[i].memPrice)-this.addData.memPrice)) < 0){
+                this.curData.splice(i,i+1);
+              }
+            }
+        },
+        close(){
+          this.addF = false;
+        },
+        mannger(data) {
+          this.addF = true;
+           var tempCardRule = '';
+            this.addData={
+              // 门店 id, 写错也没关系
+              storeId: this.$route.params.id,
+              // 会员级别名称
+              cardName: data.cardName,
+              // 会员价格
+              memPrice: data.memPrice.replace("元",""),
+              // 单次折扣
+              singleDiscount: parseInt(data.singleDiscount.replace("%","")),
+              // 产品折扣
+              productDiscount: parseInt(data.productDiscount.replace("%","")),
+              // 有效期
+              expiryDate: parseInt(data.expiryDate.replace("个月","")),
+              // 升卡原则
+              risCardRule: '',
+              // 是否允许增量充值, 0 未选中, 1 选中
+              allowRecharge: this.transferBack(data.allowRecharge),
+              // 会员日, 每月 ? 日
+              memDate: '',
+              // 会员日, 或第 ? 次到店
+              memTimes: parseInt(data.memTimes),
+              // 会员日, 第 ? 个项目
+              memItems: parseInt(data.memItems),
+              // 会员日, 折扣
+              memDiscount: parseInt(data.memDiscount),
+              // 会员返现, 第 ? 次到店
+              rebateTimes: parseInt(data.rebateTimes),
+              // 会员返现, 第 ? 个项目
+              rebateItems: parseInt(data.rebateItems),
+              // 会员返现, 返现 ? 元/次
+              rebateCash: parseInt(data.rebateCash),
+              // 会员返现, 有效期 ? 个月
+              rebateExpire: parseInt(data.rebateExpire),
+              // 注意事项, 分别从 1 到 6 对应 6 个选项
+              considerations: ''
+          };
+          this.honorList = data.memCardItems;
+          if(data.memCardRisings.length == 0){
+            this.upgradeList = [
+              {storeId: this.$route.params.id, 
+              // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
+              memCardId: 0,
+              // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
+              risingCardName: '',
+              // 客户为升级卡花费金额
+              risingCardMoney: ''}
+            ];
+          }else{
+            this.upgradeList = data.memCardRisings;
+          }
+          this.selectedConsiderations = data.considerations.split(",");
+          this.selectedMemDate = data.memDate.split(",");
+          this.selectedRisCardRule = data.risCardRule.split(",");
+          for(var i = 0; i < this.selectedConsiderations.length; i++){
+            this.selectedConsiderations[i] = parseInt(this.selectedConsiderations[i]);
+          }
+          for(var j = 0; j < this.selectedMemDate.length; j++){
+            this.selectedMemDate[j] = parseInt(this.selectedConsiderations[j]);
+          }
+          for(var k = 0; k < this.honorList.length; k++){
+            this.honorList[k].itemExpiry = parseInt(this.honorList[k].itemExpiry);
           }
         },
-        del(data, i) {
+        changeStyle(){
+          if(this.selectedRisCardRule.indexOf("增量充值")>-1){
+            this.addData.allowRecharge = true;
+          }else{
+            this.addData.allowRecharge = false;
+          }
+        },
+        transfer(b){
+          if(b == true){
+            return 1;
+          }else{
+            return 0;
+          }
+        },
+        transferBack(c){
+        if(c == 1){
+          return true;
+        }else{
+          return false;
+        }
+      },
+        del(data) {
           var c = confirm('确认删除？');
           if(!c) {
             return false;
           }
           this.$ajax({
             method: 'get',
-            url: deleteMembership()+'?id='+data.id,
+            url: deleteMembership()+'/'+this.$route.params.id+'?cardName='+data.cardName,
           }).then( (res) =>{
             this.$Message.success('删除成功');
             this.getData();
           }).catch( (res) =>{
             this.$Message.error('删除失败');
           })
-        },
-        splitNum(num){
-          if(typeof num !='string'){
-            num.toString();
-          }
-          if(num == '0'){
-            num = '0.00';
-          }
-          var arr = num.split('.')[1];
-          var arr2 = arr.split('');
-          for(var i=0;i<arr2.length;i++){
-            arr2[i]=parseInt(arr2[i]);
-          }
-          if(arr2.length<2){
-            arr2[1]=0;
-          }
-          return arr2;
         }
       },
       created(){
         this.getList();
+        this.getData();
         this.insertDayList();
-        //this.getData();
+        this.insertHunList();
+        this.insertMonthList();
       }
     }
 </script>
@@ -496,11 +663,11 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
   }
   .disLeft{
     float:left;
-    margin-left:22%;
+    margin-left:16%;
   }
   .disRight{
     float:right;
-    margin-right:22%;
+    margin-right:16%;
   }
   .com{
     margin: 10px 0;
@@ -509,11 +676,15 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
     padding: 10px;
   }
   .enjoyInput{
-    width: 290px;
-    margin-top: 10px;           
+    width: 230px;
+    margin-top: 10px;  
+    float:left;         
   }
   .enjoyInputTime{
     width: 75px;
     margin-top: 10px; 
+  }
+  .deleteButton{
+    float:right;
   }
 </style>

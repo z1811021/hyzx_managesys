@@ -628,25 +628,25 @@ export const deleteStaffLevelBaseSalary = function () {
 
 //获取会员卡
 export const findMembership = function () {
-  const URL = '/app/api/membership/findMembership';
+  const URL = '/memCard/manage/store';
   const API = host + URL;
   return API;
 };
 //保存会员卡
 export const saveMembership = function () {
-  const URL = '/app/api/membership/save';
+  const URL = '/memCard/manage/add';
   const API = host + URL;
   return API;
 };
-//编辑会员卡
+/*//编辑会员卡
 export const editMembership = function () {
   const URL = '/app/api/membership/edit';
   const API = host + URL;
   return API;
-};
+};*/
 //删除会员卡
 export const deleteMembership = function () {
-  const URL = '/app/api/membership/delete';
+  const URL = '/memCard/manage/delete';
   const API = host + URL;
   return API;
 };

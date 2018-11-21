@@ -277,6 +277,7 @@
         this.mealName = data.programName;
         this.mealPrice = data.programPrice;
         this.storeFlag = true;
+        //this.selectedProject = 
       },
       close(){
         this.storeFlag = false;
