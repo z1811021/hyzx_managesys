@@ -6,7 +6,7 @@
       <br/>
       <br/>
       <Table :columns="columns" :data="data"></Table>
-      <Modal v-model="addF" title="添加" :mask-closable="false" @on-ok="ok" class="mod">
+      <Modal v-model="addF" title="添加" :mask-closable="false" class="mod">
         <div class='com'>会员级别名称：<Input v-model="addData.cardName" placeholder="会员级别名称" style="width: 252px"></Input></div>
         <div class='com' style="margin-top:20px;">
         会员价格：<InputNumber
@@ -33,7 +33,7 @@
               <Option v-for="item in dayList" :value="item.value" :key="item.value">{{item.label}} 个月</Option>
           </Select> 
         </div>
-        <div class='com' style="margin-top:10px;">升卡原则：
+        <div class='com' style="margin-top:20px;">升卡原则：
           <Select v-model="selectedRisCardRule" :multiple=true :transfer=true @on-change="changeStyle" style="width:275px">
             <Option value="累计现金">累计现金</Option>
             <Option value="累计充值">累计充值</Option>
@@ -44,18 +44,22 @@
         <div v-show="addData.allowRecharge" style="margin-top:15px;">
          <div style="float:left;margin-left: 63px;padding-top:4px;">增量充值细节：</div>
          <div style="margin-right:280px;"><Button type="success" size="small" @click="addUpgrade"><Icon type="plus-round"></Icon>项目</Button></div>
-          <Input v-for="item in upgradeList" v-model="item.risingCardMoney" type="number" style="margin-left:63px;margin-top:4px;width: 280px;" placeholder="元">
-              <Select v-model="item.risingCardName" slot="prepend" style="width: 180px">
-                  <Option v-for="item in curData" :value="item.cardName" :key="item.id">升级到{{item.cardName}}</Option>
-              </Select>
-          </Input>
+           <div v-for="(item,index) in upgradeList">
+            <Input v-model="item.risingCardMoney" type="number" style="margin-left:23px;margin-top:4px;width: 280px;float:left;" placeholder="元" @on-blur="changeUpMoney(item.risingCardMoney,index)">
+                <Select v-model="item.risingCardName" @on-change="changeJumpUpgrade(item.risingCardName,index)" slot="prepend" style="width: 180px">
+                    <Option v-for="(project,index) in curData" :value="project.cardName" :key="project.id">升级到{{project.cardName}}</Option>
+                </Select>
+            </Input>
+            <Button style="float:left;margin-left:8px;margin-top:5px;" type="warning" @click="deleteUpgrade(index)">删除</Button>
+            <div v-show="showMoney && item.showChoose" style="float:right;margin-top:12px;margin-right:23px;">{{item.min}}元~{{item.max}}元</div>
+          </div>
         </div>
         <br/>
-        <div class='group' style="display:inline-block;">
+        <div class='group' style="display:inline-block;margin-top:30px;">
           <h3>会员尊享</h3> 
           <div style="margin-left:-320px;"><Button type="success" size="small" @click="addHonor"><Icon type="plus-round"></Icon>项目</Button></div>
             <div style="display:block;margin-bottom:20px;" v-for="(item,index) in honorList" > 
-                  <Input type="number" v-model="item.itemTimes" class="enjoyInput" placeholder="尊享次数：">
+                  <Input type="number" v-model="item.itemTimes" class="enjoyInput" placeholder="次数：">
                   <Select v-model="item.itemName" ref="setHouseQuery" clearable placeholder="请选择尊享项目" slot="prepend" style="width: 160px" @on-change="changeHonor(index)">
                       <Option v-for="item in projectList" :value="item.itemName" :key="item.id">{{item.itemName}}</Option>
                   </Select>
@@ -69,13 +73,14 @@
             </div>
         </div>
         <div class="blank"></div>
-        <div class="group" >
+        <div class="group" style="margin-top: 30px;">
           <h3>会员日</h3>
           <div class='com' style="margin-top: 20px;">每月
             <Select :multiple=true size="small" v-model="selectedMemDate" style="width:92px" placeholder="第几日" >
                 <Option v-for="item in dayList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
-            日，或 第 
+            日，<br/><br/>
+            或 第 
             <Select size="small" v-model="addData.memTimes" style="width:70px" placeholder="第几次">
                 <Option v-for="item in dayList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
@@ -84,9 +89,8 @@
                 <Option v-for="item in dayList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select> 
             个项目，
-            <br/>
               <div class='com' style="margin-top:20px;">
-                <div class="disLeft">折扣：
+                <div >折扣：
                   <Select size="small" v-model="addData.memDiscount" style="width:90px" placeholder="单次折扣" filterable>
                       <Option v-for="item in hunList" :value="item.value" :key="item.value">{{item.label}}%</Option>
                   </Select> 
@@ -95,10 +99,9 @@
             </div>
         </div>
         <br/>
-        <br/>
         <div class='group'>
           <h3>会员返现</h3>
-          <div class='com'> 第 
+          <div class='com' style="margin-top: 20px;"> 第 
             <Select size="small" v-model="addData.rebateTimes" style="width:70px" placeholder="第几次">
                 <Option v-for="item in dayList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select> 
@@ -106,7 +109,7 @@
             <Select size="small" v-model="addData.rebateItems" style="width:70px" placeholder="第几个">
                 <Option v-for="item in dayList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select> 
-            个项目，返现 
+            个项目，<br/><br/>返现 
             <InputNumber
             :min="0"
             v-model="addData.rebateCash"
@@ -163,7 +166,11 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
               risingCardName: '',
               // 客户为升级卡花费金额
-              risingCardMoney: ''
+              risingCardMoney: '',
+              min: '',
+              max: '',
+              showChoose: false,
+              upgradeTo: ''
             }
           ],
           selectedConsiderations: [],
@@ -173,6 +180,8 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
           dayList: [],
           curData: [],
           memberList: [],
+          removeItem: [],
+          showMoney: false,
           honorList: [
             {
               // 门店 id, 写错也没关系
@@ -184,7 +193,10 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               // 尊享项目次数
               itemTimes: '',
               // 尊享项目过期时间
-              itemExpiry: ''
+              itemExpiry: '',
+              min: '',
+              // 升级最大金额
+              max: ''
             }
           ],
           hunList: [],
@@ -363,17 +375,53 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               this.data[i].singleDiscount = this.data[i].singleDiscount + "%";
               this.data[i].productDiscount = this.data[i].productDiscount + "%";
               this.data[i].expiryDate = this.data[i].expiryDate + "个月";
-              currentItem = {"cardName":this.data[i].cardName, "memPrice":this.data[i].memPrice};
+              currentItem = {"cardName":this.data[i].cardName, "memPrice":this.data[i].memPrice,"id":''};
               this.curData.push(currentItem);
             }
+            this.data.sort(this.compare);
+            this.curData.sort(this.compare);
           }).catch( (error) =>{
             this.$Message.error('获取失败');
           })
+        },
+        compare(a,b) {
+          if (a.memPrice < b.memPrice)
+            return 1;
+          if (a.memPrice > b.memPrice)
+            return -1;
+          return 0;
+        },
+        changeJumpUpgrade(a,index){
+          var minList = JSON.parse(JSON.stringify(this.removeItem));
+          var minNumber = JSON.parse(JSON.stringify(this.curData));
+          this.upgradeList[index].min = minList[0].memPrice-this.addData.memPrice;
+          for(var i=0;i<minNumber.length;i++){
+            if(minNumber[i].cardName==a){
+              this.upgradeList[index].max = minNumber[i].memPrice-this.addData.memPrice;
+              this.upgradeList[index].showChoose = true;
+              this.upgradeList[index].upgradeTo = index;
+            }
+          }
         },
         ok() {
           var selectedMemDateString = '';
           var selectedConsiderationsDateString = '';
           var selectedRisCardRuleString = '';
+          var tempList = JSON.parse(JSON.stringify(this.upgradeList));
+          var selectedCardRisings = [];
+          for(var l=0;l<tempList.length;l++){
+            var currentUpItem = {
+              // 门店 id, 写错也没关系
+              "storeId": this.$route.params.id,
+              // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
+              "memCardId": 0,
+              // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
+              "risingCardName": tempList[l].upgradeTo.toString(),
+              // 客户为升级卡花费金额
+              "frisingCardMoney": tempList[l].risingCardMoney
+            };
+            selectedCardRisings.push(currentUpItem);
+          }
           for(var i=0;i<this.selectedMemDate.length;i++){
             selectedMemDateString = selectedMemDateString + this.selectedMemDate[i] + ',';
           }
@@ -389,7 +437,7 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
           this.addData.risCardRule = selectedRisCardRuleString.substring(0,selectedRisCardRuleString.length-1);
           this.addData.allowRecharge = this.transfer(this.addData.allowRecharge);
           var memCardManage = this.addData;
-          var memCardRisings = this.upgradeList;
+          var memCardRisings = selectedCardRisings;
           var memCardItems = this.honorList;
           var params = {
             // 门店 id, 此处的 storeId 一定不能错
@@ -498,6 +546,37 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               this.$Message.warning(errorMessage);
             }
         },
+        deleteUpgrade(index){
+          if(this.upgradeList.length>1){
+            this.upgradeList.splice(index,1);
+          }else{
+            this.upgradeList = [{storeId: this.$route.params.id, 
+                  // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
+                  memCardId: 0,
+                  // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
+                  risingCardName: '',
+                  // 客户为升级卡花费金额
+                  risingCardMoney: '',
+                  // 升级最小金额
+                  min: '',
+                  // 升级最大金额
+                  max: '',
+                  showChoose: false,
+                  upgradeTo: ''}
+            ];
+          }
+        },
+        changeUpMoney(a,index){
+          if(a != ''){
+            if( a < this.upgradeList[index].min){
+            this.$Message.warning("输入金额过低！");
+            this.upgradeList[index].risingCardMoney = '';
+            }else if(a > this.upgradeList[index].max){
+              this.$Message.warning("输入金额过高！");
+              this.upgradeList[index].risingCardMoney = ''; 
+            }
+          }
+        },
         addHonor(){
           var errorMessage = '';
           var newItem = {
@@ -530,14 +609,51 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
             }
         },
         changeThisPrice(){
-            for(var i = 0; i < this.curData.length; i++){
-              if(((parseInt(this.curData[i].memPrice)-this.addData.memPrice)) < 0){
-                this.curData.splice(i,i+1);
+            var currentItem;
+            var removeItem = [];
+            this.curData = [];
+            for(var i=0;i<this.data.length;i++){
+              currentItem = {"cardName":this.data[i].cardName, "memPrice":this.data[i].memPrice.replace("元",""),"id":''};
+              this.curData.push(currentItem);
+            }
+            for(var j = 0; j < this.curData.length; j++){
+                if(((parseInt(this.curData[j].memPrice)-this.addData.memPrice)) <= 0){
+                  removeItem.push(this.curData[j]);
+                  this.curData.splice(j);
+                }
               }
+            this.curData.sort(this.compare);
+            removeItem.push(this.curData[this.curData.length-1]);
+            this.curData.splice(this.curData.length-1,1);
+            this.removeItem = removeItem;
+            this.removeItem.sort(this.compare);
+            if(this.curData == 0){
+              this.showMoney = false;
+              this.upgradeList = [
+                  {storeId: this.$route.params.id, 
+                  // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
+                  memCardId: 0,
+                  // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
+                  risingCardName: '',
+                  // 客户为升级卡花费金额
+                  risingCardMoney: '',
+                  // 升级最小金额
+                  min: '',
+                  // 升级最大金额
+                  max: '',
+                  showChoose: false,
+                  upgradeTo: ''}
+                ];
+            }else{
+              this.showMoney = true;
+            }
+            for(var j=0;j<this.upgradeList.length;j++){
+              this.changeJumpUpgrade(this.upgradeList[j].risingCardName,j);
             }
         },
         close(){
           this.addF = false;
+          this.showMoney = false
         },
         mannger(data) {
           this.addF = true;
@@ -572,7 +688,7 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               // 会员返现, 第 ? 个项目
               rebateItems: parseInt(data.rebateItems),
               // 会员返现, 返现 ? 元/次
-              rebateCash: parseInt(data.rebateCash),
+              rebateCash: data.rebateCash,
               // 会员返现, 有效期 ? 个月
               rebateExpire: parseInt(data.rebateExpire),
               // 注意事项, 分别从 1 到 6 对应 6 个选项
@@ -587,7 +703,13 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
               risingCardName: '',
               // 客户为升级卡花费金额
-              risingCardMoney: ''}
+              risingCardMoney: '',
+              // 升级最小金额
+              min: '',
+              // 升级最大金额
+              max: '',
+              showChoose: false,
+              upgradeTo: ''}
             ];
           }else{
             this.upgradeList = data.memCardRisings;
@@ -606,10 +728,31 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
           }
         },
         changeStyle(){
-          if(this.selectedRisCardRule.indexOf("增量充值")>-1){
-            this.addData.allowRecharge = true;
+          var index = this.selectedRisCardRule.indexOf("增量充值");
+          if(index > -1){
+            if(this.addData.memPrice == ''){
+              this.$Message.warning("请先输入本会员卡价格！");
+              this.selectedRisCardRule = [];
+            }else{
+              this.addData.allowRecharge = true;
+              this.changeThisPrice();
+            }
           }else{
             this.addData.allowRecharge = false;
+            this.upgradeList = [
+              {storeId: this.$route.params.id, 
+              // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
+              memCardId: 0,
+              // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
+              risingCardName: '',
+              // 客户为升级卡花费金额
+              risingCardMoney: '',
+              // 升级最小金额
+              min: '',
+              // 升级最大金额
+              max: '',
+              showChoose: false}
+            ];
           }
         },
         transfer(b){
