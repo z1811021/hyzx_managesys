@@ -170,7 +170,7 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               min: '',
               max: '',
               showChoose: false,
-              upgradeTo: ''
+              upgradeTo: '',
             }
           ],
           selectedConsiderations: [],
@@ -399,28 +399,34 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
             if(minNumber[i].cardName==a){
               this.upgradeList[index].max = minNumber[i].memPrice-this.addData.memPrice;
               this.upgradeList[index].showChoose = true;
-              this.upgradeList[index].upgradeTo = index;
+              this.upgradeList[index].upgradeTo = index+1;
             }
           }
         },
         ok() {
+          var validateMessage = '';
           var selectedMemDateString = '';
           var selectedConsiderationsDateString = '';
           var selectedRisCardRuleString = '';
-          var tempList = JSON.parse(JSON.stringify(this.upgradeList));
+          var tempList = [];
           var selectedCardRisings = [];
-          for(var l=0;l<tempList.length;l++){
-            var currentUpItem = {
-              // 门店 id, 写错也没关系
-              "storeId": this.$route.params.id,
-              // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
-              "memCardId": 0,
-              // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
-              "risingCardName": tempList[l].upgradeTo.toString(),
-              // 客户为升级卡花费金额
-              "frisingCardMoney": tempList[l].risingCardMoney
-            };
-            selectedCardRisings.push(currentUpItem);
+          if(this.upgradeList[0].risingCardName == ''){
+              selectedCardRisings = [];
+          }else{
+            tempList = JSON.parse(JSON.stringify(this.upgradeList));
+              for(var l=0;l<tempList.length;l++){
+              var currentUpItem = {
+                // 门店 id, 写错也没关系
+                "storeId": this.$route.params.id,
+                // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
+                "memCardId": 0,
+                // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
+                "risingCardName": tempList[l].upgradeTo.toString(),
+                // 客户为升级卡花费金额
+                "risingCardMoney": tempList[l].risingCardMoney
+              };
+              selectedCardRisings.push(currentUpItem);
+            }
           }
           for(var i=0;i<this.selectedMemDate.length;i++){
             selectedMemDateString = selectedMemDateString + this.selectedMemDate[i] + ',';
@@ -449,7 +455,67 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
             memCardItems: memCardItems
         };
         let URL = saveMembership();
-          this.$ajax({
+        if(this.addData.cardName == ''){
+            validateMessage = validateMessage + "请输入会员级别名称！<br/>";
+          }
+          if(this.addData.memPrice == ''){
+            validateMessage = validateMessage + "请输入会员价格！<br/>";
+          }
+          if(this.addData.singleDiscount == ''){
+            validateMessage = validateMessage + "请选择单次价格！<br/>";
+          }
+          if(this.addData.productDiscount == ''){
+            validateMessage = validateMessage + "请选择产品折扣！<br/>";
+          }
+          if(this.addData.expiryDate == ''){
+            validateMessage = validateMessage + "请选择有效期！<br/>";
+          }
+          if(this.addData.risCardRule.length == 0){
+            validateMessage = validateMessage + "请选择升卡原则！<br/>";
+          }
+          if(this.addData.memDate.length == 0){
+            validateMessage = validateMessage + "请选择会员日日期！<br/>";
+          }
+          if(this.addData.memTimes == ''){
+            validateMessage = validateMessage + "请选择会员日第几次到店！<br/>";
+          }
+          if(this.addData.memDiscount == ''){
+            validateMessage = validateMessage + "请选择会员日折扣！<br/>";
+          }
+          if(this.addData.memItems == ''){
+            validateMessage = validateMessage + "请选择会员日rebateTimes！<br/>";
+          }
+          if(this.addData.rebateTimes == ''){
+            validateMessage = validateMessage + "请选择返现第几次到店！<br/>";
+          }
+          if(this.addData.rebateItems == ''){
+            validateMessage = validateMessage + "请选择返现第几个项目！<br/>";
+          }
+          if(this.addData.rebateCash == ''){
+            validateMessage = validateMessage + "请选择返现金额！<br/>";
+          }
+          if(this.addData.rebateExpire == ''){
+            validateMessage = validateMessage + "请选择返现有效期！<br/>";
+          }
+          if(this.addData.considerations.length == 0){
+            validateMessage = validateMessage + "请选择注意事项！<br/>";
+          }
+          for(var m=0;m<this.honorList.length;m++){
+            if(this.honorList[m].itemName == '' || this.honorList[m].itemTimes == '' || this.honorList[m].itemExpiry == ''){
+              validateMessage = validateMessage + "请先完善尊享项目信息！<br/>";
+            }
+          }
+          for(var i = 0; i < this.upgradeList.length ; i++){
+              if(this.upgradeList[i].risingCardName == '' || this.upgradeList[i].risingCardMoney == ''){
+                //this.$Message.warning("请先完善已有尊享项目信息！");
+                validateMessage = validateMessage + "请先填写当前已有升级项目金额！"; 
+              }
+            }
+          if(validateMessage != ''){
+            this.$Message.warning(validateMessage);
+            validateMessage = '';
+          }else{
+            this.$ajax({
               method: 'POST',
               dataType: 'JSON',
               contentType: 'application/json;charset=UTF-8',
@@ -465,6 +531,7 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
             }).catch((error) => {
               this.$Message.error('操作失败');
             });
+          }
         },
         Add(){
           this.addF = true;
@@ -518,6 +585,22 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               itemExpiry: ''
             }
           ];
+          this.upgradeList = [
+            {
+              // 门店 id, 写错也没关系
+              storeId: this.$route.params.id, 
+              // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
+              memCardId: 0,
+              // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
+              risingCardName: '',
+              // 客户为升级卡花费金额
+              risingCardMoney: '',
+              min: '',
+              max: '',
+              showChoose: false,
+              upgradeTo: '',
+            }
+          ];
           this.selectedConsiderations = [];
           this.selectedMemDate = [];
           this.selectedRisCardRule = [];
@@ -532,7 +615,11 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
               risingCardName: '',
               // 客户为升级卡花费金额
-              risingCardMoney: ''
+              risingCardMoney: '',
+              min: '',
+              max: '',
+              showChoose: false,
+              upgradeTo: '',
           }
             for(var i = 0; i < this.upgradeList.length ; i++){
               if(this.upgradeList[i].risingCardName == '' || this.upgradeList[i].risingCardMoney == ''){
@@ -562,7 +649,7 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
                   // 升级最大金额
                   max: '',
                   showChoose: false,
-                  upgradeTo: ''}
+                  upgradeTo: '',}
             ];
           }
         },
@@ -642,7 +729,7 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
                   // 升级最大金额
                   max: '',
                   showChoose: false,
-                  upgradeTo: ''}
+                  upgradeTo: '',}
                 ];
             }else{
               this.showMoney = true;
@@ -695,6 +782,18 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               considerations: ''
           };
           this.honorList = data.memCardItems;
+          this.selectedConsiderations = data.considerations.split(",");
+          this.selectedMemDate = data.memDate.split(",");
+          this.selectedRisCardRule = data.risCardRule.split(",");
+          for(var i = 0; i < this.selectedConsiderations.length; i++){
+            this.selectedConsiderations[i] = parseInt(this.selectedConsiderations[i]);
+          }
+          for(var j = 0; j < this.selectedMemDate.length; j++){
+            this.selectedMemDate[j] = parseInt(this.selectedConsiderations[j]);
+          }
+          for(var k = 0; k < this.honorList.length; k++){
+            this.honorList[k].itemExpiry = parseInt(this.honorList[k].itemExpiry);
+          }
           if(data.memCardRisings.length == 0){
             this.upgradeList = [
               {storeId: this.$route.params.id, 
@@ -709,22 +808,29 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               // 升级最大金额
               max: '',
               showChoose: false,
-              upgradeTo: ''}
+              upgradeTo: '',}
             ];
           }else{
-            this.upgradeList = data.memCardRisings;
-          }
-          this.selectedConsiderations = data.considerations.split(",");
-          this.selectedMemDate = data.memDate.split(",");
-          this.selectedRisCardRule = data.risCardRule.split(",");
-          for(var i = 0; i < this.selectedConsiderations.length; i++){
-            this.selectedConsiderations[i] = parseInt(this.selectedConsiderations[i]);
-          }
-          for(var j = 0; j < this.selectedMemDate.length; j++){
-            this.selectedMemDate[j] = parseInt(this.selectedConsiderations[j]);
-          }
-          for(var k = 0; k < this.honorList.length; k++){
-            this.honorList[k].itemExpiry = parseInt(this.honorList[k].itemExpiry);
+            this.upgradeList = [];
+            for(var l = 0; l < data.memCardRisings.length; l++){
+              var index = data.memCardRisings[l].risingCardName - 1;
+              var currentUpBackItem = {
+                storeId: this.$route.params.id, 
+                // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
+                memCardId: 0,
+                // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
+                risingCardName: this.curData[index].cardName,
+                // 客户为升级卡花费金额
+                risingCardMoney: data.memCardRisings[l].risingCardMoney,
+                // 升级最小金额
+                min: '',
+                // 升级最大金额
+                max: '',
+                showChoose: false,
+                upgradeTo: data.memCardRisings[l].risingCardName
+              }
+              this.upgradeList.push(currentUpBackItem);
+            }
           }
         },
         changeStyle(){
