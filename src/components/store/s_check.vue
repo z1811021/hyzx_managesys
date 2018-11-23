@@ -193,15 +193,13 @@ import { findStoreList,getProvinces,getCities,auditStoreCustomer,review,customer
           method:'GET',
           url:customer()+data.id,
         }).then( (res)=>{
-          console.log(data)
           this.storeFlag = true;
           this.storeVal = data;
           this.storeVal.staffName = res.data.customer.name;
           this.storeVal.phoneNumber = res.data.customer.account;
-          this.storeVal.storeType = this.getStoreType(data.storeType)
+          //this.storeVal.storeType = this.getStoreType(data.storeType)
           this.storeStatus =data.storeStatus == 2 ? data.storeStatus : null;
           this.causeOfFailure =data.storeDesc;  
-          console.log(this.storeVal)
         }).catch((error)=>{
 
         })
@@ -217,7 +215,7 @@ import { findStoreList,getProvinces,getCities,auditStoreCustomer,review,customer
         let storeType = ''
         for (let i =0;i<arr.length;i++){
           if (i == data-1) {
-              storeType = arr[i]
+              storeType = arr[i-1]
           }
         }
         return storeType;

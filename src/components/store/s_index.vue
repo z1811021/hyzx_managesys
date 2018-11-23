@@ -92,7 +92,7 @@
      <div class="modalInputs"><div style="margin-left:14%;">店平方数：<Input v-model="question.area" style="width: 88px" disabled/></div>
       <div style="margin: 0 auto;">年房租：<Input v-model="question.rent" style="width: 88px" disabled/></div><div style="margin-right:14%;">床位数：<Input v-model="question.bedCount" style="width: 88px" disabled/></div></div>
       <br/>
-        <Table border :columns="question.roomTypesColumns" :data="roomTypes"></Table>
+        <Table border :columns="question.roomTypesColumns" :data="question.roomTypes"></Table>
       <br/>
       <br/>
       <div style="width:100%;margin:0 auto;" align="center">
@@ -343,24 +343,24 @@
        <br/>
        <br/>
        <div style="margin-left: 30px;">
-    1月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 2月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;3月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    1月: &nbsp;&nbsp; <Input v-model="question.register3Month.type1.month_1" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 2月:&nbsp;&nbsp; <Input v-model="question.register3Month.type1.month_2" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;3月:&nbsp;&nbsp; <Input v-model="question.register3Month.type1.month_3" class="modalMonthInput" disabled/>
        <br/>
        <br/>
-    4月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 5月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;6月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    4月: &nbsp;&nbsp; <Input v-model="question.register3Month.type1.month_4" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 5月:&nbsp;&nbsp; <Input v-model="question.register3Month.type1.month_5" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;6月:&nbsp;&nbsp; <Input v-model="question.register3Month.type1.month_6" class="modalMonthInput" disabled/>
        <br/>
        <br/>
-    7月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 8月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;9月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    7月: &nbsp;&nbsp; <Input v-model="question.register3Month.type1.month_7" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 8月:&nbsp;&nbsp; <Input v-model="question.register3Month.type1.month_8" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;9月:&nbsp;&nbsp; <Input v-model="question.register3Month.type1.month_9" class="modalMonthInput" disabled/>
        <br/>
        <br/>
-    10月: &nbsp;<Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 11月:&nbsp;<Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;12月:&nbsp;<Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    10月: &nbsp;<Input v-model="question.register3Month.type1.month_10" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 11月:&nbsp;<Input v-model="question.register3Month.type1.month_11" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;12月:&nbsp;<Input v-model="question.register3Month.type1.month_12" class="modalMonthInput" disabled/>
        <br/>
        <br/>
         </div>
@@ -369,24 +369,24 @@
        <br/>
        <br/>
        <div style="margin-left: 30px;">
-    1月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 2月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;3月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    1月: &nbsp;&nbsp; <Input v-model="question.register3Month.type2.month_1" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 2月:&nbsp;&nbsp; <Input v-model="question.register3Month.type2.month_2" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;3月:&nbsp;&nbsp; <Input v-model="question.register3Month.type2.month_3" class="modalMonthInput" disabled/>
        <br/>
        <br/>
-    4月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 5月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;6月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    4月: &nbsp;&nbsp; <Input v-model="question.register3Month.type2.month_4" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 5月:&nbsp;&nbsp; <Input v-model="question.register3Month.type2.month_5" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;6月:&nbsp;&nbsp; <Input v-model="question.register3Month.type2.month_6" class="modalMonthInput" disabled/>
        <br/>
        <br/>
-    7月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 8月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;9月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    7月: &nbsp;&nbsp; <Input v-model="question.register3Month.type2.month_7" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 8月:&nbsp;&nbsp; <Input v-model="question.register3Month.type2.month_8" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;9月:&nbsp;&nbsp; <Input v-model="question.register3Month.type2.month_9" class="modalMonthInput" disabled/>
        <br/>
        <br/>
-    10月: &nbsp;<Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 11月:&nbsp;<Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;12月:&nbsp;<Input v-model="question.numberOfTransactions" class="modalMonthInput" disabled/>
+    10月: &nbsp;<Input v-model="question.register3Month.type2.month_10" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 11月:&nbsp;<Input v-model="question.register3Month.type2.month_11" class="modalMonthInput" disabled/>
+    &nbsp;&nbsp;&nbsp;12月:&nbsp;<Input v-model="question.register3Month.type2.month_12" class="modalMonthInput" disabled/>
        <br/>
        <br/>
         </div>
@@ -395,24 +395,24 @@
        <br/>
        <br/>
        <div style="margin-left: 30px;">
-    1月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 2月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;3月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    1月: &nbsp;&nbsp; <Input v-model="question.register3Month.type3.month_1" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 2月:&nbsp;&nbsp; <Input v-model="question.register3Month.type3.month_2" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;3月:&nbsp;&nbsp; <Input v-model="question.register3Month.type3.month_3" style="width: 128px" disabled/>
        <br/>
        <br/>
-    4月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 5月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;6月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    4月: &nbsp;&nbsp; <Input v-model="question.register3Month.type3.month_4" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 5月:&nbsp;&nbsp; <Input v-model="question.register3Month.type3.month_5" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;6月:&nbsp;&nbsp; <Input v-model="question.register3Month.type3.month_6" style="width: 128px" disabled/>
        <br/>
        <br/>
-    7月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 8月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;9月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    7月: &nbsp;&nbsp; <Input v-model="question.register3Month.type3.month_7" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 8月:&nbsp;&nbsp; <Input v-model="question.register3Month.type3.month_8" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;9月:&nbsp;&nbsp; <Input v-model="question.register3Month.type3.month_9" style="width: 128px" disabled/>
        <br/>
        <br/>
-    10月: &nbsp;<Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 11月:&nbsp;<Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;12月:&nbsp;<Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    10月: &nbsp;<Input v-model="question.register3Month.type3.month_10" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 11月:&nbsp;<Input v-model="question.register3Month.type3.month_11" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;12月:&nbsp;<Input v-model="question.register3Month.type3.month_12" style="width: 128px" disabled/>
        <br/>
        <br/>
         </div>
@@ -421,24 +421,24 @@
        <br/>
        <br/>
        <div style="margin-left: 30px;">
-    1月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 2月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;3月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    1月: &nbsp;&nbsp; <Input v-model="question.register3Month.type4.month_1" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 2月:&nbsp;&nbsp; <Input v-model="question.register3Month.type4.month_2" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;3月:&nbsp;&nbsp; <Input v-model="question.register3Month.type4.month_3" style="width: 128px" disabled/>
        <br/>
        <br/>
-    4月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 5月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;6月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    4月: &nbsp;&nbsp; <Input v-model="question.register3Month.type4.month_4" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 5月:&nbsp;&nbsp; <Input v-model="question.register3Month.type4.month_5" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;6月:&nbsp;&nbsp; <Input v-model="question.register3Month.type4.month_6" style="width: 128px" disabled/>
        <br/>
        <br/>
-    7月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 8月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;9月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    7月: &nbsp;&nbsp; <Input v-model="question.register3Month.type4.month_7" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 8月:&nbsp;&nbsp; <Input v-model="question.register3Month.type4.month_8" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;9月:&nbsp;&nbsp; <Input v-model="question.register3Month.type4.month_9" style="width: 128px" disabled/>
        <br/>
        <br/>
-    10月: &nbsp;<Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 11月:&nbsp;<Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;12月:&nbsp;<Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    10月: &nbsp;<Input v-model="question.register3Month.type4.month_10" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 11月:&nbsp;<Input v-model="question.register3Month.type4.month_11" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;12月:&nbsp;<Input v-model="question.register3Month.type4.month_12" style="width: 128px" disabled/>
        <br/>
        <br/>
         </div>
@@ -473,7 +473,7 @@
 </template>
 
 <script>
-  import { findStoreList,findStoreListById, newStore, editStore,deleteStore,getProvinces,getCities,checkStorePhone, getRoomInfo, infoUpdate} from '../../interface';
+  import { findStoreList,findStoreListById, newStore, editStore,deleteStore,getProvinces,getCities,checkStorePhone, infos, infoUpdate} from '../../interface';
 
   export default {
     name: 's_index',
@@ -562,8 +562,68 @@
           extensionMethod: '',
           newCustomers: '',
           numberOfTransactions: '',
-          numberOfTransactions1: '',
-          numberOfTransactions2: '',
+          register3Month:{
+            type1:
+              {
+                  "month_1": "9",
+                  "month_2": "8",
+                  "month_3": "7",
+                  "month_4": "6",
+                  "month_5": "5",
+                  "month_6": "4",
+                  "month_7": "3",
+                  "month_8": "2",
+                  "month_9": "1",
+                  "month_10": "12",
+                  "month_11": "11",
+                  "month_12": "10",
+              },
+            type2:
+              {
+                  "month_1": "",
+                  "month_2": "88",
+                  "month_3": "77",
+                  "month_4": "66",
+                  "month_5": "55",
+                  "month_6": "44",
+                  "month_7": "33",
+                  "month_8": "22",
+                  "month_9": "11",
+                  "month_10": "122",
+                  "month_11": "111",
+                  "month_12": "100",
+              },
+            type3:
+              {
+                  "month_1": "",
+                  "month_2": "",
+                  "month_3": "",
+                  "month_4": "",
+                  "month_5": "",
+                  "month_6": "",
+                  "month_7": "",
+                  "month_8": "",
+                  "month_9": "",
+                  "month_10": "",
+                  "month_11": "",
+                  "month_12": "",
+              },
+            type4:
+              {
+                  "month_1": "",
+                  "month_2": "",
+                  "month_3": "",
+                  "month_4": "",
+                  "month_5": "",
+                  "month_6": "",
+                  "month_7": "",
+                  "month_8": "",
+                  "month_9": "",
+                  "month_10": "",
+                  "month_11": "",
+                  "month_12": "",
+              }
+    },
           numberOfCustomers: '',
           theNumberOfRenewals: '',
           theBiggestProblem: '',
@@ -634,10 +694,11 @@
                       if(sessionStorage.getItem('isSystem')) {
                         this.$ajax({
                           method: 'GET',
-                          url: getRoomInfo()+params.row.id,
+                          url: infos()+params.row.id,
                         }).then((res) => {
                           this.check(params.row, res.data)
                         }).catch((error) =>{
+                          console.log(error)
                           this.$Message.error({content: '页面有错误请刷新'});
                         })
                       } else {
@@ -1037,8 +1098,10 @@
         });
       },
       check(data, rowData) {
+        console.log(rowData)
         this.questionFlag = true;
-        this.showRoomInfo(rowData)
+        this.register2(rowData.register_2)
+        this.register3(rowData.register_3)
       },
       clearNew() {
         this.storeVal = {
@@ -1061,32 +1124,46 @@
       check2(value){
         return value.replace(/[^\d\.]/g,'');
       },
-      showRoomInfo(rowData){
-        console.log(rowData)
-        this.question.area = rowData.roomInfo.room.area;
-        this.question.rent = rowData.roomInfo.room.rent;
-        this.question.bedCount = rowData.roomNum;
+      register2(rowData){
+        this.question.area = rowData.room.area;
+        this.question.rent = rowData.room.rent;
+        this.question.bedCount = rowData.room.roomCount;
         let memberObj = {}
-        const arrRule = ['onlyShower', 'onlyToilet', 'onlyBubble', 'showerAndToilet', 'bubbleAndToilet', 'showerAndBubble', 'showerAndToiletAndBubble']
-         let temArr = ['仅淋浴','仅坐便','仅泡浴', '淋浴+坐便', '泡浴+坐便','淋浴+泡浴','淋浴+坐便+泡浴']
+        const arrRule =  new Map([['onlyShower','仅淋浴'], ['onlyToilet','仅坐便'], ['onlyBubble','仅泡浴'], ['showerAndToilet','淋浴+坐便'], ['bubbleAndToilet','泡浴+坐便'], ['showerAndBubble','淋浴+泡浴'], ['showerAndToiletAndBubble','淋浴+坐便+泡浴']])
         const room = ['单间', '两人间', '三人间', '三人以上间']
         const member = [{cosmeTologist: '美容师（皮肤管理师)'},{therapist: '美体师'},{nurse: '护士'},{physicalTherapist: '理疗师'},{pedicure: '足疗师'}]
-        this.question.roomTypesColumns.push({type: 'index'})
-        for (let val of room) {
-          this.question.roomTypesColumns.push({title: val, key: val})
-        }
-        for (let i =0; i<arrRule.length; i++) {
+        this.question.roomTypesColumns.push({type: 'index',title: '房间类型'})
 
+        arrRule.forEach((key,value)=>{
+          this.question.roomTypesColumns.push({'title': key, 'key': value})
+        })
+
+        for (let i =0;i <rowData.roomTypes.length;i++ ){
+          for (let key in rowData.roomTypes[i]) {
+            rowData.roomTypes[i][key] = rowData.roomTypes[i][key]+'间'
+          }
         }
+
+        console.log(rowData.roomTypes)
+        this.question.roomTypes = rowData.roomTypes;
         for (let i=0; i<member.length; i++){
           this.question.memberColumns.push({title: Object.values(member[i])[0], key: Object.keys(member[i])[0]})
           let memberObj2 ={}
-          memberObj2[Object.keys(member[i])[0]] =  rowData.roomInfo.member[Object.keys(member[i])[0]]
+          memberObj2[Object.keys(member[i])[0]] =  rowData.member[Object.keys(member[i])[0]]
           memberObj = Object.assign(memberObj, memberObj2);
         }
         this.question.member.push(memberObj)
-        console.log(this.question.member)
-        console.log(this.question.memberColumns)
+      },
+      register3(rowData){
+        for (let i =0;i <rowData.waterInfos.length;i++){
+          let newObj = {}
+          for (let objVal in rowData.waterInfos[i]) {
+            if (objVal.includes('month_')){
+              newObj = Object.assign(newObj, JSON.parse(`{"${objVal}":"${rowData.waterInfos[i][objVal]}"}`))
+            }
+          }
+          this.question.register3Month['type'+rowData.waterInfos[i].type] = newObj
+        }
       },
       cancelQuestion(){
         this.question.area = ''
