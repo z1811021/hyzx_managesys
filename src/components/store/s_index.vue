@@ -113,71 +113,19 @@
       </section>
       <section v-show="isBrandShow" >
       <div style="width:100%;"><div style="float:left;width:50%;margin:0 auto;" align="center">直营产品品牌：       <br/>
-  <table border="1" style="margin-left:22%;width:70%;margin-top:2%;">
-    <thead>
-    <tr>
-      <th>院护</th>
-      <th>家居</th>
-    </tr>
-  </thead>
-    <tr>
-      <td>AAAAAAA</td>
-      <td>BBBBBBBB</td>
-    </tr>
-    <tr>
-      <td>AAAAAAA</td>
-      <td>BBBBBBBB</td>
-    </tr>
-    <tr>
-      <td>AAAAAAA</td>
-      <td>BBBBBBBB</td>
-    </tr>
-    <tr>
-      <td>AAAAAAA</td>
-      <td>BBBBBBBB</td>
-    </tr>
-  </table>
+  <Table size='small' :columns="question.register4Columns" :data="question.register4Data">
+  </Table>
 </div>
 <div style="float:right;width:50%;margin:0 auto;" align="center">仪器：<br/>
-  <table border="1" style="margin-right:22%;width:70%;margin-top:2%;">
-    <thead>
-    <tr>
-      <th>功效</th>
-      <th>品牌</th>
-    </tr>
-  </thead>
-    <tr>
-      <td>AAAAAAAAA</td>
-      <td>BBBBBBBBBB</td>
-    </tr>
-    <tr>
-      <td>AAAAAAAAA</td>
-      <td>BBBBBBBBBB</td>
-    </tr>
-    <tr>
-      <td>AAAAAAAAA</td>
-      <td>BBBBBBBBBB</td>
-    </tr>
-    <tr>
-      <td>AAAAAAAAA</td>
-      <td>BBBBBBBBBB</td>
-    </tr>
-    <tr>
-      <td>AAAAAAAAA</td>
-      <td>BBBBBBBBBB</td>
-    </tr>
-    <tr>
-      <td>AAAAAAAAA</td>
-      <td>BBBBBBBBBB</td>
-    </tr>
-  </table>
+  <Table size='small' :columns="question.register4Columns2" :data="question.register4Data2">
+  </Table>
      </div>
      <div class="clearfloat"></div>
      <br/>
 </div>
       </section>
       <section v-show="isSalaryShow" id="salarySection">
-      <br/><br/><div class="ivu-input-wrapper ivu-input-type"><textarea autocomplete="off" spellcheck="false" rows="2" class="ivu-input" style="height: 230px;margin-top: -10px;" wrap="soft" disabled></textarea></div>
+      <br/><br/><div class="ivu-input-wrapper ivu-input-type"><textarea autocomplete="off" spellcheck="false" rows="2" class="ivu-input" style="height: 230px;margin-top: -10px;" wrap="soft" disabled v-model="question.register5_desc"></textarea></div>
       <br/>
       <br/>
       
@@ -447,24 +395,24 @@
        <br/>
        <br/>
        <div style="margin-left: 30px;">
-    1月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 2月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;3月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    1月: &nbsp;&nbsp; <Input v-model="question.register5Month.month_1" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 2月:&nbsp;&nbsp; <Input v-model="question.register5Month.month_2" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;3月:&nbsp;&nbsp; <Input v-model="question.register5Month.month_3" style="width: 128px" disabled/>
        <br/>
        <br/>
-    4月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 5月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;6月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    4月: &nbsp;&nbsp; <Input v-model="question.register5Month.month_4" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 5月:&nbsp;&nbsp; <Input v-model="question.register5Month.month_5" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;6月:&nbsp;&nbsp; <Input v-model="question.register5Month.month_6" style="width: 128px" disabled/>
        <br/>
        <br/>
-    7月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 8月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;9月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    7月: &nbsp;&nbsp; <Input v-model="question.register5Month.month_7" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 8月:&nbsp;&nbsp; <Input v-model="question.register5Month.month_8" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;9月:&nbsp;&nbsp; <Input v-model="question.register5Month.month_9" style="width: 128px" disabled/>
        <br/>
        <br/>
-    10月: &nbsp;<Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 11月:&nbsp;<Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;12月:&nbsp;<Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    10月: &nbsp;<Input v-model="question.register5Month.month_10" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 11月:&nbsp;<Input v-model="question.register5Month.month_11" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;12月:&nbsp;<Input v-model="question.register5Month.month_12" style="width: 128px" disabled/>
        <br/>
        <br/>
       </div>
@@ -624,6 +572,25 @@
                   "month_12": "",
               }
     },
+          register4Columns:[],
+          register4Columns2:[],
+          register4Data:[],
+          register4Data2:[],
+          register5_desc:'',
+          register5Month: {
+            "month_1": "",
+            "month_2": "",
+            "month_3": "",
+            "month_4": "",
+            "month_5": "",
+            "month_6": "",
+            "month_7": "",
+            "month_8": "",
+            "month_9": "",
+            "month_10": "",
+            "month_11": "",
+            "month_12": "",
+          },    
           numberOfCustomers: '',
           theNumberOfRenewals: '',
           theBiggestProblem: '',
@@ -1102,6 +1069,8 @@
         this.questionFlag = true;
         this.register2(rowData.register_2)
         this.register3(rowData.register_3)
+        this.register4(rowData.register_4)
+        this.register5(rowData.register_5)
       },
       clearNew() {
         this.storeVal = {
@@ -1164,6 +1133,39 @@
           }
           this.question.register3Month['type'+rowData.waterInfos[i].type] = newObj
         }
+      },
+      register4(rowData){
+        this.question.register4Columns = [];
+        this.question.register4Data = [];
+        this.question.register4Columns2 = [];
+        this.question.register4Data2 = [];
+        const arrRule =  new Map([['type','类型'],['name', '品牌']])
+        const arrRule2 =  new Map([['effect','功效'],['name', '仪器品牌']])
+        arrRule.forEach((key,value)=>{
+          this.question.register4Columns.push({'title': key, 'key': value})
+        })
+        arrRule2.forEach((key,value)=>{
+          this.question.register4Columns2.push({'title': key, 'key': value})
+        })
+        rowData.brands.map((item)=>{
+          let {type, name} = item
+          type = this.brandsTransfer(type)
+          this.question.register4Data.push({type, name})
+        })
+        rowData.instruments.map((item)=>{
+          let {effect, name} = item
+          this.question.register4Data2.push({effect, name})
+        })
+      },
+      register5(rowData){
+        this.question.register5_desc = rowData.salary.desc;
+        let newObj = {}
+        for (let objVal in rowData.salary) {
+          if (objVal.includes('month_')){
+            newObj = Object.assign(newObj, JSON.parse(`{"${objVal}":"${rowData.salary[objVal]}"}`))
+          }
+        }
+        this.question.register5Month = newObj
       },
       cancelQuestion(){
         this.question.area = ''

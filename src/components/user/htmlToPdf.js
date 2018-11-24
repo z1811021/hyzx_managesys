@@ -138,6 +138,24 @@ export default{
       }else{
         return ""
       }
+    }
+    Vue.prototype.brandsTransfer = (brands)=>{
+      if(brands ==1){
+        return "院护"
+      }else if(brands ==2){
+        return "家居"
+      }else{
+        return ""
+      }
+    }
+    Vue.prototype.brandsTransferBack = (brands)=>{
+      if(brands =='院护'){
+        return "1"
+      }else if(brands =='家居'){
+        return "2"
+      }else{
+        return ""
+      }
     }  
   }
 }
