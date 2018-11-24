@@ -394,14 +394,19 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
         changeJumpUpgrade(a,index){
           var minList = JSON.parse(JSON.stringify(this.removeItem));
           var minNumber = JSON.parse(JSON.stringify(this.curData));
-          this.upgradeList[index].min = minList[0].memPrice-this.addData.memPrice;
           for(var i=0;i<minNumber.length;i++){
             if(minNumber[i].cardName==a){
+              if(minNumber[i+1] != undefined){
+                this.upgradeList[index].min = minNumber[i+1].memPrice-this.addData.memPrice;
+              }else{
+                this.upgradeList[index].min = minList[0].memPrice-this.addData.memPrice;
+              }
               this.upgradeList[index].max = minNumber[i].memPrice-this.addData.memPrice;
               this.upgradeList[index].showChoose = true;
               this.upgradeList[index].upgradeTo = index+1;
             }
           }
+          //this.upgradeList[index].risingCardMoney = '';
         },
         ok() {
           var validateMessage = '';
