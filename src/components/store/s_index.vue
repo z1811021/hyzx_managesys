@@ -179,7 +179,7 @@
       <br/>
       </section>
       <section style="width: 80%;margin: 0 auto;text-align: center;" v-show="isProblemShow">
-      <div style="margin-left:-65%;margin-top:1%;">目前自己认为经营的最大问题是什么？：</div><br/><div class="ivu-input-wrapper ivu-input-type"><textarea autocomplete="off" spellcheck="false" rows="2" class="ivu-input" style="height: 230px;margin-bottom:2%;" wrap="soft" disabled></textarea></div>
+      <div style="margin-left:-65%;margin-top:1%;">目前自己认为经营的最大问题是什么？：</div><br/><div class="ivu-input-wrapper ivu-input-type"><textarea autocomplete="off" spellcheck="false" rows="2" class="ivu-input" style="height: 230px;margin-bottom:2%;" wrap="soft" disabled v-model="question.register8Desc"></textarea></div>
       <br/>
       <br/>
       </section>
@@ -500,7 +500,8 @@
           register7Data6:'',
           register7Data7:'',
           register7Data8:'',
-          register7Data9:'',    
+          register7Data9:'',
+          register8Desc:'',    
           numberOfCustomers: '',
           theNumberOfRenewals: '',
           theBiggestProblem: '',
@@ -983,6 +984,7 @@
         this.register5(rowData.register_5)
         this.register6(rowData.register_6)
         this.register7(rowData.register_7)
+        this.register8(rowData.register_8)
       },
       clearNew() {
         this.storeVal = {
@@ -1108,6 +1110,9 @@
         this.question.register7Data7 = rowData.client.avgMonPerformance
         this.question.register7Data8 = rowData.client.monNcliPerformance
         this.question.register7Data9 = rowData.client.monOcliPerformance
+      },
+      register8(rowData){
+        this.question.register8Desc = rowData.problem.desc
       },
       cancelQuestion(){
         this.question.area = ''
