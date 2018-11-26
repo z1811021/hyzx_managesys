@@ -100,16 +100,15 @@
       </div>
       <br/>
       </section>
-      <section v-show="isYearShow" style="margin-left: 50px;" id="twentySection">
-      <br/>
-      <Button size="large"  @click="showLs" style="background: #CCE8EB;height:60px;width:200px;margin-left: 60px;">连续十二个月店内现金流水</Button>
-      <Button size="large"  @click="showSc" style="background: #CCE8EB;height:60px;width:200px;margin-left: 60px;">连续十二个月店内实操</Button>
-      <br/>
-      <br/>
-      <Button size="large"  @click="showKl" style="background: #CCE8EB;height:60px;width:200px;margin-left: 60px;margin-top: 30px;">连续十二个月店内客流</Button>
-      <Button size="large"  @click="showYj" style="background: #CCE8EB;height:60px;width:200px;margin-left: 60px;margin-top: 30px;">连续十二个月店内产品业绩</Button>
-      <br/>
-      <br/>
+      <section v-show="isYearShow" style="margin: 0 100px" id="twentySection">
+        <div class="column">
+          <Button size="large"  @click="showLs" style="background: #CCE8EB;height:60px;width:200px;">连续十二个月店内现金流水</Button>
+          <Button size="large"  @click="showSc" style="background: #CCE8EB;height:60px;width:200px;">连续十二个月店内实操</Button>
+        </div>
+        <div class="column">
+          <Button size="large"  @click="showKl" style="background: #CCE8EB;height:60px;width:200px;margin-top: 30px;">连续十二个月店内客流</Button>
+          <Button size="large"  @click="showYj" style="background: #CCE8EB;height:60px;width:200px;margin-top: 30px;">连续十二个月店内产品业绩</Button>
+        </div>
       </section>
       <section v-show="isBrandShow" >
       <div style="width:100%;"><div style="float:left;width:50%;margin:0 auto;" align="center">直营产品品牌：       <br/>
@@ -1081,6 +1080,10 @@
         this.question.register5Month = newObj
       },
       register6(rowData){
+        this.question.register6Colum1 = []
+        this.question.register6Colum2 = []
+        this.question.register6Data1 = []
+        this.question.register6Data2 = []
         const arrRule =  new Map([['name','项目名称'],['price', '价格区间'],['count','次数']])
         const arrRule2 =  new Map([['type','拓客方式'],['exCount', '拓进人数'],['dealCount','成交人数']])
         arrRule.forEach((key,value)=>{
@@ -1194,4 +1197,14 @@ table tr:nth-child(even)
   {            
     background: #F5FAFA;        
   }
+  #twentySection{
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-between;
+  }
+.column {
+  flex-basis: 100%;
+  display: flex;
+  justify-content: space-between;
+}
 </style>
