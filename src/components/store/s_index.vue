@@ -100,84 +100,31 @@
       </div>
       <br/>
       </section>
-      <section v-show="isYearShow" style="margin-left: 50px;" id="twentySection">
-      <br/>
-      <Button size="large"  @click="showLs" style="background: #CCE8EB;height:60px;width:200px;margin-left: 60px;">连续十二个月店内现金流水</Button>
-      <Button size="large"  @click="showSc" style="background: #CCE8EB;height:60px;width:200px;margin-left: 60px;">连续十二个月店内实操</Button>
-      <br/>
-      <br/>
-      <Button size="large"  @click="showKl" style="background: #CCE8EB;height:60px;width:200px;margin-left: 60px;margin-top: 30px;">连续十二个月店内客流</Button>
-      <Button size="large"  @click="showYj" style="background: #CCE8EB;height:60px;width:200px;margin-left: 60px;margin-top: 30px;">连续十二个月店内产品业绩</Button>
-      <br/>
-      <br/>
+      <section v-show="isYearShow" style="margin: 0 100px" id="twentySection">
+        <div class="column">
+          <Button size="large"  @click="showLs" style="background: #CCE8EB;height:60px;width:200px;">连续十二个月店内现金流水</Button>
+          <Button size="large"  @click="showSc" style="background: #CCE8EB;height:60px;width:200px;">连续十二个月店内实操</Button>
+        </div>
+        <div class="column">
+          <Button size="large"  @click="showKl" style="background: #CCE8EB;height:60px;width:200px;margin-top: 30px;">连续十二个月店内客流</Button>
+          <Button size="large"  @click="showYj" style="background: #CCE8EB;height:60px;width:200px;margin-top: 30px;">连续十二个月店内产品业绩</Button>
+        </div>
       </section>
       <section v-show="isBrandShow" >
       <div style="width:100%;"><div style="float:left;width:50%;margin:0 auto;" align="center">直营产品品牌：       <br/>
-  <table border="1" style="margin-left:22%;width:70%;margin-top:2%;">
-    <thead>
-    <tr>
-      <th>院护</th>
-      <th>家居</th>
-    </tr>
-  </thead>
-    <tr>
-      <td>AAAAAAA</td>
-      <td>BBBBBBBB</td>
-    </tr>
-    <tr>
-      <td>AAAAAAA</td>
-      <td>BBBBBBBB</td>
-    </tr>
-    <tr>
-      <td>AAAAAAA</td>
-      <td>BBBBBBBB</td>
-    </tr>
-    <tr>
-      <td>AAAAAAA</td>
-      <td>BBBBBBBB</td>
-    </tr>
-  </table>
+  <Table size='small' :columns="question.register4Columns" :data="question.register4Data">
+  </Table>
 </div>
 <div style="float:right;width:50%;margin:0 auto;" align="center">仪器：<br/>
-  <table border="1" style="margin-right:22%;width:70%;margin-top:2%;">
-    <thead>
-    <tr>
-      <th>功效</th>
-      <th>品牌</th>
-    </tr>
-  </thead>
-    <tr>
-      <td>AAAAAAAAA</td>
-      <td>BBBBBBBBBB</td>
-    </tr>
-    <tr>
-      <td>AAAAAAAAA</td>
-      <td>BBBBBBBBBB</td>
-    </tr>
-    <tr>
-      <td>AAAAAAAAA</td>
-      <td>BBBBBBBBBB</td>
-    </tr>
-    <tr>
-      <td>AAAAAAAAA</td>
-      <td>BBBBBBBBBB</td>
-    </tr>
-    <tr>
-      <td>AAAAAAAAA</td>
-      <td>BBBBBBBBBB</td>
-    </tr>
-    <tr>
-      <td>AAAAAAAAA</td>
-      <td>BBBBBBBBBB</td>
-    </tr>
-  </table>
+  <Table size='small' :columns="question.register4Columns2" :data="question.register4Data2">
+  </Table>
      </div>
      <div class="clearfloat"></div>
      <br/>
 </div>
       </section>
       <section v-show="isSalaryShow" id="salarySection">
-      <br/><br/><div class="ivu-input-wrapper ivu-input-type"><textarea autocomplete="off" spellcheck="false" rows="2" class="ivu-input" style="height: 230px;margin-top: -10px;" wrap="soft" disabled></textarea></div>
+      <br/><br/><div class="ivu-input-wrapper ivu-input-type"><textarea autocomplete="off" spellcheck="false" rows="2" class="ivu-input" style="height: 230px;margin-top: -10px;" wrap="soft" disabled v-model="question.register5_desc"></textarea></div>
       <br/>
       <br/>
       
@@ -185,156 +132,53 @@
       </section>
   <section v-show="isProjectShow">
       <div style="width:100%;">
-        <div style="float:left;width:42%;margin:0 auto;" align="center">项目价格单：<br/>
-        <table border="1" style="margin-left: 30%;margin-top:1%;">
-          <thead>
-          <tr>
-            <th>项目</th>
-            <th>价格</th>
-          </tr>
-          </thead>
-          <tr>
-            <td>XXX</td>
-            <td>1000 元</td>
-          </tr>
-          <tr>
-            <td>XXX</td>
-            <td>1000 元</td>
-          </tr>
-          <tr>
-            <td>XXX</td>
-            <td>1000 元</td>
-          </tr>
-          <tr>
-            <td>XXX</td>
-            <td>1000 元</td>
-          </tr>
-        </table>
+        <div style="margin:0 auto;" align="center">项目价格单：<br/>
+          <Table border :columns="question.register6Colum1" :data="question.register6Data1"></Table>
     </div>
-    <div style="float:right;width:58%;margin:0 auto;" align="center">卡项：<br/>
-      <table border="1" style="margin-right: 20%;margin-top:1%;">
-        <thead>
-        <tr>
-          <th>项目</th>
-          <th>价格</th>
-          <th>营销方式</th>
-        </tr>
-      </thead>
-        <tr>
-          <td>XXX</td>
-          <td>1000 元</td>
-          <td>XXX</td>
-        </tr>
-        <tr>
-          <td>XXX</td>
-          <td>1000 元</td>
-          <td>XXX</td>
-        </tr>
-        <tr>
-          <td>XXX</td>
-          <td>1000 元</td>
-          <td>XXX</td>
-        </tr>
-        <tr>
-          <td>XXX</td>
-          <td>1000 元</td>
-          <td>XXX</td>
-        </tr>
-        <tr>
-          <td>XXX</td>
-          <td>1000 元</td>
-          <td>XXX</td>
-        </tr>
-        <tr>
-          <td>XXX</td>
-          <td>1000 元</td>
-          <td>XXX</td>
-        </tr>
-      </table>
-        </div>
       <div class="clearfloat"></div>
     </div>
-      <div style="width:100%;margin-top:4%;"><div style="float:left;width:50%;margin:0 auto;" align="center">拓客卡：<Input v-model="question.shopSquare" style="width: 88px" disabled/>
+      <div style="width:100%;margin-top:4%;"><div style="float:left;width:50%;margin:0 auto;" align="center">拓客卡：<Input v-model="question.register6Card1" style="width: 88px" disabled/>
       </div>
-      <div style="float:right;width:50%;margin:0 auto;" align="center">留客卡：<Input v-model="question.shopSquare" style="width: 88px" disabled/>
+      <div style="float:right;width:50%;margin:0 auto;" align="center">留客卡：<Input v-model="question.register6Card2" style="width: 88px" disabled/>
       </div>
            <div class="clearfloat"></div>
       </div>
       <br/>
-      <div style="width:80%;margin:0 auto;margin-top:2%;margin-bottom:5%;" align="center">
-        <table border="1">
-          <thead>
-          <tr>
-            <th></th>
-            <th>团购</th>
-            <th>微信</th>
-            <th>微博</th>
-            <th>APP</th>
-            <th>地推</th>
-            <th>异业联盟</th>
-            <th>会议营销</th>
-            <th>社区合作</th>
-            <th>行业合作</th>
-          </tr>
-        </thead>
-          <tr>
-            <td>拓进人数</td>
-            <td>223</td>
-            <td>123</td>
-            <td>223</td>
-            <td>123</td>
-            <td>223</td>
-            <td>123</td>
-            <td>223</td>
-            <td>123</td>
-            <td>123</td>
-          </tr>
-          <tr>
-            <td>成交人数</td>
-            <td>223</td>
-            <td>123</td>
-            <td>223</td>
-            <td>123</td>
-            <td>223</td>
-            <td>123</td>
-            <td>223</td>
-            <td>123</td>
-            <td>123</td>
-          </tr>
-        </table>
+      <div style="margin:0 auto;" align="center">
+        <Table border :columns="question.register6Colum2" :data="question.register6Data2"></Table>
       </div>
       </section>
       <section v-show="isCustomerShow" style="width: 80%;margin: 0 auto;text-align: center;">
-     店内注册顾客数量：<Input v-model="question.newCustomers" style="width: 85px" disabled/>
+     店内注册顾客数量：<Input v-model="question.register7Data1" style="width: 85px" disabled/>
       <br/>
       <br/>
-      两个月至少到店一次的顾客数量：<Input v-model="question.numberOfTransactions" style="width: 85px" disabled/>
+      两个月至少到店一次的顾客数量：<Input v-model="question.register7Data2" style="width: 85px" disabled/>
       <br/>
       <br/>
-      一个月至少到店一次的顾客数量：<Input v-model="question.numberOfTransactions" style="width: 85px" disabled/>
+      一个月至少到店一次的顾客数量：<Input v-model="question.register7Data3" style="width: 85px" disabled/>
       <br/>
       <br/>
-     一个月至少到店两次的顾客数量：<Input v-model="question.numberOfTransactions" style="width: 85px" disabled/>
+     一个月至少到店两次的顾客数量：<Input v-model="question.register7Data4" style="width: 85px" disabled/>
       <br/>
       <br/>
-     一个月至少到店三次的顾客数量：<Input v-model="question.numberOfTransactions" style="width: 85px" disabled/>
+     一个月至少到店三次的顾客数量：<Input v-model="question.register7Data5" style="width: 85px" disabled/>
       <br/>
       <br/>
-     一个月到店三次以上的顾客数量：<Input v-model="question.numberOfTransactions" style="width: 85px" disabled/>
+     一个月到店三次以上的顾客数量：<Input v-model="question.register7Data6" style="width: 85px" disabled/>
       <br/>
       <br/>
-       每个月的月均业绩：<Input v-model="question.numberOfTransactions" style="width: 85px" disabled/>
+       每个月的月均业绩：<Input v-model="question.register7Data7" style="width: 85px" disabled/>
       <br/>
       <br/>
-      月均新顾客成交业绩：<Input v-model="question.numberOfTransactions" style="width: 85px" disabled/>
+      月均新顾客成交业绩：<Input v-model="question.register7Data8" style="width: 85px" disabled/>
       <br/>
       <br/>
-       月均老顾客成交业绩：<Input v-model="question.numberOfTransactions" style="width: 85px" disabled/>
+       月均老顾客成交业绩：<Input v-model="question.register7Data9" style="width: 85px" disabled/>
       <br/>
       <br/>
       </section>
       <section style="width: 80%;margin: 0 auto;text-align: center;" v-show="isProblemShow">
-      <div style="margin-left:-65%;margin-top:1%;">目前自己认为经营的最大问题是什么？：</div><br/><div class="ivu-input-wrapper ivu-input-type"><textarea autocomplete="off" spellcheck="false" rows="2" class="ivu-input" style="height: 230px;margin-bottom:2%;" wrap="soft" disabled></textarea></div>
+      <div style="margin-left:-65%;margin-top:1%;">目前自己认为经营的最大问题是什么？：</div><br/><div class="ivu-input-wrapper ivu-input-type"><textarea autocomplete="off" spellcheck="false" rows="2" class="ivu-input" style="height: 230px;margin-bottom:2%;" wrap="soft" disabled v-model="question.register8Desc"></textarea></div>
       <br/>
       <br/>
       </section>
@@ -447,24 +291,24 @@
        <br/>
        <br/>
        <div style="margin-left: 30px;">
-    1月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 2月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;3月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    1月: &nbsp;&nbsp; <Input v-model="question.register5Month.month_1" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 2月:&nbsp;&nbsp; <Input v-model="question.register5Month.month_2" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;3月:&nbsp;&nbsp; <Input v-model="question.register5Month.month_3" style="width: 128px" disabled/>
        <br/>
        <br/>
-    4月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 5月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;6月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    4月: &nbsp;&nbsp; <Input v-model="question.register5Month.month_4" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 5月:&nbsp;&nbsp; <Input v-model="question.register5Month.month_5" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;6月:&nbsp;&nbsp; <Input v-model="question.register5Month.month_6" style="width: 128px" disabled/>
        <br/>
        <br/>
-    7月: &nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 8月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;9月:&nbsp;&nbsp; <Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    7月: &nbsp;&nbsp; <Input v-model="question.register5Month.month_7" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 8月:&nbsp;&nbsp; <Input v-model="question.register5Month.month_8" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;9月:&nbsp;&nbsp; <Input v-model="question.register5Month.month_9" style="width: 128px" disabled/>
        <br/>
        <br/>
-    10月: &nbsp;<Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 11月:&nbsp;<Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;12月:&nbsp;<Input v-model="question.numberOfTransactions" style="width: 128px" disabled/>
+    10月: &nbsp;<Input v-model="question.register5Month.month_10" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 11月:&nbsp;<Input v-model="question.register5Month.month_11" style="width: 128px" disabled/>
+    &nbsp;&nbsp;&nbsp;12月:&nbsp;<Input v-model="question.register5Month.month_12" style="width: 128px" disabled/>
        <br/>
        <br/>
       </div>
@@ -534,7 +378,6 @@
           staffName: '',
           phoneNumber: '',
           provinceName: '',
-          shopSquare: '',
           area: '',
           rent: '',
           bedCount:'',
@@ -560,7 +403,6 @@
           extensionCard: '',
           oneCard1: '',
           extensionMethod: '',
-          newCustomers: '',
           numberOfTransactions: '',
           register3Month:{
             type1:
@@ -624,6 +466,41 @@
                   "month_12": "",
               }
     },
+          register4Columns:[],
+          register4Columns2:[],
+          register4Data:[],
+          register4Data2:[],
+          register5_desc:'',
+          register5Month: {
+            "month_1": "",
+            "month_2": "",
+            "month_3": "",
+            "month_4": "",
+            "month_5": "",
+            "month_6": "",
+            "month_7": "",
+            "month_8": "",
+            "month_9": "",
+            "month_10": "",
+            "month_11": "",
+            "month_12": "",
+          },
+          register6Colum1:[],
+          register6Data1:[],
+          register6Colum2:[],
+          register6Data2:[],
+          register6Card1:'',
+          register6Card2:'',
+          register7Data1:'',
+          register7Data2:'',
+          register7Data3:'',
+          register7Data4:'',
+          register7Data5:'',
+          register7Data6:'',
+          register7Data7:'',
+          register7Data8:'',
+          register7Data9:'',
+          register8Desc:'',    
           numberOfCustomers: '',
           theNumberOfRenewals: '',
           theBiggestProblem: '',
@@ -1102,6 +979,11 @@
         this.questionFlag = true;
         this.register2(rowData.register_2)
         this.register3(rowData.register_3)
+        this.register4(rowData.register_4)
+        this.register5(rowData.register_5)
+        this.register6(rowData.register_6)
+        this.register7(rowData.register_7)
+        this.register8(rowData.register_8)
       },
       clearNew() {
         this.storeVal = {
@@ -1144,7 +1026,6 @@
           }
         }
 
-        console.log(rowData.roomTypes)
         this.question.roomTypes = rowData.roomTypes;
         for (let i=0; i<member.length; i++){
           this.question.memberColumns.push({title: Object.values(member[i])[0], key: Object.keys(member[i])[0]})
@@ -1164,6 +1045,77 @@
           }
           this.question.register3Month['type'+rowData.waterInfos[i].type] = newObj
         }
+      },
+      register4(rowData){
+        this.question.register4Columns = [];
+        this.question.register4Data = [];
+        this.question.register4Columns2 = [];
+        this.question.register4Data2 = [];
+        const arrRule =  new Map([['type','类型'],['name', '品牌']])
+        const arrRule2 =  new Map([['effect','功效'],['name', '仪器品牌']])
+        arrRule.forEach((key,value)=>{
+          this.question.register4Columns.push({'title': key, 'key': value})
+        })
+        arrRule2.forEach((key,value)=>{
+          this.question.register4Columns2.push({'title': key, 'key': value})
+        })
+        rowData.brands.map((item)=>{
+          let {type, name} = item
+          type = this.brandsTransfer(type)
+          this.question.register4Data.push({type, name})
+        })
+        rowData.instruments.map((item)=>{
+          let {effect, name} = item
+          this.question.register4Data2.push({effect, name})
+        })
+      },
+      register5(rowData){
+        this.question.register5_desc = rowData.salary.desc;
+        let newObj = {}
+        for (let objVal in rowData.salary) {
+          if (objVal.includes('month_')){
+            newObj = Object.assign(newObj, JSON.parse(`{"${objVal}":"${rowData.salary[objVal]}"}`))
+          }
+        }
+        this.question.register5Month = newObj
+      },
+      register6(rowData){
+        this.question.register6Colum1 = []
+        this.question.register6Colum2 = []
+        this.question.register6Data1 = []
+        this.question.register6Data2 = []
+        const arrRule =  new Map([['name','项目名称'],['price', '价格区间'],['count','次数']])
+        const arrRule2 =  new Map([['type','拓客方式'],['exCount', '拓进人数'],['dealCount','成交人数']])
+        arrRule.forEach((key,value)=>{
+          this.question.register6Colum1.push({'title': key, 'key': value})
+        })
+        arrRule2.forEach((key,value)=>{
+          this.question.register6Colum2.push({'title': key, 'key': value})
+        })
+        rowData.items.map((item)=>{
+          let {name, price, count} = item
+          this.question.register6Data1.push({name, price, count})
+        })
+        rowData.extensions.map((item)=>{
+          let {type, exCount, dealCount} = item
+          this.question.register6Data2.push({type, exCount, dealCount})
+        })
+        this.question.register6Card1 = rowData.card.extensionCard
+        this.question.register6Card2 = rowData.card.guestCard
+      },
+      register7(rowData){
+        this.question.register7Data1 = rowData.client.rcCount
+        this.question.register7Data2 = rowData.client.tmoCount
+        this.question.register7Data3 = rowData.client.omoCount
+        this.question.register7Data4 = rowData.client.omtCount
+        this.question.register7Data5 = rowData.client.omthCount
+        this.question.register7Data6 = rowData.client.omfCount
+        this.question.register7Data7 = rowData.client.avgMonPerformance
+        this.question.register7Data8 = rowData.client.monNcliPerformance
+        this.question.register7Data9 = rowData.client.monOcliPerformance
+      },
+      register8(rowData){
+        this.question.register8Desc = rowData.problem.desc
       },
       cancelQuestion(){
         this.question.area = ''
@@ -1245,4 +1197,14 @@ table tr:nth-child(even)
   {            
     background: #F5FAFA;        
   }
+  #twentySection{
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-between;
+  }
+.column {
+  flex-basis: 100%;
+  display: flex;
+  justify-content: space-between;
+}
 </style>
