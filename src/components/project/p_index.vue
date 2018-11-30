@@ -18,7 +18,7 @@
           </Radio>
           <Select v-show="!showFace" style="float:right;width:300px;margin-top:-6px;" disabled>
           </Select>
-          <Select v-model="pis.face" v-show="showFace" style="float:right;width:300px;margin-top:-6px;">
+          <Select v-model="pis.face" ref="setFaceQuery" v-show="showFace" style="float:right;width:300px;margin-top:-6px;" filterable>
             <Option value="1" >清洁</Option>
             <Option value="2" >补水</Option>
             <Option value="3" >美白</Option>
@@ -32,6 +32,7 @@
             <Option value="11" >V脸瘦脸</Option>
             <Option value="12" >眼部</Option>
             <Option value="13" >整骨</Option>
+            <Option value="14" >其他</Option>
           </Select>
           <br/>
           <br/>
@@ -40,7 +41,7 @@
           </Radio>
           <Select v-show="!showBody" style="float:right;width:300px;margin-top:-6px;" disabled>
           </Select>
-          <Select v-model="pis.body" v-show="showBody" style="float:right;width:300px;margin-top:-6px;">
+          <Select v-model="pis.body" ref="setBodyQuery" v-show="showBody" style="float:right;width:300px;margin-top:-6px;" filterable>
             <Option value="1" >头部</Option>
             <Option value="2" >肩颈</Option>
             <Option value="3" >背部</Option>
@@ -51,6 +52,7 @@
             <Option value="8" >大腿</Option>
             <Option value="9" >小腿</Option>
             <Option value="10" >足部</Option>
+            <Option value="11" >其他</Option>
           </Select>
       </RadioGroup>
       <br/>
@@ -109,6 +111,9 @@
           <div class="leftRadio">疗程价：</div><Input placeholder="疗程价" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;"disabled/>
           <br/>
           <br/>
+          <div class="leftRadio">疗程卡扣价：</div><Input placeholder="疗程卡扣价：" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;"disabled/>
+          <br/>
+          <br/>
           </div>
           <div v-show="showAgenda">
           <br/>
@@ -127,6 +132,14 @@
             v-model="pis.coursePrice"
             :formatter="value => `${value}元`"
             :parser="value => value.replace('元', '')" placeholder="疗程价：元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;">
+          </InputNumber>
+          <br/>
+          <br/>
+          <div class="leftRadio">疗程卡扣价：</div><InputNumber
+            :min="0"
+            v-model="pis.courseCharges"
+            :formatter="value => `${value}元`"
+            :parser="value => value.replace('元', '')" placeholder="疗程卡扣价：元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;">
           </InputNumber>
           </div>
       <div style="float: left;margin-left: 12%;margin-top:3%;">项目属性：</div>
@@ -192,6 +205,8 @@
               courseTimes:'',
               //疗程单价
               coursePrice:'',
+              //疗程卡扣价
+              courseCharges:'',
               //疗程间隔
               courseInterval:'',
               //高频到店, 0:未选中, 1:选中
@@ -213,6 +228,10 @@
         },
         columns: [
           {
+            title: '项目类别',
+            key: 'projectCategory'
+          },
+          {
             title: '项目',
             key: 'itemName'
           },
@@ -220,14 +239,10 @@
             title: '单价',
             key: 'itemPrice'
           },
-          {
-            title: '项目类别',
-            key: 'projectCategory'
-          },
-          {
+          /*{
             title: '是否设计疗程',
             key: 'designCourse'
-          },
+          },*/
           {
             title: '疗程次数',
             key: 'courseTimes'
@@ -235,6 +250,10 @@
           {
             title: '疗程价格',
             key: 'coursePrice'
+          },
+          {
+            title: '疗程卡扣价格',
+            key: 'courseCharges'
           },
           {
             title: '项目间隔',
@@ -308,6 +327,8 @@
               courseTimes:'',
               //疗程单价
               coursePrice:'',
+              //疗程卡扣价
+              courseCharges:'',
               //疗程间隔
               courseInterval:'',
               //高频到店, 0:未选中, 1:选中
@@ -327,6 +348,8 @@
               //技术要点, 字数应限制在 512 个字符
               technicalPoints:''
         };
+        this.$refs.setFaceQuery.$data.query = '';
+        //this.$refs.setBodyQuery.$data.query = '';
       },
       getList() {
         this.$ajax({
@@ -366,6 +389,8 @@
                   this.data[i].projectCategory = "面部 - 眼部";
             }else if(this.data[i].face != '' && this.data[i].face == 13){
                   this.data[i].projectCategory = "面部 - 整骨";
+            }else if(this.data[i].face != '' && this.data[i].face == 14){
+                  this.data[i].projectCategory = "面部 - 其他";
             }else if(this.data[i].face == '' && this.data[i].body == 1){
                   this.data[i].projectCategory = "身体 - 头部";
             }else if(this.data[i].face != '' && this.data[i].body == 2){
@@ -386,11 +411,15 @@
                   this.data[i].projectCategory = "身体 - 小腿";
             }else if(this.data[i].face != '' && this.data[i].body == 10){
                   this.data[i].projectCategory = "身体 - 足部";
+            }else if(this.data[i].face != '' && this.data[i].body == 11){
+                  this.data[i].projectCategory = "身体 - 其他";
             }
             this.data[i].itemPrice = this.data[i].itemPrice + "元/次";
             this.data[i].courseTimes = this.data[i].courseTimes + "次";
             this.data[i].coursePrice = this.data[i].coursePrice + "元";
+            this.data[i].courseCharges = this.data[i].courseCharges + "元";
             this.data[i].courseInterval = this.data[i].courseInterval + "天";
+            this.data[i].index = i+1;
           }
         }).catch((error) => {
           this.$Message.error('获取失败');
@@ -427,7 +456,7 @@
         if(this.pis.designCourse == ''){
           validateMessage = validateMessage + "请选择是否设计疗程！<br/>";
         }
-        if(this.pis.designCourse != '' && (this.pis.courseTimes == null || this.pis.coursePrice == null)){
+        if(this.pis.designCourse != '' && (this.pis.courseTimes == null || this.pis.coursePrice == null || this.pis.courseCharges == null)){
           validateMessage = validateMessage + "请输入疗程价格和次数！<br/>";
         }
         if(this.pis.highFreq == false &&  this.pis.superposition == false && this.pis.strongEfficacy == false && this.pis.generalProps == false && this.pis.presents == false){
@@ -483,6 +512,7 @@
         this.pis.courseInterval = this.pis.courseInterval.replace("天","");
         this.pis.courseTimes = this.pis.courseTimes.replace("次","");
         this.pis.coursePrice = this.pis.coursePrice.replace("元","");
+        this.pis.courseCharges = this.pis.courseCharges.replace("元","");
         this.pis.highFreq = this.transferBack(this.pis.highFreq);
         this.pis.presents = this.transferBack(this.pis.presents);
         this.pis.superposition = this.transferBack(this.pis.superposition);
@@ -537,6 +567,7 @@
           this.showAgenda = false;
           this.pis.coursePrice = '';
           this.pis.courseTimes = '';
+          this.pis.courseCharges = '';
         }
       },
       close(){
@@ -553,6 +584,6 @@
   }
   .leftRadio{
     float:left;
-    margin-left:94px;
+    margin-left:80px;
   }
 </style>

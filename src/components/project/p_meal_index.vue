@@ -176,12 +176,16 @@
             },
             url: findProjectPlanList()+'/'+this.$route.params.id+'?programType=1',
           }).then((res) => {
-            this.data = res.data.programManage;
-            for(var i = 0; i < this.data.length; i++){
-              this.data[i].projectNumber = this.data[i].programItems.length+"个";
-              this.data[i].programPrice = this.data[i].programPrice+"元";
-              this.data[i].programItems = this.data[i].programItems.sort(this.compare("itemOrder"));
-              this.data[i].courseInterval = this.data[i].programItems.itemInterval;
+            if(res.data.programManage == null){
+              this.data = [];
+            }else{
+              this.data = res.data.programManage;
+                for(var i = 0; i < this.data.length; i++){
+                  this.data[i].projectNumber = this.data[i].programItems.length+"个";
+                  this.data[i].programPrice = this.data[i].programPrice+"元";
+                  this.data[i].programItems = this.data[i].programItems.sort(this.compare("itemOrder"));
+                  this.data[i].courseInterval = this.data[i].programItems.itemInterval;
+                }
             }
         }).catch((error) => {
           this.$Message.error('获取失败');

@@ -23,8 +23,8 @@ import sa_index2 from '@/components/salary/sa_index2';
 import cr_index from '@/components/card/cr_m';
 import tk_m from '@/components/card/tk_m';
 import hd_m from '@/components/card/hd_m';
-import lc_m from '@/components/card/lc_m';
-import cp_m from '@/components/card/cp_m';
+/*import lc_m from '@/components/card/lc_m';
+import cp_m from '@/components/card/cp_m';*/
 import login from '@/components/user/login'
 import register from '@/components/user/register'
 import register_1 from '@/components/user/register_1'
@@ -141,7 +141,7 @@ export default new Router({
               name: 'hd_m',
               component: hd_m,
             },
-            {
+            /*{
               path: 'lc_m',
               name: 'lc_m',
               component: lc_m,
@@ -150,7 +150,7 @@ export default new Router({
               path: 'cp_m',
               name: 'cp_m',
               component: cp_m,
-            },
+            },*/
             {
               path: 'cr_index',
               name: 'cr_index',

@@ -18,8 +18,8 @@
             <DropdownItem name="cr_index">会员卡</DropdownItem>
             <DropdownItem name="tk_m">拓客卡</DropdownItem>
             <DropdownItem name="hd_m">活动卡</DropdownItem>
-            <DropdownItem name="lc_m">疗程组合卡</DropdownItem>
-            <DropdownItem name="cp_m">产品卡</DropdownItem>
+<!--             <DropdownItem name="lc_m">疗程组合卡</DropdownItem>
+            <DropdownItem name="cp_m">产品卡</DropdownItem> -->
           </DropdownMenu>
         </Dropdown>
       </Col>
@@ -93,7 +93,7 @@
         if(name == 'c_index'){
          this.isActive1 = true;
        }
-       if(name == 'cr_index' || name == 'tk_m'|| name == 'hd_m'|| name == 'lc_m'|| name == 'cp_m'){
+       if(name == 'cr_index' || name == 'tk_m'|| name == 'hd_m'){
           this.isActive2 = true;
        }
        if(name == 'p_index' || name == 'p_symptom' || name == 'p_program' || name == 'p_plan_index' || name == 'p_meal_index'){
