@@ -6,48 +6,66 @@
     <br/>
     <Table :columns="columns" :data="data"></Table>
 
-    <Modal v-model="addF" title="添加" :mask-closable="false" @on-ok="ok" class="mod">
+    <Modal class="modalProjects" v-model="addF" title="添加" :mask-closable="false">
       <div class='com'>名称：<Input v-model="addData.extensionName" style="width: 300px"></Input></div>
-      <div class='com'>卡扣价格：<Input v-model="addData.bucklePrice" style="width: 276px" @on-keyup="addData.bucklePrice =check2(addData.bucklePrice)" ></Input></div>
-      <div class="com">现金价格：<Input v-model="addData.cashPrice" style="width: 276px" @on-keyup="addData.cashPrice=check2(addData.cashPrice)"></Input></div>
-      <div class='com'>有效期：<Input v-model="addData.extensionValidity" placeholder="单位天" style="width: 288px" @on-keyup="addData.extensionValidity=check(addData.extensionValidity)"></Input></div>
-      <div class='com'>是否计算业绩：<Select v-model="addData.performance" style="width:252px" :transfer=true>
-        <Option value="1"> 是</Option>
-        <Option value="2"> 否</Option>
-      </Select>
-        </div>
-      <div class='com'>是否计算实操：<Select v-model="addData.actualOperation" style="width:252px" :transfer=true>
-        <Option value="1"> 是</Option>
-        <Option value="2"> 否</Option>
-      </Select>
-       </div>
-      <div class='com'>是否计算手工：<Select v-model="addData.manualFee" style="width:252px" :transfer=true>
-        <Option value="1"> 是</Option>
-        <Option value="2"> 否</Option>
-      </Select>
-        </div>
-
-      <div class="project">
-        <h3>拓客项目<Button class="hy_btn" size="small" @click="Addproject">添加</Button></h3>
-        <div v-for="item in addData.project" class="projectone">
-          <div class='com'>项目：
-            <Select v-model="item.projectId" style="width:150px" :transfer=true>
-              <Option :value="items.id" :key="items.id" v-for="items in projectList">{{items.projectName}}</Option>
+      <div class='com'>卡扣价格：<Input v-model="addData.bucklePrice" style="width: 276px"></Input></div>
+      <div class="com">现金价格：<Input v-model="addData.cashPrice" style="width: 276px"></Input></div>
+      <div class='com'>有效期：<Input v-model="addData.extensionValidity" placeholder="单位天" style="width: 288px"></Input></div>
+      <div class='com'><div style="float:left;margin-left: 76px;margin-top:8px;">是否计算业绩：</div>
+        <Input v-model="addData.performancePrice" style="width:252px" >
+            <Select v-model="addData.performance" slot="prepend" style="width: 80px">
+                <Option value="1"> 是</Option>
+                <Option value="2"> 否</Option>
             </Select>
-            &nbsp;&nbsp;次数：<Input v-model="item.extensionNumber" style="width: 100px" @on-keyup="item.extensionNumber=check(item.extensionNumber)"></Input>
+        </Input>
+        </div>
+        <div class='com'><div style="float:left;margin-left: 76px;margin-top:8px;">是否计算实操：</div>
+          <Input v-model="addData.performancePrice" style="width:252px" >
+              <Select v-model="addData.performance" slot="prepend" style="width: 80px">
+                  <Option value="1"> 是</Option>
+                  <Option value="2"> 否</Option>
+              </Select>
+          </Input>
+       </div>
+      <div class='com'><div style="float:left;margin-left: 76px;margin-top:8px;">是否计算手工：</div>
+          <Input v-model="addData.performancePrice" style="width:252px" >
+              <Select v-model="addData.performance" slot="prepend" style="width: 80px">
+                  <Option value="1"> 是</Option>
+                  <Option value="2"> 否</Option>
+              </Select>
+          </Input>
+       </div>
+
+      <div class="project" style="margin-top:20px;">
+        <h3 style="margin-left:-200px;">拓客项目<Button class="hy_btn" size="small" @click="Addproject" style="margin-left:42px;">添加</Button></h3>
+        <div v-for="(item,index) in addData.project" class="projectone">
+          <div class='com'>项目：
+            <Select v-model="item.projectId" style="width:180px" :transfer=true>
+              <Option v-for="(item,index) in projectList" :value="index" :key="index">{{ item.itemName }}</Option>
+
+            </Select>
+            &nbsp;次数：<Input v-model="item.extensionNumber" style="width: 50px"></Input>
+            <Button class="hy_btn" @click="deleteProject(index)">删除</Button>
           </div>
         </div>
       </div>
       <div class='group'>
         <h3>奖励政策</h3>
-        <div class='com'> 每周销售 <Input v-model="addData.quantity" style="width: 30px"/> 张，每张奖励<Input v-model="addData.reward" style="width: 50px" @on-keyup="addData.reward=check2(addData.reward)"/> 元，超过每张奖励<Input v-model="addData.exceedReward" @on-keyup="addData.exceedReward=check(addData.exceedReward)" style="width: 50px"/> 元</div>
+        <div class='com'> 每周销售 <Input v-model="addData.quantity" size="small" style="width: 30px"/> 张，每张奖励<Input v-model="addData.reward" size="small" style="width: 50px" @on-keyup="addData.reward=check2(addData.reward)"/> 元，超过每张奖励<Input v-model="addData.exceedReward" size="small" style="width: 50px"/> 元</div>
+      </div>
+      <div class='group'>
+        <h3>奖励政策</h3>
+        <div class='com'> 首次进店微信预约转账 <Input v-model="addData.quantity" size="small" style="width: 30px"/> 元，体验抵 <Input v-model="addData.reward" size="small" style="width: 50px"/> 元，充值抵 <Input v-model="addData.exceedReward" size="small" style="width: 50px"/> 元，均按照<div style="margin-top:8px;">
+          <Select size="small" style="width:80px;" :transfer=true>
+              <Option v-for="(project,index) in memberShowData" :value="project.cardName" :key="project.id">{{project.cardName}}</Option>
+          </Select>会员最低抵扣体验护理。</div></div>
       </div>
     </Modal>
   </div>
 </template>
 
 <script>
-import {findExtension,saveExtension,editExtension,deleteExtension,findAllProject} from '../../interface'
+import {findMembership,findProjectList,findExtension,saveExtension,editExtension,deleteExtension,findAllProject} from '../../interface'
     export default {
       name: "tk_m",
       data() {
@@ -112,6 +130,9 @@ import {findExtension,saveExtension,editExtension,deleteExtension,findAllProject
           ],
           data: [],
           addF: false,
+          projectList: [],
+          memberData: [],
+          memberShowData: [],
           addData:{
             actualOperation: "",
             extensionMoney: "",
@@ -141,15 +162,59 @@ import {findExtension,saveExtension,editExtension,deleteExtension,findAllProject
         }
       },
       methods: {
-        getProject(){
+        getList() {
+          this.$ajax({
+            method: 'GET',
+            dataType: 'JSON',
+            contentType: 'application/json;charset=UTF-8',
+            headers: {
+              "authToken": sessionStorage.getItem('authToken')
+            },
+            url: findProjectList()+'/'+this.$route.params.id,
+          }).then((res) => {
+            this.projectList = res.data.itemManages;
+            for(var i=0;i<this.projectList.length;i++){
+              if(this.projectList[i].face != ''){
+                this.projectList[i].projectCategory = "面部";
+              }else{
+                this.projectList[i].projectCategory = "身体";
+              }
+              this.projectList[i].itemPrice = this.projectList[i].itemPrice + "元/次";
+              this.projectList[i].courseTimes = this.projectList[i].courseTimes + "次";
+              this.projectList[i].coursePrice = this.projectList[i].coursePrice + "元";
+              this.projectList[i].courseInterval = this.projectList[i].courseInterval + "天";
+            }
+          }).catch((error) => {
+            this.$Message.error('获取失败');
+          });
+        },
+        getMember(){
           this.$ajax({
             method:'get',
-            url: findAllProject()+'?id='+this.$route.params.id,
+            url: findMembership()+'/'+this.$route.params.id,
           }).then( (res) =>{
-            this.projectList = res.data;
+            this.memberData = res.data.memCardManageInfo;
+            var currentItem = {};
+            for(var i=0;i<this.memberData.length;i++){
+              this.memberData[i].memPrice = this.memberData[i].memPrice + "元";
+              this.memberData[i].singleDiscount = this.memberData[i].singleDiscount + "%";
+              this.memberData[i].productDiscount = this.memberData[i].productDiscount + "%";
+              this.memberData[i].expiryDate = this.memberData[i].expiryDate + "个月";
+              currentItem = {"cardName":this.memberData[i].cardName, "memPrice":this.memberData[i].memPrice,"id":''};
+              this.memberShowData.push(currentItem);
+            }
+            this.memberData.sort(this.compare);
+            this.memberShowData.sort(this.compare);
           }).catch( (error) =>{
-
-          });
+            this.$Message.error('获取失败');
+          })
+        },
+        compare(a,b) {
+          if (a.memPrice < b.memPrice)
+            return 1;
+          if (a.memPrice > b.memPrice)
+            return -1;
+          return 0;
         },
         getData(){
           this.$ajax({
@@ -218,7 +283,20 @@ import {findExtension,saveExtension,editExtension,deleteExtension,findAllProject
             projectId: '',
             projectName: ""
           });
-
+        },
+        deleteProject(index){
+          if(this.addData.project.length == 1){
+            this.addData.project = [
+              {
+                extensionNumber: '',
+                extensionValidity:'',
+                projectId: '',
+                projectName: ""
+              }
+            ];
+          }else{
+            this.addData.project.splice(index,1);
+          }
         },
         mannger(data, i) {
           this.type = 0;
@@ -248,8 +326,9 @@ import {findExtension,saveExtension,editExtension,deleteExtension,findAllProject
         }
       },
       created(){
-        this.getProject();
-        this.getData();
+        this.getList();
+        //this.getData();
+        this.getMember();
       }
     }
 </script>
@@ -266,6 +345,10 @@ import {findExtension,saveExtension,editExtension,deleteExtension,findAllProject
   }
   .group{
     padding: 10px;
+  }
+  .modalProjects {
+    margin: 0 auto;            
+    text-align: center;    
   }
 
 </style>

@@ -6,112 +6,107 @@
     <br/>
     <Table :columns="columns" :data="data"></Table>
 
-    <Modal v-model="addF" title="添加" :mask-closable="false" @on-ok="ok" class="mod">
-      <div class='com'>名称：<Input v-model="addData.activityName" style="width: 300px"></Input></div>
-      <div class='com'>卡扣价格：<Input v-model="addData.activityBucklePrice" style="width: 276px" @on-keyup="addData.activityBucklePrice =check2(addData.activityBucklePrice)"></Input></div>
-      <div class="com">现金价格：<Input v-model="addData.activityCashPrice" style="width: 276px" @on-keyup="addData.activityCashPrice=check2(addData.activityCashPrice)"></Input></div>
-      <div class='com'>卡有效期：<Input v-model="addData.activityValidity" placeholder="单位月" style="width: 276px" @on-keyup="addData.activityValidity =check(addData.activityValidity)"></Input></div>
-      <div class='com'>活动开始时间：<DatePicker v-model="addData.beginTime" type="date" placeholder="开始时间" style="width: 250px"></DatePicker>
-       </div>
-      <div class="com">活动结束时间：<DatePicker v-model="addData.endTime" type="date" placeholder="结束时间" style="width: 250px"></DatePicker></div>
-
-      <div class='group'>
-        <h3>返现优惠</h3>
-        <div class='com'>适用范围：
-          <Select v-model="addData.returnMode" style="width:264px" :transfer=true>
-            <Option value="卡扣项目">卡扣项目</Option>
-            <Option value="现金项目">现金项目</Option>
-            <Option value="产品">产品</Option>
-            <Option value="储值余额">储值余额</Option>
-            <Option value="储值返现">储值返现</Option>
+    <Modal v-model="addF" title="添加" :mask-closable="false" class="mod">
+      <div class='com'>活动名称：<Input style="width: 300px"></Input></div>
+      <div style="float:left;margin-left: 63px;">选择活动类型：</div>
+        <br/>
+      <Select v-model="selectedActivities" placeholder="请选择活动类型" :multiple=true style="width:360px;margin-top:5px;" :transfer=true @on-change="changeActivity()">
+          <Option value="到店">到店</Option>
+          <Option value="耗卡">耗卡</Option>
+          <Option value="充值">充值</Option>
+      </Select>
+      <br/>
+      <div class='group' v-show="showDD" style="display:inline-block;margin-top:20px;">
+        <h3>到店活动</h3>
+        <div style="float:left;margin-left:30px;margin-top:10px;margin-right:30px;">
+        <span>挑选出<Input v-model="ddAct.ddProNumber" size="small" style="width: 24px;margin-top: -1px;" :readonly=true></Input>个基础功效类项目，原价<Input v-model="ddAct.ddOriPrice" size="small" style="width: 60px;margin-top: -1px;" :readonly=true></Input>元，活动价<Input v-model="ddAct.ddActPrice" size="small" style="width: 60px;margin-top: -1px;"></Input>元，
+        每周完成<Input v-model="ddAct.ddActNumber" size="small" style="width: 24px;margin-top: -1px;"></Input>个项目（每周五、六、日），<Input v-model="ddAct.ddDurTime" size="small" style="width: 24px;margin-top: -1px;"></Input>周内全部耗完。</span>
+        </div>
+        <Select v-model="selectedActivityProjects" placeholder="请选择到店活动项目" :multiple=true style="width:360px;margin-top:5px;" :transfer=true @on-change="changeActivityProjects()">
+            <Option v-for="(item,index) in projectList" :value="index" :key="index">
+              <span>{{ item.itemName }}</span>
+              <span style="float:right;color:#ccc">{{item.itemPrice}}</span>
+            </Option>
+        </Select>
+        <br/>
+        <div style="margin-top:10px;">
+          <Select v-model="selectedDDRules" placeholder="请选择到店活动项目政策" :multiple=true style="width:360px;margin-top:5px;" :transfer=true @on-change="changeDDRules()">
+              <Option value="old">老客户：在约定时间内耗完，活动金额全部返卡，不做完不返。</Option>
+              <Option value="new">新客：同老客户，若不储值只能用余额扣单次，目的刺激储值。</Option>
+              <Option value="oledNew">老带新，请选择后填写详细优惠。</Option>
+          </Select>
+          <div v-show="showOldNew" style="margin-top:10px;">
+            新顾客可以以<Input v-model="ddAct.special" size="small" style="width:50px"></Input>元购买，该款项全部返还老顾客作为答谢，并且新顾客首次成交额的<Input v-model="ddAct.specialNew" size="small" style="width:50px"></Input>%可现金或返卡方式回馈老顾客。
+          </div>
+        </div>
+      </div>
+      <br/>
+      <div class='group' v-show="showHK" style="display:inline-block;margin-top:20px;">
+        <h3>耗卡活动</h3>
+        <br/>
+        <div style="margin-bottom:20px;"><Input type="number" min="0" max="99" v-model="hkAct.weeks" size="small" style="width: 48px;margin-top: -1px;" ></Input>周内做完<Input type="number" min="0" max="99" v-model="hkAct.projects" size="small" style="width: 48px;margin-top: -1px;" ></Input>个项目，从第<Input type="number" min="0" max="99" v-model="hkAct.fromProjects" @on-change="changeFromProjects" size="small" style="width: 48px;margin-top: -1px;" ></Input>次开始赠送相应项目或者产品</div>
+        <div v-for="(item,index) in hkProjects" style="margin-top:10px;">
+          <span >第{{item.hkNumber}}次</span>
+          <Select v-model="item.hkProject" placeholder="请选择耗卡活动项目" style="width:260px;margin-left:50px;" :transfer=true @on-change="changeHKProjects()">
+              <Option v-for="(item,index) in projectList" :value="index" :key="index">
+                <span>{{ item.itemName }}</span>
+                <span style="float:right;color:#ccc">{{item.itemPrice}}</span>
+              </Option>
           </Select>
         </div>
-        <div class='com'>返现金额：<Input v-model="addData.returnAmount" @on-keyup="addData.returnAmount=check2(addData.returnAmount)" style="width: 268px"  ></Input></div>
-        <div class='com'>有效期：<Input v-model="addData.returnValidity" placeholder="单位月" style="width: 280px" @on-keyup="addData.returnValidity=check(addData.returnValidity)"></Input></div>
       </div>
-      <div class='group'>
-        <h3>特价秒杀<Button class="hy_btn" size="small" @click="AddapecialSecondKill">添加</Button></h3>
-        <div class="projectone" v-for="item in addData.apecialSecondKill">
-          <div class='com'>秒杀项目：
-            <Select v-model="item.projectId" style="width:264px" :transfer=true>
-              <Option :value="items.id" :key="items.id"  v-for="items in projectList">{{items.projectName}}</Option>
-            </Select>
-          </div>
-          <div class='com'>套数：<Input v-model="item.specialNumber" style="width: 291px"     @on-keyup="item.specialNumber=check(item.specialNumber)"></Input></div>
-          <div class='com'>秒杀价格：<Input v-model="item.specialMoney" @on-keyup="item.specialMoney=check2(item.specialMoney)" style="width: 268px"></Input></div>
-        </div>
-      </div>
-      <div class='group'>
-        <h3>到店赠送<Button class="hy_btn" size="small" @click="AddtoStoreProject">添加</Button></h3>
-        <div class='com'>触发机制：第 <Input v-model="addData.memberDayNtoStore" style="width: 30px"/> 次到店,赠送 </div>
-          <div class="projectone" v-for="item in addData.toStoreProject">
-            <div class='com'>赠送项目：
-              <Select v-model="item.projectId" style="width:270px" :transfer=true>
-                <Option :value="items.id" :key="items.id"  v-for="items in projectList">{{items.projectName}}</Option>
+      <br/>
+      <div class='group' v-show="showCZ" style="display:inline-block;margin-top:20px;">
+        <h3>充值活动</h3>
+        <br/>
+          <Select v-model="selectedCZactivites" @on-change="changeCZprojects" placeholder="请选择充值活动" :multiple=true style="width:360px;" :transfer=true>
+              <Option value="czGiveProject">充值赠送项目</Option>
+              <Option value="czGiveProduct">充值赠送产品</Option>
+              <Option value="czYJ">充值摇奖</Option>
+          </Select>
+          <div v-show="showGiveProject">
+          <div style="margin-top:20px;margin-left:-220px;">充值赠送项目：<Button style="margin-left:50px;" size="small" type="primary" @click="addGiveProject">增加</Button></div>
+            <div v-for="(item,index) in czGiveProjectList" style="margin-top:4px;">
+              <span >充值<Input v-model="item.czMoney" type="number" min="0" size="small" style="width:80px"></Input>元</span>
+              <Select v-model="item.czProject" :multiple=true placeholder="请选择活动充值赠送项目" style="width:240px;margin-left:20px;" :transfer=true>
+                  <Option v-for="(item,index) in projectList" :value="index" :key="index">
+                    <span>{{item.itemName}}</span>
+                    <span style="float:right;color:#ccc">{{item.itemPrice}}</span>
+                  </Option>
               </Select>
             </div>
-            <div class='com'>赠送次数：<Input v-model="item.activityNumber" style="width: 273px" @on-keyup="item.activityNumber=check(item.activityNumber)"></Input></div>
+          </div>
+          <div v-show="showGiveProduct">
+            <div style="margin-top:20px;margin-left:-220px;">充值赠送产品：<Button style="margin-left:50px;" size="small" type="primary" @click="addGivePro">增加</Button></div>
+              <div style="margin-top:10px;">
+                <Select v-model="选择产品" style="width:200px">
+                    <Option value="产品一">产品一</Option>
+                    <Option value="产品二">产品二</Option>
+                    <Option value="产品三">产品三</Option>
+                </Select>
+                <span>价格：XXX元</span>
+              </div>
+              <div style="margin-top:10px;">
+                <Select v-model="选择产品" style="width:200px">
+                    <Option value="产品一">产品一</Option>
+                    <Option value="产品二">产品二</Option>
+                    <Option value="产品三">产品三</Option>
+                </Select>
+                <span>价格：XXX元</span>
+              </div>
+          </div>
+          <div v-show="showczYj">
+            <div style="margin-top:20px;margin-left:-220px;">充值摇奖活动：<Button style="margin-left:50px;" size="small" type="primary" @click="addCZYJ">增加</Button></div>
+              <div v-for="(item,index) in yjTimeList" style="margin-top:10px;">充值<Input v-model="item.yjMoney" type="number" min="0" size="small" style="width:80px;"></Input>元可转盘摇奖{{item.yjTimes}}次</div>
           </div>
       </div>
-      <div class='group'>
-        <h3>享受尊享<Button class="hy_btn" size="small" @click="Addproject">添加</Button></h3>
-        <div class="projectone" v-for="item in addData.project">
-          <div class='com'>尊享项目：
-            <Select v-model="item.projectId" style="width:270px" :transfer=true>
-              <Option :value="items.id" :key="items.id"  v-for="items in projectList">{{items.projectName}}</Option>
-            </Select>
-          </div>
-          <div class='com'>尊享有效期：<Input v-model="item.activityValidity" placeholder="单位月" style="width: 262px" @on-keyup="item.activityValidity=check(item.activityValidity)"></Input></div>
-          <div class='com'>尊享次数：<Input v-model="item.activityNumber" @on-keyup="item.activityNumber=check(item.activityNumber)" style="width: 275px"></Input></div>
-        </div>
-      </div>
-
-      <div class='group'>
-        <h3>老带新<Button class="hy_btn" size="small" @click="AddnewCustomerParticipation">添加</Button></h3>
-        <div class='projectone' v-for="item in addData.newCustomerParticipation">
-          <div class='com'>赠送项目：
-          <Select v-model="item.projectId" style="width:275px" :transfer=true>
-            <Option :value="items.id" :key="items.id"  v-for="items in projectList">{{items.projectName}}</Option>
-          </Select>
-        </div>
-        <div class='com'>赠送次数：<Input v-model="item.activityNumber" style="width: 278px" @on-keyup="item.activityNumber=check(item.activityNumber)"></Input></div>
-        </div>
-      </div>
-      <div class='group'>
-        <h3>产品秒杀<Button class="hy_btn" size="small" @click="AddproductSecondKill">添加</Button></h3>
-        <div class="projectone" v-for="item in addData.productSecondKill">
-          <div class='com'>产品：
-            <Select v-model="item.projectId" style="width:305px" :transfer=true>
-              <Option :value="1" :key="1">产品A</Option>
-              <Option :value="2" :key="2">产品B</Option>
-              <Option :value="3" :key="3">产品C</Option>
-
-            </Select>
-          </div>
-          <div class='com'>现金秒杀价格：<Input v-model="item.cashSecondPrice" @on-keyup="item.cashSecondPrice=check2(item.cashSecondPrice)" style="width: 260px"></Input></div>
-          <div class='com'>卡扣秒杀价格：<Input v-model="item.buckleTheSecondPrice" @on-keyup="item.buckleTheSecondPrice=check2(item.buckleTheSecondPrice)" style="width: 260px"></Input></div>
-        </div>
-      </div>
-      <div class='group'>
-        <h3>卡扣优惠<Button class="hy_btn" size="small" @click="">添加</Button></h3>
-      </div>
-      <div class='group'>
-        <h3>隐藏显示</h3>
-        <div class='com'>疗程组合卡：
-          <span class="projectone" v-for="item in addData.courseOfActivityCard">
-            <Select v-model="item.treatmentId"style="width:100px" :transfer=true>
-               <Option :value="items.id" :key="items.id" v-for="items in cardList">{{items.treatmentName}}</Option>
-            </Select>
-          </span>
-          <Button class="hy_btn" size="small" @click="AddcourseOfActivityCard">添加</Button>
-        </div>
-      </div>
+      <br/>
     </Modal>
   </div>
 </template>
 
 <script>
-import {findactivity,saveactivity,editactivity,deleteactivity,findAllProject,findTreatment} from '../../interface'
+import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,findAllProject,findTreatment} from '../../interface'
   export default {
     name: "hd_m",
     data() {
@@ -161,285 +156,203 @@ import {findactivity,saveactivity,editactivity,deleteactivity,findAllProject,fin
           }
         ],
         data: [],
+        projectList: [],
+        checkString: '',
         addF: false,
-        addData:{
-          activityCardValidity: '',
-          activityBucklePrice: "",
-          activityCashPrice:"",
-          beginTime:"",
-          endTime:"",
-          activityName: "",
-          activityValidity: '',
-          apecialSecondKill: [
-            {
-              projectId: '',
-              projectName: "",
-              specialMoney: "",
-              specialNumber: ''
-            }
-          ],
-          courseOfActivityCard: [
-            {
-              treatmentId: '',
-              treatmentName: ""
-            }
-          ],
-          id: '',
-          memberDayNtoStore: '',
-          productSecondKill: [
-            {
-              buckleTheSecondPrice: "",
-              cashSecondPrice: "",
-              projectId: '',
-              projectName: ""
-            }
-          ],
-          project: [
-            {
-              activityNumber: '',
-              activityValidity: '',
-              projectId: '',
-              projectName: ""
-            }
-          ],
-          returnAmount: "",
-          returnMode: "",
-          returnValidity: "",
-          storeId: this.$route.params.id,
-          storeName: "",
-          toStoreProject: [
-            {
-              activityNumber: '',
-              projectId: '',
-              projectName: ""
-            }
-          ],
-          newCustomerParticipation:[
-            {
-              activityNumber:'',
-              activityValidity:'',
-              id :'',
-              projectId: '',
-              projectName: ''
-
-            }
-          ]
+        showDD: false,
+        showHK: false,
+        showCZ: false,
+        showOldNew: false,
+        showczYj: false,
+        showGiveProject: false,
+        showGiveProduct: false,
+        selectedDDRules: [],
+        selectedActivities: [],
+        selectedActivityProjects: [],
+        selectedCZactivites: [],
+        ddAct: {
+          ddProNumber: '',
+          ddOriPrice: '',
+          ddActPrice: '',
+          ddActNumber: '',
+          ddDurTime: '',
+          special: 0,
+          specialNew: 0
         },
-        type: '',
-        projectList:[],
-        cardList:[],
+        hkAct:{
+          weeks: '',
+          projects: '',
+          fromProjects: ''
+        },
+        hkProjects:[],
+        czGiveProjectList: [
+          { 
+            czMoney: '',
+            czProject: ''
+          }
+        ],
+        yjTimeList: [
+          {
+            yjMoney: '',
+            yjTimes: 1
+          }
+        ]
       }
     },
     methods: {
-      getProject(){
-        this.$ajax({
-          method:'get',
-          url: findAllProject()+'?id='+this.$route.params.id,
-        }).then( (res) =>{
-          this.projectList = res.data;
-        }).catch( (error) =>{
-
-        });
-      },
-      getCard(){
-        this.$ajax({
-          method: 'get',
-          url: findTreatment()+'?storeId='+this.$route.params.id,
-        }).then( (res)=>{
-          this.cardList = res.data;
-        }).catch( (error)=>{
-        })
-
-      },
-      getData(){
-       this.$ajax({
-            method:'get',
-            url: findactivity()+'?storeId='+this.$route.params.id,
-          }).then( (res) =>{
-            this.data = res.data;
-          }).catch( (error) =>{
-
-          })
-      },
-      ok() {
-        var Surl;
-        if(this.addData.activityName == ''){
-          this.$Message.warning('名称不能为空');
-          return;
-        }
-        if(this.type == 1){
-          Surl = saveactivity();
-        }else{
-          Surl = editactivity();
-        }
-        this.$ajax({
-          method: 'post',
-          url: Surl,
-          data: this.addData,
-        }).then( (res) =>{
-          this.$Message.success('保存成功');
-          this.getData();
-        }).catch( (error) =>{
-          this.$Message.error('保存失败');
-        })
-      },
       Add(){
-       this.type = 1;
         this.addF = true;
-        this.addData={
-          activityCardValidity: '',
-          activityBucklePrice: "",
-          activityCashPrice:"",
-          beginTime:"",
-          endTime:"",
-            activityName: "",
-            activityValidity: '',
-            apecialSecondKill: [
-            {
-              projectId: '',
-              projectName: "",
-              specialMoney: "",
-              specialNumber: ''
-            }
-          ],
-            courseOfActivityCard: [
-            {
-              treatmentId: '',
-              treatmentName: ""
-            }
-          ],
-            id: '',
-            memberDayNtoStore: '',
-            productSecondKill: [
-            {
-              buckleTheSecondPrice: "",
-              cashSecondPrice: "",
-              projectId: '',
-              projectName: ""
-            }
-          ],
-            project: [
-            {
-              activityNumber: '',
-              activityValidity: '',
-              projectId: '',
-              projectName: ""
-            }
-          ],
-            returnAmount: "",
-            returnMode: "",
-            returnValidity: "",
-            storeId: this.$route.params.id,
-            storeName: "",
-            toStoreProject: [
-            {
-              activityNumber: '',
-              projectId: '',
-              projectName: ""
-            }
-          ],
-           newCustomerParticipation:[
-          {
-            activityNumber:'',
-            activityValidity:'',
-            id :'',
-            projectId: '',
-            projectName: ''
-
-          }
-          ]
-
+        this.showDD = false;
+        this.showHK = false;
+        this.showCZ = false;
+        this.selectedDDRules = [];
+        this.selectedActivities = [];
+        this.selectedActivityProjects = [];
+        this.showOldNew = '';
+        this.hkProjects = [];
+        this.selectedCZactivites = [];
+        this.ddAct = {
+          ddProNumber: '',
+          ddOriPrice: '',
+          ddActPrice: '',
+          ddActNumber: '',
+          ddDurTime: '',
+          special: 0,
+          specialNew: 0
         };
-      },
-      AddapecialSecondKill(){
-        this.addData.apecialSecondKill.push(
+        this.hkAct = {
+          weeks: '',
+          projects: '',
+          fromProjects: ''
+        };
+        this.hkProjects = [];
+        this.czGiveProjectList = [
+          { 
+            czMoney: '',
+            czProject: ''
+          }
+        ];
+        this.yjTimeList = [
           {
-            projectId: '',
-            projectName: "",
-            specialMoney: "",
-            specialNumber: ''
+            yjMoney: '',
+            yjTimes: 1
+          }
+        ];
+      },
+      getList() {
+          this.$ajax({
+            method: 'GET',
+            dataType: 'JSON',
+            contentType: 'application/json;charset=UTF-8',
+            headers: {
+              "authToken": sessionStorage.getItem('authToken')
+            },
+            url: findProjectList()+'/'+this.$route.params.id,
+          }).then((res) => {
+            this.projectList = res.data.itemManages;
+            for(var i=0;i<this.projectList.length;i++){
+              if(this.projectList[i].face != ''){
+                this.projectList[i].projectCategory = "面部";
+              }else{
+                this.projectList[i].projectCategory = "身体";
+              }
+              this.projectList[i].itemPrice = this.projectList[i].itemPrice + "元/次";
+              this.projectList[i].courseTimes = this.projectList[i].courseTimes + "次";
+              this.projectList[i].coursePrice = this.projectList[i].coursePrice + "元";
+              this.projectList[i].courseInterval = this.projectList[i].courseInterval + "天";
+            }
+          }).catch((error) => {
+            this.$Message.error('获取失败');
           });
-      },
-      AddtoStoreProject(){
-        this.addData.toStoreProject.push(
-          {
-            activityNumber: '',
-            projectId: '',
-            projectName: ""
-          });
-
-      },
-      Addproject(){
-        this.addData. project.push(
-          {
-            activityNumber: '',
-            activityValidity: '',
-            projectId: '',
-            projectName: ""
-          });
-      },
-      AddproductSecondKill(){
-        this.addData.productSecondKill.push(
-          {
-            buckleTheSecondPrice: "",
-            cashSecondPrice: "",
-            projectId: '',
-            projectName: ""
-          });
-      },
-      AddcourseOfActivityCard(){
-        this.addData.courseOfActivityCard.push(
-          {
-            treatmentId: '',
-            treatmentName: ""
-          });
-      },
-      AddnewCustomerParticipation(){
-        this.addData.newCustomerParticipation.push({
-          activityNumber:'',
-            activityValidity:'',
-            id :'',
-            projectId: '',
-            projectName: ''
-        })
-      },
-      mannger(data, i) {
-        this.type = 0;
-        this.addF =true;
-        this.addData = JSON.parse(JSON.stringify(data));
-
-      },
-      del(data, i) {
-      this.$ajax({
-          method: 'get',
-          url: deleteactivity()+'?id='+data.id,
-        }).then( (res) =>{
-          this.$Message.success('删除成功');
-          this.getData();
-        }).catch( (res) =>{
-          this.$Message.error('删除失败');
-        })
-      },
-      check(value){
-        return value.replace(/[^\d]/g,'');
-      },
-      check2(value){
-        return value.replace(/[^\d\.]/g,'');
-      },
-      changeDate(date){
-        var y = date.getFullYear();
-        var m = date.getMonth() + 1;
-        m = m < 10 ? '0' + m : m;
-        var d = date.getDate();
-        d = d < 10 ? ('0' + d) : d;
-        return y + '-' + m + '-' + d;
-      },
-
+        },
+        changeActivity(){
+          var checkString = '';
+          for(var i = 0; i < this.selectedActivities.length; i++){
+            checkString = checkString + "," + this.selectedActivities[i];
+          }
+          if(checkString.indexOf("到店")>-1){
+            this.showDD = true;
+          }else{
+            this.showDD = false;
+          }
+          if(checkString.indexOf("耗卡")>-1){
+            this.showHK = true;
+          }else{
+            this.showHK = false;
+          }
+          if(checkString.indexOf("充值")>-1){
+            this.showCZ = true;
+          }else{
+            this.showCZ = false;
+          }
+        },
+        changeActivityProjects(){
+          var currentPrice = 0;
+          this.ddAct.ddProNumber = this.selectedActivityProjects.length;
+          for(var i = 0; i < this.selectedActivityProjects.length; i++){
+            currentPrice = currentPrice + parseInt(this.projectList[i].itemPrice.replace("元/次",""));
+          }
+          this.ddAct.ddOriPrice = currentPrice;
+        },
+        changeDDRules(){
+          var checkRuleString = '';
+          for(var i = 0; i < this.selectedDDRules.length; i++){
+            checkRuleString = checkRuleString + "," + this.selectedDDRules[i];
+          }
+          if(checkRuleString.indexOf("oledNew")>-1){
+            this.showOldNew = true;
+          }else{
+            this.showOldNew = false;
+          }
+        },
+        changeFromProjects(){
+          var timesHK = '';
+          this.hkAct.weeks = this.hkAct.fromProjects;
+          timesHK = parseInt(this.hkAct.projects) - parseInt(this.hkAct.fromProjects);
+          this.hkProjects = [];
+          for(var i = 0; i < timesHK; i++){
+            var currentHKprojects = {hkNumber: (parseInt(this.hkAct.fromProjects)+i),hkProject: ''};
+            this.hkProjects.push(currentHKprojects);
+          }
+        },
+        changeCZprojects(){
+          var checkCZString = '';
+          for(var i = 0; i < this.selectedCZactivites.length; i++){
+            checkCZString = checkCZString + "," + this.selectedCZactivites[i];
+          }
+          if(checkCZString.indexOf("czGiveProject")>-1){
+            this.showGiveProject = true;
+          }else{
+            this.showGiveProject = false;
+          }
+          if(checkCZString.indexOf("czGiveProduct")>-1){
+            this.showGiveProduct = true;
+          }else{
+            this.showGiveProduct = false;
+          }
+          if(checkCZString.indexOf("czYJ")>-1){
+            this.showczYj = true;
+          }else{
+            this.showczYj = false;
+          }
+        },
+        addGiveProject(){
+          var curretGiveProject = {
+            czMoney: '',
+            czProject: ''
+          };
+          this.czGiveProjectList.push(curretGiveProject);
+        },
+        addCZYJ(){
+          var currentYjTime = {
+            yjMoney: '',
+            yjTimes: this.yjTimeList.length+1
+          };
+          this.yjTimeList.push(currentYjTime);
+        }
     },
     created(){
-      this.getProject();
-      this.getData();
-      this.getCard();
+      this.getList();
     }
   }
 </script>
@@ -450,6 +363,8 @@ import {findactivity,saveactivity,editactivity,deleteactivity,findAllProject,fin
   }
   .mod{
     line-height: 60px;
+    margin: 0 auto;            
+    text-align: center; 
   }
   .com{
     margin: 10px 0;

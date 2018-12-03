@@ -314,7 +314,7 @@
         data.programItems.forEach(this.getProjectsBack);
         //this.planData = data.programItems;
         this.selectedProjects.forEach(this.pushSelectProjects);
-        console.log(JSON.parse(JSON.stringify(data.programItems)));
+        //console.log(JSON.parse(JSON.stringify(data.programItems)));
         data.programItems.forEach(this.getInterBack);
         this.planName = data.programName;
         this.planPrice = data.programPrice;
