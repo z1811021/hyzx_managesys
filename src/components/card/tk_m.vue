@@ -7,58 +7,68 @@
     <Table :columns="columns" :data="data"></Table>
 
     <Modal class="modalProjects" v-model="addF" title="添加" :mask-closable="false">
-      <div class='com'>名称：<Input v-model="addData.extensionName" style="width: 300px"></Input></div>
-      <div class='com'>卡扣价格：<Input v-model="addData.bucklePrice" style="width: 276px"></Input></div>
-      <div class="com">现金价格：<Input v-model="addData.cashPrice" style="width: 276px"></Input></div>
-      <div class='com'>有效期：<Input v-model="addData.extensionValidity" placeholder="单位天" style="width: 288px"></Input></div>
+      <div class='com' style="margin-left:-18px;">名称：<Input v-model="addData.cardName" style="width: 300px"></Input></div>
+      <div class='com'>卡扣价格：<InputNumber :max="100000" :min="0" v-model="addData.deductPrice" style="width: 256px"></InputNumber> 元</div>
+      <div class="com">现金价格：<InputNumber :max="100000" :min="0" v-model="addData.cashPrice" style="width: 256px"></InputNumber> 元</div>
+      <div class='com'>有效期：<InputNumber :max="1000" :min="0" v-model="addData.expiredDay" placeholder="单位天" style="width: 268px"></InputNumber> 天</div>
       <div class='com'><div style="float:left;margin-left: 76px;margin-top:8px;">是否计算业绩：</div>
-        <Input v-model="addData.performancePrice" style="width:252px" >
-            <Select v-model="addData.performance" slot="prepend" style="width: 80px">
-                <Option value="1"> 是</Option>
-                <Option value="2"> 否</Option>
-            </Select>
-        </Input>
+      <br/>
+      <br/>
+           <Select v-model="isPerformance" :transfer=true slot="prepend" @on-change="changePerformance()" style="width: 80px" >
+                <Option value="是"> 是</Option>
+                <Option value="否"> 否</Option>
+           </Select>
+           <InputNumber :max="100000" :min="0" v-show="!showPerformance" v-model="addData.performanceMoney" style="width:232px" disabled></InputNumber>
+           <InputNumber :max="100000" :min="0" v-show="showPerformance" v-model="addData.performanceMoney" style="width:232px" ></InputNumber> 元
         </div>
         <div class='com'><div style="float:left;margin-left: 76px;margin-top:8px;">是否计算实操：</div>
-          <Input v-model="addData.performancePrice" style="width:252px" >
-              <Select v-model="addData.performance" slot="prepend" style="width: 80px">
-                  <Option value="1"> 是</Option>
-                  <Option value="2"> 否</Option>
-              </Select>
-          </Input>
+        <br/>
+        <br/>
+            <Select v-model="isOperation" :transfer=true slot="prepend" style="width: 80px" @on-change="changeOperation()">
+                  <Option value="是"> 是</Option>
+                  <Option value="否"> 否</Option>
+            </Select>
+          <InputNumber :max="100000" :min="0" v-show="!showOperation" v-model="addData.operationMoney" style="width:232px" disabled></InputNumber>
+          <InputNumber :max="100000" :min="0" v-show="showOperation" v-model="addData.operationMoney" style="width:232px" ></InputNumber> 元
        </div>
       <div class='com'><div style="float:left;margin-left: 76px;margin-top:8px;">是否计算手工：</div>
-          <Input v-model="addData.performancePrice" style="width:252px" >
-              <Select v-model="addData.performance" slot="prepend" style="width: 80px">
-                  <Option value="1"> 是</Option>
-                  <Option value="2"> 否</Option>
-              </Select>
-          </Input>
+      <br/>
+      <br/>
+          <Select v-model="isManual" :transfer=true slot="prepend" style="width: 80px" @on-change="changeManual()">
+                  <Option value="是"> 是</Option>
+                  <Option value="否"> 否</Option>
+          </Select>
+          <InputNumber :max="100000" :min="0" v-show="!showManual" v-model="addData.manualMoney" style="width:232px" disabled></InputNumber>
+          <InputNumber :max="100000" :min="0" v-show="showManual" v-model="addData.manualMoney" style="width:232px" ></InputNumber> 元
        </div>
 
       <div class="project" style="margin-top:20px;">
         <h3 style="margin-left:-200px;">拓客项目<Button class="hy_btn" size="small" @click="Addproject" style="margin-left:42px;">添加</Button></h3>
-        <div v-for="(item,index) in addData.project" class="projectone">
+        <div v-for="(item,index) in tkProjectList" class="projectone">
           <div class='com'>项目：
-            <Select v-model="item.projectId" style="width:180px" :transfer=true>
-              <Option v-for="(item,index) in projectList" :value="index" :key="index">{{ item.itemName }}</Option>
+            <Select v-model="item.itemType" style="width:180px" :transfer=true>
+              <Option v-for="(item,index) in projectList" :value="item.itemName" :key="index">{{item.itemName}}</Option>
 
             </Select>
-            &nbsp;次数：<Input v-model="item.extensionNumber" style="width: 50px"></Input>
+            &nbsp;次数：<InputNumber :max="100" :min="0" v-model="item.itemTimes" style="width: 50px"></InputNumber>
             <Button class="hy_btn" @click="deleteProject(index)">删除</Button>
           </div>
         </div>
       </div>
       <div class='group'>
         <h3>奖励政策</h3>
-        <div class='com'> 每周销售 <Input v-model="addData.quantity" size="small" style="width: 30px"/> 张，每张奖励<Input v-model="addData.reward" size="small" style="width: 50px" @on-keyup="addData.reward=check2(addData.reward)"/> 元，超过每张奖励<Input v-model="addData.exceedReward" size="small" style="width: 50px"/> 元</div>
+        <div class='com'> 每周销售 <InputNumber :max="100" :min="0" v-model="addData.saleCardNum" size="small" style="width: 30px"/> 张，每张奖励<InputNumber :max="100000" :min="0" v-model="addData.rewardMoney" size="small" style="width: 50px"/> 元，超过每张奖励<InputNumber :max="100000" :min="0" v-model="addData.mRewardMoney" size="small" style="width: 50px"/> 元</div>
       </div>
       <div class='group'>
         <h3>奖励政策</h3>
-        <div class='com'> 首次进店微信预约转账 <Input v-model="addData.quantity" size="small" style="width: 30px"/> 元，体验抵 <Input v-model="addData.reward" size="small" style="width: 50px"/> 元，充值抵 <Input v-model="addData.exceedReward" size="small" style="width: 50px"/> 元，均按照<div style="margin-top:8px;">
-          <Select size="small" style="width:80px;" :transfer=true>
+        <div class='com'> 首次进店微信预约转账 <InputNumber :max="100000" :min="0" v-model="addData.checkMoney" size="small" style="width: 30px"/> 元，体验抵 <InputNumber :max="100000" :min="0" v-model="addData.offsetMoney" size="small" style="width: 50px"/> 元，充值抵 <InputNumber :max="100000" :min="0" v-model="addData.rechargeMoney" size="small" style="width: 50px"/> 元，均按照<div style="margin-top:8px;">
+          <Select v-model="addData.cardType" size="small" style="width:180px;" :transfer=true>
               <Option v-for="(project,index) in memberShowData" :value="project.cardName" :key="project.id">{{project.cardName}}</Option>
           </Select>会员最低抵扣体验护理。</div></div>
+      </div>
+      <div slot="footer">
+          <Button type="primary" @click="ok">添加</Button>
+          <Button type="ghost" @click="close">取消</Button>
       </div>
     </Modal>
   </div>
@@ -71,24 +81,24 @@ import {findMembership,findProjectList,findExtension,saveExtension,editExtension
       data() {
         return {
           columns: [
-            { title: '名称', key: 'extensionName',},
-            { title: '卡扣价格', key: 'bucklePrice',},
+            { title: '名称', key: 'cardName',},
+            { title: '卡扣价格', key: 'deductPrice',},
             { title: '现金价格', key: 'cashPrice',},
-            { title: '有效期(天)', key: 'extensionValidity',},
+            { title: '有效期(天)', key: 'expiredDay',},
             { title: '是否计算业绩', key: 'performance',
               render: (h, params) => {
-                return h('div',params.row.performance==1? '是':'否')
+                return h('div',params.row.isPerformance==1? '是':'否')
               }
 
             },
             { title: '是否计算实操', key: 'actualOperation',
               render: (h, params) => {
-                return h('div',params.row.actualOperation==1? '是':'否')
+                return h('div',params.row.isOperation==1? '是':'否')
               }
             },
             { title: '是否计算手工', key: 'manualFee',
               render: (h, params) => {
-                return h('div',params.row.manualFee==1? '是':'否')
+                return h('div',params.row.isManual==1? '是':'否')
               }
             },
             {
@@ -120,7 +130,7 @@ import {findMembership,findProjectList,findExtension,saveExtension,editExtension
                     },
                     on: {
                       click: () => {
-                        this.del(params.row, params.index)
+                        this.del(params.row)
                       }
                     }
                   }, '删除'),
@@ -133,30 +143,61 @@ import {findMembership,findProjectList,findExtension,saveExtension,editExtension
           projectList: [],
           memberData: [],
           memberShowData: [],
+          isPerformance: '',
+          isOperation: '',
+          isManual: '',
+          showPerformance: false,
+          showManual: false,
+          showOperation: false,
           addData:{
-            actualOperation: "",
-            extensionMoney: "",
-            extensionName: '',
-            extensionValidity: "",
-            id: "",
-            manualFee: "",
-            performance: "",
-            project: [
-              {
-                extensionNumber: '',
-                extensionValidity:'',
-                projectId: '',
-                projectName: ""
-              }
-            ],
-            quantity: '',
-            reward: "",
-            storeName: "",
-            storeId: this.$route.params.id,
-            bucklePrice:"",
-            cashPrice:"",
-            exceedReward:"",
+              storeId: this.$route.params.id,
+              // 名称
+              cardName: '',
+              // 卡扣价格
+              deductPrice: '',
+              // 现金价格
+              cashPrice: '',
+              // 有效期
+              expiredDay: '',
+              // 是否计算业绩, 0 否 1 是
+              isPerformance: 0,
+              // 业绩金额
+              performanceMoney: 0,
+              // 是否计算实操, 0 否 1 是
+              isOperation: 0,
+              // 实操金额
+              operationMoney: 0,
+              // 是否计算手工, 0 否 1 是
+              isManual: 0,
+              // 手工金额
+              manualMoney: 0,
+              // 每周销售 ? 张
+              saleCardNum: '',
+              // 每张奖励 ? 元
+              rewardMoney: '',
+              // 超过每张奖励 ? 元
+              mRewardMoney: '',
+              // 首次进店微信预约转账 ? 元
+              checkMoney: '',
+              // 体验抵 ? 元
+              offsetMoney: '',
+              // 充值抵 ? 元
+              rechargeMoney: '',
+              // 卡片类型, 推荐数字, 字符串也可以, 1 超白金卡, 2 钻石卡  ...
+              cardType: '' 
           },
+          tkProjectList: [
+            {
+              // 写错也没有关系, 后台会纠正
+              storeId:this.$route.params.id,
+              // 关联拓客卡的id, 写 0 就可以了
+              extCardId: 0,
+              // 项目类型, 推荐数字, 也可以传递字符串, 1 超微气泡 ...
+              itemType: '',
+              // 次数
+              itemTimes: ''
+            }],
+
           type: '',
           projectList:[],
         }
@@ -219,115 +260,198 @@ import {findMembership,findProjectList,findExtension,saveExtension,editExtension
         getData(){
           this.$ajax({
             method:'get',
-            url: findExtension()+'?storeId='+this.$route.params.id,
+            url: findExtension()+'/'+this.$route.params.id,
           }).then( (res) =>{
-            this.data = res.data;
+            this.data = res.data.extCardInfo;
+            for(var i=0;i<this.data.length;i++){
+              this.data[i].deductPrice = this.data[i].deductPrice + "元";
+              this.data[i].cashPrice = this.data[i].cashPrice + "元";
+              this.data[i].expiredDay = this.data[i].expiredDay + "天";
+            }
           }).catch( (error) =>{
-
+            this.$Message.error('获取失败');
           })
         },
-        ok() {
-          var Surl;
-
-          if(this.addData.extensionName == ''){
-            this.$Message.warning('名称不能为空');
-            return;
+        changePerformance(){
+          if(this.isPerformance == "是"){
+            this.showPerformance = true;
+          }else if(this.isPerformance == "否"){
+            this.showPerformance = false;
           }
-        if(this.type == 1){
-          Surl = saveExtension();
-        }else{
-          Surl = editExtension();
-        }
-        this.$ajax({
-          method: 'post',
-          url: Surl,
-          data: this.addData,
-        }).then( (res) =>{
-          this.$Message.success('保存成功');
-          this.getData();
-        }).catch( (error) =>{
-          this.$Message.error('保存失败');
-        })
+        },
+        changeOperation(){
+          if(this.isOperation == "是"){
+            this.showOperation = true;
+          }else if(this.isOperation == "否"){
+            this.showOperation = false;
+          }
+        },
+        changeManual(){
+          if(this.isManual == "是"){
+            this.showManual = true;
+          }else if(this.isManual == "否"){
+            this.showManual = false;
+          }
+        },
+        close(){
+          this.addF = false;
+        },
+        transfer(b){
+        if(b == "是"){
+            return 1;
+          }else{
+            return 0;
+          }
+        },
+        transferBack(c){
+          if(c == 1){
+            return "是";
+          }else{
+            return "否";
+          }
+        },
+        ok() {
+          this.addData.isPerformance = this.transfer(this.isPerformance);
+          this.addData.isManual = this.transfer(this.isManual);
+          this.addData.isOperation = this.transfer(this.isOperation);
+          var params = {
+              storeId: this.$route.params.id,
+              extCard: this.addData,
+              extCardItems: this.tkProjectList
+          };
+          let URL = saveExtension();
+          this.$ajax({
+            method: 'POST',
+            dataType: 'JSON',
+            contentType: 'application/json;charset=UTF-8',
+            headers: {
+              "authToken": sessionStorage.getItem('authToken')
+            },
+            data: params,
+            url: URL,
+          }).then((res) => {
+            this.$Message.success('操作成功');
+            this.addF=false;
+            this.getData();
+          }).catch((error) => {
+            this.$Message.error('操作失败');
+          });
         },
         Add(){
           this.type = 1;
-        this.addF = true;
-        this.addData={
-              actualOperation: "",
-              extensionMoney: "",
-              extensionName: '',
-              extensionValidity: '',
-              id: '',
-              manualFee: "",
-              performance: "",
-              project: [
-              {
-                extensionNumber: '',
-                extensionValidity:'',
-                projectId: '',
-                projectName: ""
-              }
-            ],
-              quantity: '',
-              reward: "",
-              storeName: "",
+          this.addF = true;
+          this.showPerformance = false;
+          this.showManual = false;
+          this.showOperation = false;
+          this.addData={
               storeId: this.$route.params.id,
-              bucklePrice:'',
-              cashPrice:''
+              // 名称
+              cardName: '',
+              // 卡扣价格
+              deductPrice: '',
+              // 现金价格
+              cashPrice: '',
+              // 有效期
+              expiredDay: '',
+              // 是否计算业绩, 0 否 1 是
+              isPerformance: 0,
+              // 业绩金额
+              performanceMoney: 0,
+              // 是否计算实操, 0 否 1 是
+              isOperation: 0,
+              // 实操金额
+              operationMoney: 0,
+              // 是否计算手工, 0 否 1 是
+              isManual: 0,
+              // 手工金额
+              manualMoney: 0,
+              // 每周销售 ? 张
+              saleCardNum: '',
+              // 每张奖励 ? 元
+              rewardMoney: '',
+              // 超过每张奖励 ? 元
+              mRewardMoney: '',
+              // 首次进店微信预约转账 ? 元
+              checkMoney: '',
+              // 体验抵 ? 元
+              offsetMoney: '',
+              // 充值抵 ? 元
+              rechargeMoney: '',
+              // 卡片类型, 推荐数字, 字符串也可以, 1 超白金卡, 2 钻石卡  ...
+              cardType: '' 
           };
+          this.tkProjectList = [
+            {
+              // 写错也没有关系, 后台会纠正
+              storeId:this.$route.params.id,
+              // 关联拓客卡的id, 写 0 就可以了
+              extCardId: 0,
+              // 项目类型, 推荐数字, 也可以传递字符串, 1 超微气泡 ...
+              itemType: '',
+              // 次数
+              itemTimes: ''
+            }];
         },
         Addproject(){
-          this.addData.project.push({
-            extensionNumber: '',
-            extensionValidity:'',
-            projectId: '',
-            projectName: ""
-          });
+          this.tkProjectList.push({
+              // 写错也没有关系, 后台会纠正
+              storeId:this.$route.params.id,
+              // 关联拓客卡的id, 写 0 就可以了
+              extCardId: 0,
+              // 项目类型, 推荐数字, 也可以传递字符串, 1 超微气泡 ...
+              itemType: '',
+              // 次数
+              itemTimes: ''
+            });
         },
         deleteProject(index){
-          if(this.addData.project.length == 1){
-            this.addData.project = [
-              {
-                extensionNumber: '',
-                extensionValidity:'',
-                projectId: '',
-                projectName: ""
+          if(this.tkProjectList.length == 1){
+            this.tkProjectList = [
+                {
+                // 写错也没有关系, 后台会纠正
+                storeId:this.$route.params.id,
+                // 关联拓客卡的id, 写 0 就可以了
+                extCardId: 0,
+                // 项目类型, 推荐数字, 也可以传递字符串, 1 超微气泡 ...
+                itemType: '',
+                // 次数
+                itemTimes: ''
               }
             ];
           }else{
-            this.addData.project.splice(index,1);
+            this.tkProjectList.splice(index,1);
           }
         },
-        mannger(data, i) {
+        mannger(data) {
           this.type = 0;
           this.addF =true;
           this.addData = JSON.parse(JSON.stringify(data));
-          this.addData.performance=this.addData.performance == 1 ? '1': '2';
-          this.addData.actualOperation=this.addData.actualOperation== 1 ? '1': '2';
-          this.addData.manualFee=this.addData.manualFee== 1 ? '1': '2';
+          this.showPerformance=this.addData.isPerformance == 1 ? true: false;
+          this.showOperation=this.addData.isOperation== 1 ? true: false;
+          this.showManual=this.addData.isManual== 1 ? true: false;
+          this.isPerformance=this.addData.isPerformance == 1 ? "是": "否";
+          this.isOperation=this.addData.isOperation== 1 ? "是": "否";
+          this.isManual=this.addData.isManual== 1 ? "是": "否";
+          this.tkProjectList=JSON.parse(JSON.stringify(data.extCardItems));
+          for(var i=0;i<this.tkProjectList.length;i++){
 
+          }
         },
-        del(data, i) {
+        del(data) {
           this.$ajax({
-          method: 'get',
-          url: deleteExtension()+'?id='+data.id,
-        }).then( (res) =>{
-          this.$Message.success('删除成功');
-          this.getData();
-        }).catch( (res) =>{
-          this.$Message.error('删除失败');
-        })
-        },
-        check(value){
-          return value.replace(/[^\d]/g,'');
-        },
-        check2(value){
-          return value.replace(/[^\d\.]/g,'');
+            method: 'get',
+            url: deleteExtension()+'/'+this.$route.params.id+'?cardName='+data.cardName,
+          }).then( (res) =>{ 
+            this.$Message.success('删除成功');
+            this.getData();
+          }).catch( (res) =>{
+            this.$Message.error('删除失败');
+          })
         }
       },
       created(){
         this.getList();
-        //this.getData();
+        this.getData();
         this.getMember();
       }
     }

@@ -652,25 +652,19 @@ export const deleteMembership = function () {
 };
 //获取拓客卡
 export const findExtension = function () {
-  const URL = '/app/api/extension/findExtension';
+  const URL = '/extCard/manage/store';
   const API = host + URL;
   return API;
 };
 //保存拓客卡
 export const saveExtension = function () {
-  const URL = '/app/api/extension/save';
-  const API = host + URL;
-  return API;
-};
-//编辑拓客卡
-export const editExtension = function () {
-  const URL = '/app/api/extension/edit';
+  const URL = '/extCard/manage/add';
   const API = host + URL;
   return API;
 };
 //删除拓客卡
 export const deleteExtension = function () {
-  const URL = '/app/api/extension/delete';
+  const URL = '/extCard/manage/delete';
   const API = host + URL;
   return API;
 };

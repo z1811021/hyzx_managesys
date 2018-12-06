@@ -188,6 +188,7 @@
         showAgenda: false,
         showTc: false,
         projectChoose: '',
+        projectFilterList: [],
         pis: {
               // 门店id，本地测试 24，服务器测试可用 22
               storeId: this.$route.params.id,
@@ -229,7 +230,62 @@
         columns: [
           {
             title: '项目类别',
-            key: 'projectCategory'
+            key: 'projectCategory',
+            filters: [],
+              filterMultiple: false,
+              filterMethod (value, row) {
+                  if (value === 1) {
+                      return row.projectCategory === '面部 - 清洁';
+                  } else if (value === 2) {
+                      return row.projectCategory === '面部 - 补水';
+                  } else if (value === 3) {
+                      return row.projectCategory === '面部 - 美白';
+                  } else if (value === 4) {
+                      return row.projectCategory === '面部 - 修复';
+                  } else if (value === 5) {
+                      return row.projectCategory === '面部 - 抗敏';
+                  } else if (value === 6) {
+                      return row.projectCategory === '面部 - 痘痘';
+                  } else if (value === 7) {
+                      return row.projectCategory === '面部 - 紧致';
+                  } else if (value === 8) {
+                      return row.projectCategory === '面部 - 除皱';
+                  } else if (value === 9) {
+                      return row.projectCategory === '面部 - 祛斑';
+                  } else if (value === 10) {
+                      return row.projectCategory === '面部 - 毛孔管理';
+                  } else if (value === 11) {
+                      return row.projectCategory === '面部 - V脸瘦脸';
+                  } else if (value === 12) {
+                      return row.projectCategory === '面部 - 眼部';
+                  } else if (value === 13) {
+                      return row.projectCategory === '面部 - 整骨';
+                  } else if (value === 14) {
+                      return row.projectCategory === '面部 - 其他';
+                  } else if (value === 15) {
+                      return row.projectCategory === '身体 - 头部';
+                  } else if (value === 16) {
+                      return row.projectCategory === '身体 - 肩颈';
+                  } else if (value === 17) {
+                      return row.projectCategory === '身体 - 背部';
+                  } else if (value === 18) {
+                      return row.projectCategory === '身体 - 胸部';
+                  } else if (value === 19) {
+                      return row.projectCategory === '身体 - 腹部';
+                  } else if (value === 20) {
+                      return row.projectCategory === '身体 - 腰部';
+                  } else if (value === 21) {
+                      return row.projectCategory === '身体 - 臀部';
+                  } else if (value === 22) {
+                      return row.projectCategory === '身体 - 大腿';
+                  } else if (value === 23) {
+                      return row.projectCategory === '身体 - 小腿';
+                  } else if (value === 24) {
+                      return row.projectCategory === '身体 - 足部';
+                  } else if (value === 25) {
+                      return row.projectCategory === '身体 - 其他';
+                  }
+              }
           },
           {
             title: '项目',
@@ -237,7 +293,8 @@
           },
           {
             title: '单价',
-            key: 'itemPrice'
+            key: 'itemPrice',
+            sortable: true
           },
           /*{
             title: '是否设计疗程',
@@ -245,19 +302,23 @@
           },*/
           {
             title: '疗程次数',
-            key: 'courseTimes'
+            key: 'courseTimes',
+            sortable: true
           },
           {
             title: '疗程价格',
-            key: 'coursePrice'
+            key: 'coursePrice',
+            sortable: true
           },
           {
             title: '疗程卡扣价格',
-            key: 'courseCharges'
+            key: 'courseCharges',
+            sortable: true
           },
           {
             title: '项目间隔',
-            key: 'courseInterval'
+            key: 'courseInterval',
+            sortable: true
           },
           {
             title: '操作',
@@ -351,6 +412,23 @@
         this.$refs.setFaceQuery.$data.query = '';
         //this.$refs.setBodyQuery.$data.query = '';
       },
+      uniqueArray(array, key){
+        var result = [array[0]];
+        for(var i = 1; i < array.length; i++){
+          var item = array[i];
+          var repeat = false;
+          for (var j = 0; j < result.length; j++) {
+            if (item[key] == result[j][key]) {
+              repeat = true;
+              break;
+            }
+          }
+          if (!repeat) {
+            result.push(item);
+          }
+        }
+        return result;
+      },
       getList() {
         this.$ajax({
           method: 'GET',
@@ -420,6 +498,15 @@
             this.data[i].courseCharges = this.data[i].courseCharges + "元";
             this.data[i].courseInterval = this.data[i].courseInterval + "天";
             this.data[i].index = i+1;
+          }
+          //console.log(JSON.parse(JSON.stringify(this.columns)));
+          this.projectFilterList = this.uniqueArray(this.data,"projectCategory");
+          for(var j=0;j<this.projectFilterList.length;j++){
+            var currentFitlerItem = {
+                      label: this.projectFilterList[j].projectCategory,
+                      value: j+1
+                  };
+            this.columns[0].filters.push(currentFitlerItem);
           }
         }).catch((error) => {
           this.$Message.error('获取失败');
