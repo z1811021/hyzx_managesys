@@ -46,7 +46,7 @@
         <h3 style="margin-left:-200px;">拓客项目<Button class="hy_btn" size="small" @click="Addproject" style="margin-left:42px;">添加</Button></h3>
         <div v-for="(item,index) in tkProjectList" class="projectone">
           <div class='com'>项目：
-            <Select v-model="item.itemType" style="width:180px" :transfer=true>
+            <Select v-model="item.itemType" ref="setTKQuery" clearable style="width:180px" placeholder="请选择拓客赠送项目" :transfer=true @on-change="changeTLproject(index)">
               <Option v-for="(item,index) in projectList" :value="item.itemName" :key="index">{{item.itemName}}</Option>
 
             </Select>
@@ -229,6 +229,16 @@ import {findMembership,findProjectList,findExtension,saveExtension,editExtension
             this.$Message.error('获取失败');
           });
         },
+        changeTLproject(index){
+          for(var i = 0; i < index; i++){
+            if(this.tkProjectList[i].itemType == this.tkProjectList[index].itemType){
+              var errorMessageName = "请不要选择重复的拓客赠送项目！";
+              this.tkProjectList[index].itemType = '';
+              //this.$refs.setTKQuery.$data.query = '';
+              this.$Message.warning(errorMessageName);
+            }
+          }
+        },
         getMember(){
           this.$ajax({
             method:'get',
@@ -319,26 +329,87 @@ import {findMembership,findProjectList,findExtension,saveExtension,editExtension
               extCard: this.addData,
               extCardItems: this.tkProjectList
           };
-          let URL = saveExtension();
-          this.$ajax({
-            method: 'POST',
-            dataType: 'JSON',
-            contentType: 'application/json;charset=UTF-8',
-            headers: {
-              "authToken": sessionStorage.getItem('authToken')
+          var validateMessage = '';
+            if(this.addData.cardName == '' || this.addData.cardName == null){
+              validateMessage = validateMessage + "请输入拓客卡名称！<br/>";
+            }
+            if(this.addData.deductPrice == '' || this.addData.deductPrice == null){
+              validateMessage = validateMessage + "请输入卡扣价格！<br/>";
+            }
+            if(this.addData.cashPrice == '' || this.addData.cashPrice == null){
+              validateMessage = validateMessage + "请输入现金价格！<br/>";
+            }
+            if(this.addData.expiredDay == '' || this.addData.expiredDay == null){
+              validateMessage = validateMessage + "请输入有效期！<br/>";
+            }
+            if(this.isPerformance == '' || this.isPerformance == null){
+              validateMessage = validateMessage + "请选择是否计算业绩！<br/>";
+            }
+            if(this.addData.isPerformance == 1 && this.addData.isPerformance == '' || this.addData.rechargeMoney == null){
+              validateMessage = validateMessage + "请输入业绩金额！<br/>";
+            }
+            if(this.isOperation == '' || this.isOperation == null){
+              validateMessage = validateMessage + "请选择是否计算实操！<br/>";
+            }
+            if(this.addData.isOperation == 1 && this.addData.operationMoney == '' || this.addData.operationMoney == null){
+              validateMessage = validateMessage + "请输入实操金额！<br/>";
+            }
+            if(this.isManual == '' || this.isManual == null){
+              validateMessage = validateMessage + "请选择是否计算手工！<br/>";
+            }
+            if(this.addData.isManual == 1 && this.addData.manualMoney == '' || this.addData.manualMoney == null){
+              validateMessage = validateMessage + "请输入手工金额！<br/>";
+            }
+            if(this.addData.saleCardNum == '' || this.addData.saleCardNum == null){
+              validateMessage = validateMessage + "请输入每周销售多少张！<br/>";
+            }
+            if(this.addData.rewardMoney == '' || this.addData.rewardMoney == null){
+              validateMessage = validateMessage + "请输入每张奖励多少元！<br/>";
+            }
+            if(this.addData.mRewardMoney == '' || this.addData.mRewardMoney == null){
+              validateMessage = validateMessage + "请输入超过每张奖励多少元！<br/>";
+            }
+            if(this.addData.checkMoney == '' || this.addData.checkMoney == null){
+              validateMessage = validateMessage + "请输入首次进店微信预约转账多少元！<br/>";
+            }
+            if(this.addData.offsetMoney == '' || this.addData.offsetMoney == null){
+              validateMessage = validateMessage + "请输入体验抵扣多少元！<br/>";
+            }
+            if(this.addData.rechargeMoney == '' || this.addData.rechargeMoney == null){
+              validateMessage = validateMessage + "请输入充值抵扣多少元！<br/>";
+            }
+            if(this.addData.cardType == '' || this.addData.cardType == null){
+              validateMessage = validateMessage + "请选择卡片类型！<br/>";
+            }
+            for(var m=0;m<this.tkProjectList.length;m++){
+              if(this.tkProjectList[m].itemType == '' || this.tkProjectList[m].itemTimes == '' || this.tkProjectList[m].itemTimes == null){
+                validateMessage = validateMessage + "请先完善拓客项目信息！<br/>";
+              }
+            }
+            if(validateMessage != ''){
+              this.$Message.warning(validateMessage);
+              validateMessage = '';
+            }else{
+                let URL = saveExtension();
+                this.$ajax({
+                  method: 'POST',
+                  dataType: 'JSON',
+                  contentType: 'application/json;charset=UTF-8',
+                  headers: {
+                    "authToken": sessionStorage.getItem('authToken')
+                  },
+                  data: params,
+                  url: URL,
+                }).then((res) => {
+                  this.$Message.success('操作成功');
+                  this.addF=false;
+                  this.getData();
+                }).catch((error) => {
+                  this.$Message.error('操作失败');
+                });
+              }
             },
-            data: params,
-            url: URL,
-          }).then((res) => {
-            this.$Message.success('操作成功');
-            this.addF=false;
-            this.getData();
-          }).catch((error) => {
-            this.$Message.error('操作失败');
-          });
-        },
         Add(){
-          this.type = 1;
           this.addF = true;
           this.showPerformance = false;
           this.showManual = false;
@@ -393,16 +464,28 @@ import {findMembership,findProjectList,findExtension,saveExtension,editExtension
             }];
         },
         Addproject(){
-          this.tkProjectList.push({
-              // 写错也没有关系, 后台会纠正
-              storeId:this.$route.params.id,
-              // 关联拓客卡的id, 写 0 就可以了
-              extCardId: 0,
-              // 项目类型, 推荐数字, 也可以传递字符串, 1 超微气泡 ...
-              itemType: '',
-              // 次数
-              itemTimes: ''
-            });
+          var errorMessage = '';
+          var newItem = {
+                // 写错也没有关系, 后台会纠正
+                storeId:this.$route.params.id,
+                // 关联拓客卡的id, 写 0 就可以了
+                extCardId: 0,
+                // 项目类型, 推荐数字, 也可以传递字符串, 1 超微气泡 ...
+                itemType: '',
+                // 次数
+                itemTimes: ''
+              }
+            for(var i = 0; i < this.tkProjectList.length ; i++){
+              if(this.tkProjectList[i].itemType == '' || this.tkProjectList[i].itemTimes == '' || this.tkProjectList[i].itemTimes == null){
+                //this.$Message.warning("请先完善已有尊享项目信息！");
+                errorMessage = "请先完善已有拓客项目信息！"; 
+              }
+            }
+            if(errorMessage == ''){
+              this.tkProjectList.push(newItem);
+            }else{
+              this.$Message.warning(errorMessage);
+            }
         },
         deleteProject(index){
           if(this.tkProjectList.length == 1){

@@ -19,12 +19,12 @@
       <div class='group' v-show="showDD" style="display:inline-block;margin-top:20px;">
         <h3>到店活动</h3>
         <div style="float:left;margin-left:30px;margin-top:10px;margin-right:30px;">
-        <span>挑选出<Input v-model="ddAct.ddProNumber" size="small" style="width: 24px;margin-top: -1px;" :readonly=true></Input>个基础功效类项目，原价<Input v-model="ddAct.ddOriPrice" size="small" style="width: 60px;margin-top: -1px;" :readonly=true></Input>元，活动价<Input v-model="ddAct.ddActPrice" size="small" style="width: 60px;margin-top: -1px;"></Input>元，
-        每周完成<Input v-model="ddAct.ddActNumber" size="small" style="width: 24px;margin-top: -1px;"></Input>个项目（每周五、六、日），<Input v-model="ddAct.ddDurTime" size="small" style="width: 24px;margin-top: -1px;"></Input>周内全部耗完。</span>
+        <span>挑选出<InputNumber :max="100" :min="0" v-model="ddAct.ddProNumber" size="small" style="width: 24px;margin-top: -1px;" :readonly=true></InputNumber>个基础功效类项目，原价<InputNumber :max="100000" :min="0" v-model="ddAct.ddOriPrice" size="small" style="width: 60px;margin-top: -1px;" :readonly=true></InputNumber>元，活动价<InputNumber :max="100000" :min="0" v-model="ddAct.ddActPrice" size="small" style="width: 60px;margin-top: -1px;"></InputNumber>元，
+        每周完成<InputNumber :max="100" :min="0" v-model="ddAct.ddActNumber" size="small" style="width: 24px;margin-top: -1px;"></InputNumber>个项目（每周五、六、日），<InputNumber :max="100" :min="0" v-model="ddAct.ddDurTime" size="small" style="width: 24px;margin-top: -1px;"></InputNumber>周内全部耗完。</span>
         </div>
         <Select v-model="selectedActivityProjects" placeholder="请选择到店活动项目" :multiple=true style="width:360px;margin-top:5px;" :transfer=true @on-change="changeActivityProjects()">
             <Option v-for="(item,index) in projectList" :value="index" :key="index">
-              <span>{{ item.itemName }}</span>
+              <span>{{item.itemName}}</span>
               <span style="float:right;color:#ccc">{{item.itemPrice}}</span>
             </Option>
         </Select>
@@ -36,7 +36,7 @@
               <Option value="oledNew">老带新，请选择后填写详细优惠。</Option>
           </Select>
           <div v-show="showOldNew" style="margin-top:10px;">
-            新顾客可以以<Input v-model="ddAct.special" size="small" style="width:50px"></Input>元购买，该款项全部返还老顾客作为答谢，并且新顾客首次成交额的<Input v-model="ddAct.specialNew" size="small" style="width:50px"></Input>%可现金或返卡方式回馈老顾客。
+            新顾客可以以<InputNumber :max="100000" :min="0" v-model="ddAct.special" size="small" style="width:50px"></InputNumber>元购买，该款项全部返还老顾客作为答谢，并且新顾客首次成交额的<InputNumber :max="100000" :min="0" v-model="ddAct.specialNew" size="small" style="width:50px"></InputNumber>%可现金或返卡方式回馈老顾客。
           </div>
         </div>
       </div>
@@ -44,7 +44,7 @@
       <div class='group' v-show="showHK" style="display:inline-block;margin-top:20px;">
         <h3>耗卡活动</h3>
         <br/>
-        <div style="margin-bottom:20px;"><Input type="number" min="0" max="99" v-model="hkAct.weeks" size="small" style="width: 48px;margin-top: -1px;" ></Input>周内做完<Input type="number" min="0" max="99" v-model="hkAct.projects" size="small" style="width: 48px;margin-top: -1px;" ></Input>个项目，从第<Input type="number" min="0" max="99" v-model="hkAct.fromProjects" @on-change="changeFromProjects" size="small" style="width: 48px;margin-top: -1px;" ></Input>次开始赠送相应项目或者产品</div>
+        <div style="margin-bottom:20px;"><InputNumber :max="100" :min="0" v-model="hkAct.weeks" size="small" style="width: 48px;margin-top: -1px;" ></InputNumber :max="100" :min="0">周内做完<InputNumber :max="100" :min="0" v-model="hkAct.projects" size="small" style="width: 48px;margin-top: -1px;" ></InputNumber>个项目，从第<InputNumber :max="100" :min="0" v-model="hkAct.fromProjects" @on-change="changeFromProjects" size="small" style="width: 48px;margin-top: -1px;" ></InputNumber>次开始赠送相应项目或者产品</div>
         <div v-for="(item,index) in hkProjects" style="margin-top:10px;">
           <span >第{{item.hkNumber}}次</span>
           <Select v-model="item.hkProject" placeholder="请选择耗卡活动项目" style="width:260px;margin-left:50px;" :transfer=true @on-change="changeHKProjects()">
