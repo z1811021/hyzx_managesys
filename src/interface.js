@@ -668,75 +668,21 @@ export const deleteExtension = function () {
   const API = host + URL;
   return API;
 };
-//获取疗程组合卡
-export const findTreatment = function () {
-  const URL = '/app/api/treatment/findTreatment';
-  const API = host + URL;
-  return API;
-};
-//保存疗程组合卡
-export const saveTreatment = function () {
-  const URL = '/app/api/treatment/save';
-  const API = host + URL;
-  return API;
-};
-//编辑疗程组合卡
-export const editTreatment = function () {
-  const URL = '/app/api/treatment/edit';
-  const API = host + URL;
-  return API;
-};
-//删除疗程组合卡
-export const deleteTreatment = function () {
-  const URL = '/app/api/treatment/delete';
-  const API = host + URL;
-  return API;
-};
-//获取产品卡
-export const findproductCard = function () {
-  const URL = '/app/api/productCard/findproductCard';
-  const API = host + URL;
-  return API;
-};
-//保存产品卡
-export const saveproductCard = function () {
-  const URL = '/app/api/productCard/save';
-  const API = host + URL;
-  return API;
-};
-//编辑产品卡
-export const editproductCard = function () {
-  const URL = '/app/api/productCard/edit';
-  const API = host + URL;
-  return API;
-};
-//删除产品卡
-export const deleteproductCard = function () {
-  const URL = '/app/api/productCard/delete';
-  const API = host + URL;
-  return API;
-};
 //获取活动卡
 export const findactivity = function () {
-  const URL = '/app/api/activity/findactivity';
+  const URL = '/actCard/manage/store';
   const API = host + URL;
   return API;
 };
 //保存活动卡
 export const saveactivity = function () {
-  const URL = '/app/api/activity/save';
-  const API = host + URL;
-  return API;
-};
-//编辑活动卡
-export const editactivity = function () {
-  const URL = '/app/api/activity/edit';
+  const URL = '/actCard/manage/add';
   const API = host + URL;
   return API;
 };
 //删除活动卡
 export const deleteactivity = function () {
-  const URL = '/app/api/activity/delete';
+  const URL = '/actCard/manage/delete';
   const API = host + URL;
   return API;
 };

@@ -282,6 +282,7 @@
         this.mealPrice = data.programPrice;
         this.storeFlag = true;
         //this.selectedProject = 
+        console.log(JSON.parse(JSON.stringify(this.selectedProject)));
       },
       close(){
         this.storeFlag = false;

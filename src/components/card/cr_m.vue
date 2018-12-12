@@ -368,18 +368,22 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
             method:'get',
             url: findMembership()+'/'+this.$route.params.id,
           }).then( (res) =>{
-            this.data = res.data.memCardManageInfo;
-            var currentItem = {};
-            for(var i=0;i<this.data.length;i++){
-              this.data[i].memPrice = this.data[i].memPrice + "元";
-              this.data[i].singleDiscount = this.data[i].singleDiscount + "%";
-              this.data[i].productDiscount = this.data[i].productDiscount + "%";
-              this.data[i].expiryDate = this.data[i].expiryDate + "个月";
-              currentItem = {"cardName":this.data[i].cardName, "memPrice":this.data[i].memPrice,"id":''};
-              this.curData.push(currentItem);
+            if(res.data.memCardManageInfo == null){
+              this.data = [];
+            }else{
+              this.data = res.data.memCardManageInfo;
+              var currentItem = {};
+              for(var i=0;i<this.data.length;i++){
+                this.data[i].memPrice = this.data[i].memPrice + "元";
+                this.data[i].singleDiscount = this.data[i].singleDiscount + "%";
+                this.data[i].productDiscount = this.data[i].productDiscount + "%";
+                this.data[i].expiryDate = this.data[i].expiryDate + "个月";
+                currentItem = {"cardName":this.data[i].cardName, "memPrice":this.data[i].memPrice,"id":''};
+                this.curData.push(currentItem);
+              }
+              this.data.sort(this.compare);
+              this.curData.sort(this.compare);
             }
-            this.data.sort(this.compare);
-            this.curData.sort(this.compare);
           }).catch( (error) =>{
             this.$Message.error('获取失败');
           })
@@ -510,12 +514,14 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               validateMessage = validateMessage + "请先完善尊享项目信息！<br/>";
             }
           }
-          for(var i = 0; i < this.upgradeList.length ; i++){
+          if(selectedRisCardRuleString.indexOf("增量充值")>-1){
+            for(var i = 0; i < this.upgradeList.length ; i++){
               if(this.upgradeList[i].risingCardName == '' || this.upgradeList[i].risingCardMoney == ''){
                 //this.$Message.warning("请先完善已有尊享项目信息！");
                 validateMessage = validateMessage + "请先填写当前已有升级项目金额！"; 
               }
             }
+          }
           if(validateMessage != ''){
             this.$Message.warning(validateMessage);
             validateMessage = '';

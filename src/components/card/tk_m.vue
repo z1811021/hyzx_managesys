@@ -244,18 +244,22 @@ import {findMembership,findProjectList,findExtension,saveExtension,editExtension
             method:'get',
             url: findMembership()+'/'+this.$route.params.id,
           }).then( (res) =>{
-            this.memberData = res.data.memCardManageInfo;
-            var currentItem = {};
-            for(var i=0;i<this.memberData.length;i++){
-              this.memberData[i].memPrice = this.memberData[i].memPrice + "元";
-              this.memberData[i].singleDiscount = this.memberData[i].singleDiscount + "%";
-              this.memberData[i].productDiscount = this.memberData[i].productDiscount + "%";
-              this.memberData[i].expiryDate = this.memberData[i].expiryDate + "个月";
-              currentItem = {"cardName":this.memberData[i].cardName, "memPrice":this.memberData[i].memPrice,"id":''};
-              this.memberShowData.push(currentItem);
-            }
-            this.memberData.sort(this.compare);
-            this.memberShowData.sort(this.compare);
+            if(res.data.memCardManageInfo == null){
+              this.memberData = [];
+            }else{
+              this.memberData = res.data.memCardManageInfo;
+              var currentItem = {};
+                for(var i=0;i<this.memberData.length;i++){
+                  this.memberData[i].memPrice = this.memberData[i].memPrice + "元";
+                  this.memberData[i].singleDiscount = this.memberData[i].singleDiscount + "%";
+                  this.memberData[i].productDiscount = this.memberData[i].productDiscount + "%";
+                  this.memberData[i].expiryDate = this.memberData[i].expiryDate + "个月";
+                  currentItem = {"cardName":this.memberData[i].cardName, "memPrice":this.memberData[i].memPrice,"id":''};
+                  this.memberShowData.push(currentItem);
+                }
+                this.memberData.sort(this.compare);
+                this.memberShowData.sort(this.compare);
+              }
           }).catch( (error) =>{
             this.$Message.error('获取失败');
           })
@@ -272,11 +276,16 @@ import {findMembership,findProjectList,findExtension,saveExtension,editExtension
             method:'get',
             url: findExtension()+'/'+this.$route.params.id,
           }).then( (res) =>{
-            this.data = res.data.extCardInfo;
-            for(var i=0;i<this.data.length;i++){
-              this.data[i].deductPrice = this.data[i].deductPrice + "元";
-              this.data[i].cashPrice = this.data[i].cashPrice + "元";
-              this.data[i].expiredDay = this.data[i].expiredDay + "天";
+            console.log(res.data.extCardInfo);
+            if(res.data.extCardInfo == null){
+              this.data = [];
+            }else{
+              this.data = res.data.extCardInfo;
+              for(var i=0;i<this.data.length;i++){
+                this.data[i].deductPrice = this.data[i].deductPrice + "元";
+                this.data[i].cashPrice = this.data[i].cashPrice + "元";
+                this.data[i].expiredDay = this.data[i].expiredDay + "天";
+              }
             }
           }).catch( (error) =>{
             this.$Message.error('获取失败');
