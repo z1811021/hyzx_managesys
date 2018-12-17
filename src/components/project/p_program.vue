@@ -149,8 +149,12 @@
             },
             url: findProjectPlanList()+'/'+this.$route.params.id+'?programType=0',
           }).then((res) => {
-            this.projectList = res.data.programManage;
-            this.getMeal();
+            if(res.data.programManage == null){
+              this.projectList = [];
+            }else{
+              this.projectList = res.data.programManage;
+              this.getMeal();
+            }
         }).catch((error) => {
           this.$Message.error('获取失败');
         });

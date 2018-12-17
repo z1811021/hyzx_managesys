@@ -45,10 +45,10 @@
         <h3>耗卡活动</h3>
         <br/>
         <div style="margin-bottom:20px;"><InputNumber :max="100" :min="0" v-model="hkAct.weeks" @on-change="changeFromProjects" size="small" style="width: 48px;margin-top: -1px;" ></InputNumber :max="100" :min="0">周内做完<InputNumber :max="100" :min="0" @on-change="changeFromProjects" v-model="hkAct.projects" size="small" style="width: 48px;margin-top: -1px;" ></InputNumber>个项目，从第<InputNumber :max="100" :min="0" v-model="hkAct.fromProjects" @on-change="changeFromProjects" size="small" style="width: 48px;margin-top: -1px;" ></InputNumber>次开始赠送相应项目或者产品</div>
-        <div v-for="(item,index) in hkProjects" style="margin-top:10px;">
-          <span >第{{item.hkNumber}}次</span>
-          <Select v-model="item.hkProject" placeholder="请选择耗卡活动项目" style="width:260px;margin-left:50px;" :transfer=true>
-              <Option v-for="(item,index) in projectList" :value="item.id" :key="index">
+        <div v-for="project in hkProjects" style="margin-top:10px;">
+          <span >第{{project.hkNumber}}次</span>
+          <Select v-model="project.hkProject" placeholder="请选择耗卡活动项目" style="width:260px;margin-left:50px;" :transfer=true>
+              <Option v-for="(item,index) in projectList" :value="item.itemName" :key="'hkhd'+item.id">
                 <span>{{ item.itemName }}</span>
                 <span style="float:right;color:#ccc">{{item.itemPrice}}</span>
               </Option>
@@ -387,23 +387,21 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
         }else{
           this.showczYj = false;
         }
+        this.hkProjects = [];
         var consItems = '';
-        /*consItems = data.consItems.split(',');
-        for(var i = 0; i < this.consItems.length; i++){
-          this.hkProjects[i].hkProject = consItems[i];
-        }*/
+        consItems = data.consItems.split(',');
+        for(var i = 0; i < consItems.length; i++){
+          var currentHKprojects = {hkNumber: (parseInt(this.hkAct.fromProjects)+i),hkProject: consItems[i]};
+            this.hkProjects.push(currentHKprojects);
+        }
+        console.log(JSON.parse(JSON.stringify(this.hkProjects)));
         this.selectedActivityProjects = data.actiItems.split(',');
-        /*for(var i = 0; i < this.selectedActivityProjects.length; i++){
-          this.selectedActivityProjects[i] = parseInt(this.selectedActivityProjects[i]);
-        }*/
         this.selectedCZactivites = data.rechItems.split(',');
         this.selectedActivities = data.actiType.split(',');
         this.selectedDDRules = data.actiDescs.split(',');
         this.czGiveProjectList = data.activityCardRechargeItems;
         this.czGiveProductList = data.activityCardRechargeGifts;
         this.yjTimeList = data.activityCardRechargeLotteries;
-        this.changeFromProjects();
-        console.log(JSON.parse(JSON.stringify(this.selectedActivityProjects)));
       },
       Add(){
         this.addF = true;

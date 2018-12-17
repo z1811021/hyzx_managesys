@@ -423,6 +423,9 @@ import {findMembership,findProjectList,findExtension,saveExtension,editExtension
           this.showPerformance = false;
           this.showManual = false;
           this.showOperation = false;
+          this.isPerformance='';
+          this.isOperation='';
+          this.isManual='';
           this.addData={
               storeId: this.$route.params.id,
               // 名称
@@ -518,6 +521,9 @@ import {findMembership,findProjectList,findExtension,saveExtension,editExtension
           this.type = 0;
           this.addF =true;
           this.addData = JSON.parse(JSON.stringify(data));
+          this.addData.deductPrice = this.addData.deductPrice.replace("元","");
+          this.addData.cashPrice = this.addData.cashPrice.replace("元","");
+          this.addData.expiredDay = this.addData.expiredDay.replace("天","");
           this.showPerformance=this.addData.isPerformance == 1 ? true: false;
           this.showOperation=this.addData.isOperation== 1 ? true: false;
           this.showManual=this.addData.isManual== 1 ? true: false;
