@@ -23,7 +23,7 @@
         每周完成<InputNumber :max="100" :min="0" v-model="ddAct.ddActNumber" size="small" style="width: 44px;margin-top: -1px;"></InputNumber>个项目（每周五、六、日），<InputNumber :max="100" :min="0" v-model="ddAct.ddDurTime" size="small" style="width: 44px;margin-top: -1px;"></InputNumber>周内全部耗完。</span>
         </div>
         <Select v-model="selectedActivityProjects" placeholder="请选择到店活动项目" :multiple=true style="width:360px;margin-top:5px;" filterable :transfer=true @on-change="changeActivityProjects()">
-            <Option v-for="item in projectList" :value="item.itemName" :key="item.itemName">
+            <Option v-for="item in projectList" :value="item.itemName" :key="item.id">
               <span>{{item.itemName}}</span>
               <span style="float:right;color:#ccc">{{item.itemPrice}}</span>
             </Option>
@@ -48,8 +48,8 @@
         <div v-for="project in hkProjects" style="margin-top:10px;">
           <span >第{{project.hkNumber}}次</span>
           <Select v-model="project.hkProject" placeholder="请选择耗卡活动项目" style="width:260px;margin-left:50px;" :transfer=true>
-              <Option v-for="(item,index) in projectList" :value="item.itemName" :key="'hkhd'+item.id">
-                <span>{{ item.itemName }}</span>
+              <Option v-for="item in projectList" :value="item.itemName" :key="item.itemName">
+                <span>{{item.label}}</span>
                 <span style="float:right;color:#ccc">{{item.itemPrice}}</span>
               </Option>
           </Select>
@@ -226,6 +226,7 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
     },
     methods: {
       ok(){
+          console.log(JSON.parse(JSON.stringify(this.hkProjects)));
           var czItems = '';
           var hdItems = '';
           var consItems = '';
@@ -387,15 +388,17 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
         }else{
           this.showczYj = false;
         }
-        this.hkProjects = [];
+        this.changeFromProjects();
         var consItems = '';
         consItems = data.consItems.split(',');
         for(var i = 0; i < consItems.length; i++){
-          var currentHKprojects = {hkNumber: (parseInt(this.hkAct.fromProjects)+i),hkProject: consItems[i]};
-            this.hkProjects.push(currentHKprojects);
+          this.hkProjects[i].hkProject = consItems[i];
         }
         console.log(JSON.parse(JSON.stringify(this.hkProjects)));
         this.selectedActivityProjects = data.actiItems.split(',');
+        /*for(var i = 0; i < this.selectedActivityProjects.length; i++){
+          this.selectedActivityProjects[i] = parseInt(this.selectedActivityProjects[i]);
+        }*/
         this.selectedCZactivites = data.rechItems.split(',');
         this.selectedActivities = data.actiType.split(',');
         this.selectedDDRules = data.actiDescs.split(',');
@@ -505,6 +508,7 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
               }else{
                 this.projectList[i].projectCategory = "身体";
               }
+              this.projectList[i].label = this.projectList[i].itemName;
               this.projectList[i].itemPrice = this.projectList[i].itemPrice + "元/次";
               this.projectList[i].courseTimes = this.projectList[i].courseTimes + "次";
               this.projectList[i].coursePrice = this.projectList[i].coursePrice + "元";

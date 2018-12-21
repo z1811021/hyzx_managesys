@@ -1,7 +1,7 @@
 <template>
   <div class="forget">
     <div class="layout-logo-left">忘记密码</div>
-    <div style="width: 300px;margin:0 auto;text-align: left;font-size: 14px;">
+    <div style="width: 300px;margin:0 auto;text-align: left;font-size: 14px;color:#fff;">
       联系人电话：
       <Input v-model="phoneNumber" placeholder="联系人电话" style="width: 290px;">
         <span slot="append" class="serc" @click="getTag">获取验证码</span>
@@ -82,9 +82,11 @@
 
 <style scoped>
   .forget{
-    width: 70%;
+    width: 50%;
+    height: 56%;
     margin: 0 auto;
     text-align: center;
+    background-image: url(../../static/img/center.png);
   }
   .serc{
     cursor: pointer;
@@ -94,7 +96,7 @@
     border-top-right-radius: 3px;
     font-size: 20px;
     padding: 22px 0;
-    color: #66368C;
+    color: #fff;
     /*background-color: #66368C;*/
     text-align: center;
     width: 500px;
@@ -110,5 +112,9 @@
     border-color: #aaa;
     color: #aaa;
     background-color: #fff;
+  }
+  .hy_btn{
+    background-color: #fff;
+    color: #66368c;
   }
 </style>

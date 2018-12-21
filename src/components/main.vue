@@ -12,7 +12,7 @@
       </Col>
       <Col span="21">
         <div class="layout-header">
-          <span class="title">管理系统</span>
+          <span class="title">管理系统</span><span style="margin-left:5px;color:#8c97a2;">Management System</span>
           <div class="adminInfo">
             <Avatar icon="person" size="large" style="vertical-align: middle"/>
             <Dropdown @on-click="clickMenu">
@@ -154,6 +154,7 @@
   .title{
     font-weight: 600;
     font-size: 20px;
+    color: #66368c;
   }
   .adminInfo{
     float: right;
