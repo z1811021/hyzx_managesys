@@ -23,9 +23,8 @@
         每周完成<InputNumber :max="100" :min="0" v-model="ddAct.ddActNumber" size="small" style="width: 44px;margin-top: -1px;"></InputNumber>个项目（每周五、六、日），<InputNumber :max="100" :min="0" v-model="ddAct.ddDurTime" size="small" style="width: 44px;margin-top: -1px;"></InputNumber>周内全部耗完。</span>
         </div>
         <Select v-model="selectedActivityProjects" placeholder="请选择到店活动项目" :multiple=true style="width:360px;margin-top:5px;" filterable :transfer=true @on-change="changeActivityProjects()">
-            <Option v-for="item in projectList" :value="item.itemName" :key="item.id">
-              <span>{{item.itemName}}</span>
-              <span style="float:right;color:#ccc">{{item.itemPrice}}</span>
+            <Option v-for="item in projectList" :value="item.id" :key="item.id">
+              {{item.itemName}}{{item.itemPrice}}
             </Option>
         </Select>
         <br/>
@@ -48,9 +47,8 @@
         <div v-for="project in hkProjects" style="margin-top:10px;">
           <span >第{{project.hkNumber}}次</span>
           <Select v-model="project.hkProject" placeholder="请选择耗卡活动项目" style="width:260px;margin-left:50px;" :transfer=true>
-              <Option v-for="item in projectList" :value="item.itemName" :key="item.itemName">
-                <span>{{item.label}}</span>
-                <span style="float:right;color:#ccc">{{item.itemPrice}}</span>
+              <Option v-for="item in projectList" :value="item.id" :key="item.id">
+                {{item.itemName}}{{item.itemPrice}}
               </Option>
           </Select>
         </div>
@@ -69,9 +67,8 @@
             <div v-for="(project,index) in czGiveProjectList" style="margin-top:4px;">
               <span >充值 <InputNumber :max="100000" :min="0" v-model="project.presentMoney" size="small" style="width:64px"></InputNumber>元</span>
               <Select v-model="project.presentItem" placeholder="请选择活动充值赠送项目" style="width:240px;margin-left:20px;" :transfer=true>
-                  <Option v-for="(item,index) in projectList" :value="item.id" :key="index">
-                    <span>{{item.itemName}}</span>
-                    <span style="float:right;color:#ccc">{{item.itemPrice}}</span>
+                  <Option v-for="item in projectList" :value="item.id" :key="item.id">
+                    {{item.itemName}}{{item.itemPrice}}
                   </Option>
               </Select>
               <Button class="hy_btn" @click="deleteGiveProject(index)">删除</Button>
@@ -226,7 +223,7 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
     },
     methods: {
       ok(){
-          console.log(JSON.parse(JSON.stringify(this.hkProjects)));
+          //console.log(JSON.parse(JSON.stringify(this.hkProjects)));
           var czItems = '';
           var hdItems = '';
           var consItems = '';
@@ -389,22 +386,63 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
           this.showczYj = false;
         }
         this.changeFromProjects();
-        var consItems = '';
-        consItems = data.consItems.split(',');
-        for(var i = 0; i < consItems.length; i++){
-          this.hkProjects[i].hkProject = consItems[i];
-        }
-        console.log(JSON.parse(JSON.stringify(this.hkProjects)));
+        var tempConsItems = data.consItems.split(',');
+        for(var j = 0; j < this.hkProjects.length; j++){
+            this.hkProjects[j].hkProject = parseInt(tempConsItems[j]);
+          }
         this.selectedActivityProjects = data.actiItems.split(',');
-        /*for(var i = 0; i < this.selectedActivityProjects.length; i++){
-          this.selectedActivityProjects[i] = parseInt(this.selectedActivityProjects[i]);
-        }*/
+        for(var i = 0; i < this.selectedActivityProjects.length; i++){
+          this.selectedActivityProjects[i]=parseInt(this.selectedActivityProjects[i]);
+        }
         this.selectedCZactivites = data.rechItems.split(',');
         this.selectedActivities = data.actiType.split(',');
         this.selectedDDRules = data.actiDescs.split(',');
         this.czGiveProjectList = data.activityCardRechargeItems;
         this.czGiveProductList = data.activityCardRechargeGifts;
         this.yjTimeList = data.activityCardRechargeLotteries;
+
+        if(data.activityCardRechargeItems.length == 0){
+                this.czGiveProjectList = [
+                  {
+                      // 写错也没有关系，后台会校验重设              
+                      storeId: this.$route.params.id,
+                      // 与活动卡项目关联的id，后台会设置，直接写 0 即可 
+                      actCardId: 0,
+                      // 充值 ? 元
+                      presentMoney: '',
+                      // 赠送项目选项，推荐使用数字，1：超微气泡 ...
+                      presentItem: ''
+                    }
+                ];
+              }
+              if(data.activityCardRechargeGifts.length == 0){
+                this.czGiveProductList = [
+                  {
+                      // 写错也没有关系，后台会校验重设  
+                      storeId: this.$route.params.id,
+                      // 与活动卡项目关联的 id，后台会设置，直接写 0 即可
+                      actCardId: 0,
+                      // 选择产品，推荐使用数字，1：产品一，2：产品二
+                      presentGift: '',
+                      // 价格 ? 元
+                      presentMoney: ''
+                    }
+                ];
+              }
+              if(data.activityCardRechargeLotteries.length == 0){
+                this.yjTimeList = [
+                  {
+                      // 写错也没有关系，后台会校验重设              
+                      storeId: this.$route.params.id,
+                      // 与活动卡项目关联的 id，后台会设置，直接写 0 即可
+                      actCardId: 0,
+                      // 充值 ? 元可以转盘摇奖 1 次
+                      rechargeMoney: '',
+                      //摇奖次数
+                      rechargeTimes: 1
+                    }
+                ];
+              }
       },
       Add(){
         this.addF = true;

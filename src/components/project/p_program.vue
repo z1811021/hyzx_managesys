@@ -35,7 +35,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {saveSolution,editSolution,findSolutionList,deleteSolution,findproblemList,findAllProject,findProjectPlanList,} from '../../interface';
+  import {saveSolution,editSolution,findSolutionList,deleteSolution,findproblemList,findAllProject,findProjectPlanList,findProjectList,} from '../../interface';
 
   export default {
     name: 'p_program',
@@ -171,6 +171,27 @@
           }).then((res) => {
             for(var i=0;i<res.data.programManage.length;i++){
               this.projectList.push(res.data.programManage[i]);
+            }
+            this.getList();
+        }).catch((error) => {
+          this.$Message.error('获取失败');
+        });
+      },
+      getList() {
+        var tmpProjectList = [];
+        this.$ajax({
+          method: 'GET',
+          dataType: 'JSON',
+          contentType: 'application/json;charset=UTF-8',
+          headers: {
+            "authToken": sessionStorage.getItem('authToken')
+          },
+          url: findProjectList()+'/'+this.$route.params.id,
+        }).then((res) => {
+          tmpProjectList = res.data.itemManages;
+          for(var i=0;i<tmpProjectList.length;i++){
+              tmpProjectList[i].programName = tmpProjectList[i].itemName;
+              this.projectList.push(tmpProjectList[i]);
             }
         }).catch((error) => {
           this.$Message.error('获取失败');

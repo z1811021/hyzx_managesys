@@ -69,7 +69,6 @@
       background-image: url(../../static/img/background.png);
       background-repeat:no-repeat; 
       background-size:cover;
-      overflow: hidden;
     }
 </style>
 

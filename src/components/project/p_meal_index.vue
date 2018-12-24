@@ -19,7 +19,7 @@
         <div style="float:left;margin-left: 63px;">选择项目：</div>
         <br/>
         <Select v-model="selectedProject" ref="setHouseQuery" clearable placeholder="请选择套餐项目" style="width:360px;margin-bottom:5%;margin-top:2%;" :transfer=true @on-change="changeProjects()" filterable>
-          <Option v-for="(item,index) in projectList" :value="index" :key="index">{{ item.itemName }}</Option>
+          <Option v-for="(item,index) in projectList" :value="item.id" :key="item.id">{{ item.itemName }}</Option>
         </Select>
         <br/>
         <div v-show="showDataTable" class="dataTableDiv">
@@ -216,7 +216,11 @@
         }else{
             var oriIndex = this.planData.length;
             var indeLen = Number(oriIndex)+Number(this.selectedProjectTimes);
-            cIndex = this.selectedProject;
+            for(var j=0;j<this.projectList.length;j++){
+              if(this.projectList[j].id == this.selectedProject){
+                cIndex = j;
+              }
+            }
             for(var i=oriIndex;i<indeLen;i++){
           currentItem = {"itemName":this.projectList[cIndex].itemName,"itemPrice":this.projectList[cIndex].itemPrice,"showBlank":false,"itemInterval":this.projectList[cIndex].itemInterval,"sameProjectOrder": this.projectList[cIndex].itemName+(i)+"times","itemOrder":i+1};
               this.planData.push(currentItem);
@@ -263,12 +267,15 @@
         });
       },
       changeProjects(){
-        console.log(this.selectedProject);
         if(this.selectedProject == undefined){
           this.inputTimesFlag=false;
         }else{
           this.inputTimesFlag=true;
-          this.showModalTitle=this.projectList[this.selectedProject].itemName;
+          for(var i = 0; i < this.projectList.length; i++){
+            if(this.projectList[i].id == this.selectedProject){
+              this.showModalTitle=this.projectList[i].itemName;
+            }
+          }
         }
       },
       manngerMeal(data){
@@ -281,8 +288,9 @@
         this.mealName = data.programName;
         this.mealPrice = data.programPrice;
         this.storeFlag = true;
+        this.selectedProject = [];
         //this.selectedProject = 
-        console.log(JSON.parse(JSON.stringify(this.selectedProject)));
+        //console.log(JSON.parse(JSON.stringify(this.selectedProject)));
       },
       close(){
         this.storeFlag = false;

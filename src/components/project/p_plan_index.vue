@@ -19,7 +19,7 @@
         <div style="float:left;margin-left: 63px;">选择项目：</div>
         <br/>
         <Select v-model="selectedProjects" placeholder="请选择方案包含项目" :multiple=true style="width:360px;margin-top:2%;" :transfer=true @on-change="changeProjects()" filterable draggable=true>
-          <Option v-for="(item,index) in projectList" :value="index" :key="index">{{ item.itemName }}</Option>
+          <Option v-for="(item,index) in projectList" :value="item.id" :key="item.id">{{ item.itemName }}</Option>
         </Select>
         <br/>
         <br/>
@@ -147,9 +147,15 @@
         this.showBlank = false;
       },
       pushSelectProjects(value, index, ar){
-        this.projectList[value].index = value;
+        for(var i = 0; i < this.projectList.length; i++){
+          if(this.projectList[i].id == value){
+             this.projectList[i].showBlank - false;
+             this.planData.push(this.projectList[i]);
+          }
+        }
+        /*this.projectList[value].index = value;
         this.projectList[value].showBlank = false;
-        this.planData.push(this.projectList[value]);
+        this.planData.push(this.projectList[value]);*/
         this.showBlank = false;
         this.showDataTable = true;
       },
@@ -330,7 +336,7 @@
       getProjectsBack(value, index, ar){
         for(var i = 0; i < this.projectList.length; i++){
           if(value.itemName == this.projectList[i].itemName){
-            this.selectedProjects.push(i);
+            this.selectedProjects.push(this.projectList[i].id);
           }
         }
       },
