@@ -2,8 +2,8 @@
   <div>
     <Row :gutter="24" class="option" v-if="isSystem == 'true'">
       <Col span="4">
-        <Input v-model="serch" placeholder="输入门店名称" style="margin-top: -1px">
-        <!-- <span slot="append" class="serc" @click="serc">查找 --></span><Button slot="append" icon="ios-search" class="serc" @click="serc"></Button>
+        <Input v-model="serch" placeholder="门店名称" style="margin-top: -1px">
+        <span slot="append" class="serc" @click="serc">查找</span>
         </Input>
       </Col>
       <Col span="2" v-if="searchActive">
@@ -694,6 +694,12 @@
           },
           url:URL,
         }).then((res) => {
+          res.data.content.map((item,index)=>{
+            res.data.content[index].storeType = this.storeTypeTransfer(item.storeType)
+            res.data.content[index].operationMode = this.operationModeTransfer(item.operationMode)
+            res.data.content[index].franchType = this.franchTypeTransfer(item.franchType)
+            res.data.content[index].managementCycle = res.data.content[index].managementCycle+'个月'
+          })
           this.data1 =  res.data.content;
           this.pages = res.data.totalPages;
         }).catch((error) => {
