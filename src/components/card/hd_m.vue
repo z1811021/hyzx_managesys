@@ -111,8 +111,8 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
           { title: '名称', key: 'actiName',},
           { title: '活动类型', key: 'actiType',},
           { title: '到店活动类型', key: 'actiDescs',},
-          { title: '到店活动时长（月）', key: 'expirDate',},
-          { title: '耗卡活动时长（月）', key: 'consExpDate',},
+          { title: '到店活动时长（周）', key: 'expirDate',},
+          { title: '耗卡活动时长（周）', key: 'consExpDate',},
           { title: '充值活动类型', key: 'rechItems',},
           {
             title: '操作',
@@ -202,9 +202,9 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
               // 与活动卡项目关联的 id，后台会设置，直接写 0 即可
               actCardId: 0,
               // 选择产品，推荐使用数字，1：产品一，2：产品二
-              presentGift: "产品一",
+              presentGift: '',
               // 价格 ? 元
-              presentMoney: '500'
+              presentMoney: ''
             },
         ],
         yjTimeList: [
@@ -223,7 +223,7 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
     },
     methods: {
       ok(){
-          //console.log(JSON.parse(JSON.stringify(this.hkProjects)));
+          var validateMessage = '';
           var czItems = '';
           var hdItems = '';
           var consItems = '';
@@ -314,8 +314,82 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
               activityCardRechargeLotteries: activityCardRechargeLotteries
           };
           //console.log(JSON.parse(JSON.stringify(params)));
+          if(activityCard.actiName == ''){
+            validateMessage = validateMessage + "请输入活动卡名称！<br/>";
+          }
+          if(activityCard.actiType == ''){
+            validateMessage = validateMessage + "请至少选择一种活动形式！<br/>";
+          }
+          if((hdItems.indexOf("到店")>-1) && activityCard.actiPrice == ''){
+            validateMessage = validateMessage + "请输入到店基础功效类项目活动价！<br/>";
+          }
+          if((hdItems.indexOf("到店")>-1) && (activityCard.actiPrice >= activityCard.itemPrice)){
+            validateMessage = validateMessage + "活动价格必须低于原价！<br/>";
+          }
+          if((hdItems.indexOf("到店")>-1) && activityCard.countItem == ''){
+            validateMessage = validateMessage + "请输入到店基础功效类项目每周完成多少个项目！<br/>";
+          }
+          if((hdItems.indexOf("到店")>-1) && activityCard.actiItems == ''){
+            validateMessage = validateMessage + "请选择到店活动项目！<br/>";
+          }
+          if((hdItems.indexOf("到店")>-1) && activityCard.actiDescs == ''){
+            validateMessage = validateMessage + "请选择到店活动项目政策！<br/>";
+          }
+          if((hdItems.indexOf("到店")>-1) && activityCard.ncusPrice == '' && (oldNewItems.indexOf("老带新")>-1)){
+            validateMessage = validateMessage + "请输入老带新抵扣价格！<br/>";
+          }
+          if((hdItems.indexOf("到店")>-1) && activityCard.ncusDiscount == '' && (oldNewItems.indexOf("老带新")>-1)){
+            validateMessage = validateMessage + "请输入老带新享受折扣！<br/>";
+          }
+          if((hdItems.indexOf("耗卡"))>-1 && activityCard.consExpDate == ''){
+            validateMessage = validateMessage + "请输入耗卡活动几周内做完！<br/>";
+          }
+          if((hdItems.indexOf("耗卡"))>-1 && activityCard.consItem == ''){
+            validateMessage = validateMessage + "请输入耗卡活动有几个项目！<br/>";
+          }
+          if((hdItems.indexOf("耗卡"))>-1 && activityCard.consTime == ''){
+            validateMessage = validateMessage + "请输入从第几次开始赠送项目！<br/>";
+          }
+          if((hdItems.indexOf("耗卡"))>-1 && (activityCard.consExpDate >= activityCard.consItem)){
+            validateMessage = validateMessage + "请输入耗卡活动项目个数不能小于活动周数！<br/>";
+          }
+          if((hdItems.indexOf("耗卡"))>-1){
+            for(var n = 0; n < this.hkProjects.length; n++){
+              if(this.hkProjects[n].hkProject == ''){
+                validateMessage = validateMessage + "请为耗卡活动第"+n+"个赠送项目选择项目！<br>";
+              }
+            }
+          }
+          if((hdItems.indexOf("充值"))>-1 && activityCard.rechItems == ''){
+            validateMessage = validateMessage + "请选择充值活动内容！<br/>";
+          }
+          if((hdItems.indexOf("充值"))>-1){
+            for(var o = 0; o < this.czGiveProjectList.length; o++){
+              if(this.czGiveProjectList[o].presentMoney == '' || this.czGiveProjectList[o].presentItem == ''){
+                validateMessage = validateMessage + "请为充值赠送第"+(o+1)+"个赠送项目选择项目或输入金额！<br>";
+              }
+            }
+          }
+          if((hdItems.indexOf("充值"))>-1){
+            for(var p = 0; p < this.czGiveProductList.length; p++){
+              if(this.czGiveProductList[p].presentGift == ''){
+                validateMessage = validateMessage + "请为充值赠送第"+(p+1)+"个赠送产品选择产品！<br>";
+              }
+            }
+          }
+          if((hdItems.indexOf("充值"))>-1){
+            for(var q = 0; q < this.yjTimeList.length; q++){
+              if(this.yjTimeList[q].rechargeMoney == ''){
+                validateMessage = validateMessage + "请为充值摇奖第"+(q+1)+"个摇奖设置金额！<br>";
+              }
+            }
+          }
           let URL = saveactivity();
-                this.$ajax({
+          if(validateMessage != ''){
+            this.$Message.warning(validateMessage);
+            validateMessage = '';
+          }else{
+            this.$ajax({
                   method: 'POST',
                   dataType: 'JSON',
                   contentType: 'application/json;charset=UTF-8',
@@ -331,6 +405,7 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
                 }).catch((error) => {
                   this.$Message.error('操作失败');
                 });
+          }
       },
       close(){
         this.addF = false;
@@ -398,6 +473,9 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
         this.selectedActivities = data.actiType.split(',');
         this.selectedDDRules = data.actiDescs.split(',');
         this.czGiveProjectList = data.activityCardRechargeItems;
+        for(var k = 0; k < this.czGiveProjectList.length; k++){
+          this.czGiveProjectList[k].presentItem = parseInt(this.czGiveProjectList[k].presentItem);
+        }
         this.czGiveProductList = data.activityCardRechargeGifts;
         this.yjTimeList = data.activityCardRechargeLotteries;
 
@@ -524,6 +602,15 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
               this.data[i].rechItems = this.data[i].rechItems.replace("czGiveProject","充值赠送项目");
               this.data[i].rechItems = this.data[i].rechItems.replace("czGiveProduct","充值赠送产品");
               this.data[i].rechItems = this.data[i].rechItems.replace("czYJ","充值摇奖");
+              if(this.data[i].expirDate == ''){
+                this.data[i].expirDate = '--';
+              }
+              if(this.data[i].consExpDate == ''){
+                this.data[i].consExpDate = '--';
+              }
+              if(this.data[i].actiDescs == ''){
+                this.data[i].actiDescs = '--';
+              }
             }
           }).catch((error) => {
             this.$Message.error('获取失败');
@@ -697,6 +784,12 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
             })
           },
         addGiveProject(){
+          var errorMessage = '';
+          for(var i = 0; i < this.czGiveProjectList.length; i++){
+            if(this.czGiveProjectList[i].presentMoney == '' || this.czGiveProjectList[i].presentItem == ''){
+              errorMessage = '请完善现有充值赠送项目价格和选择！';
+            }
+          }
           var curretGiveProject = {
               // 写错也没有关系，后台会校验重设              
               storeId:this.$route.params.id,
@@ -707,9 +800,19 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
               // 赠送项目选项，推荐使用数字，1：超微气泡 ...
               presentItem: ''
             };
-          this.czGiveProjectList.push(curretGiveProject);
+          if(errorMessage == ''){
+            this.czGiveProjectList.push(curretGiveProject);
+          }else{
+            this.$Message.error(errorMessage);
+          }
         },
         addGiveProduct(){
+          var errorMessage = '';
+          for(var i = 0; i < this.czGiveProductList.length; i++){
+            if(this.czGiveProductList[i].presentGift == ''){
+              errorMessage = '请完善现有充值赠送产品选择！';
+            }
+          }
           var currentGiveProduct = {
               // 写错也没有关系，后台会校验重设  
               storeId: this.$route.params.id,
@@ -720,9 +823,19 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
               // 价格 ? 元
               presentMoney: ''
             }
-          this.czGiveProductList.push(currentGiveProduct);
+          if(errorMessage == ''){
+            this.czGiveProductList.push(currentGiveProduct);
+          }else{
+            this.$Message.error(errorMessage);
+          }
         },
         addCZYJ(){
+          var errorMessage = '';
+          for(var i = 0; i < this.yjTimeList.length; i++){
+            if(this.yjTimeList[i].rechargeMoney == ''){
+              errorMessage = '请完善现有充值赠送产品选择！';
+            }
+          }
           var currentYjTime = {
             // 写错也没有关系，后台会校验重设              
             storeId: this.$route.params.id,
@@ -733,7 +846,11 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
             //摇奖次数
             rechargeTimes: this.yjTimeList.length+1
           };
-          this.yjTimeList.push(currentYjTime);
+          if(errorMessage == ''){
+            this.yjTimeList.push(currentYjTime);
+          }else{
+            this.$Message.error(errorMessage);
+          }
         }
     },
     created(){
