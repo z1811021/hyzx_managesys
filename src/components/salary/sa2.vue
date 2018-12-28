@@ -33,7 +33,7 @@
     name: 'sa2',
     data(){
       return{
-        practicalExercises:'',
+        practicalExercises:true,
         columns: [
         {
           title: '低限',

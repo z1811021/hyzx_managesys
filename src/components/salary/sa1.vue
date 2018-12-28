@@ -59,7 +59,7 @@
       return{
         data:{},
         baseSalary: '',
-        typeOfBaseSalary: '',
+        typeOfBaseSalary: 6 ,
         columns: [
           {
             title: '员工类型',

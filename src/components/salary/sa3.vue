@@ -58,7 +58,7 @@
     name: 'sa3',
     data(){
       return{
-        performanceDrawinges: '',
+        performanceDrawinges: true,
         columns: [
           {
             title: '低限',

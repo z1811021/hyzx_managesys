@@ -17,7 +17,7 @@
         <Col span="3">
           <MenuItem name="register_3" v-bind:style="register_3" disabled>
               <Icon type="ios-paper"></Icon>
-              年流水
+              年数据
           </MenuItem>
         </Col>
         <Col span="3">

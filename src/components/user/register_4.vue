@@ -117,8 +117,8 @@
     methods:{
   addInstruments(){
     for(var i=0; i<this.instrumentsForm.length; i++){
-      if(this.instrumentsForm[i].name == this.instrumentPPInput){
-         this.$Message.error("请勿输入重复的仪器品牌！");
+      if(this.instrumentsForm[i].name == this.instrumentPPInput && this.instrumentsForm[i].effect == this.instrumentYQInput){
+         this.$Message.error("请务在相同功效下输入重复的仪器品牌！");
         this.instrumentYQInput = "";
         this.instrumentPPInput = ""; 
          return;

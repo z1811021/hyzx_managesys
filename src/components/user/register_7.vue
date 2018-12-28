@@ -22,13 +22,13 @@
             <Input v-model="clientCount.omfCount" placeholder="人数"></Input>
       </FormItem>
       <FormItem label="每个月的月均业绩：" prop="avgMonPerformance"  class="formItemStyle" >
-            <Input v-model="clientCount.avgMonPerformance" placeholder="业绩/人数"></Input>
+            <Input v-model="clientCount.avgMonPerformance" placeholder="业绩/月"></Input>
       </FormItem>
       <FormItem label="月均新顾客成交业绩：" prop="monNcliPerformance"  class="formItemStyle" >
-            <Input v-model="clientCount.monNcliPerformance" placeholder="业绩/人数"></Input>
+            <Input v-model="clientCount.monNcliPerformance" placeholder="业绩/月"></Input>
       </FormItem>
       <FormItem label="月均老顾客成交业绩：" prop="monOcliPerformance"  class="formItemStyle" >
-            <Input v-model="clientCount.monOcliPerformance" placeholder="业绩/人数"></Input>
+            <Input v-model="clientCount.monOcliPerformance" placeholder="业绩/月"></Input>
       </FormItem>
    </Form>
  </div>

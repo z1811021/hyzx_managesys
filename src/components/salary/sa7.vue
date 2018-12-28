@@ -116,7 +116,7 @@
           manualFee: false,
           teamBonuses: false,
           activityBonuses: false,
-          complaintFines: false,
+          complaintFines: true,
           leaveEarlyFines: false,
           leaveAfines: false,
           absenteeismFine: false,
