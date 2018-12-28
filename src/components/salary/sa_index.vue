@@ -98,7 +98,7 @@
           absenteeismFineAmount:'',
           accumulativePassengerFlow:'',
           accumulativePassengerFlowAward: '',
-          baseSalary:'',
+          baseSalary: 1,
           complaintFinesAmount: '',
           oneDayPassengerFlowAward: '',
           singleDayPassengerFlow: '',
@@ -155,41 +155,125 @@
       }
     },
     methods:{
+      transfer(b){
+        if(b == true){
+          return 1;
+        }else{
+          return 0;
+        }
+      },
+      transferBack(c){
+        if(c == 1){
+          return true;
+        }else{
+          return false;
+        }
+      },
       getData(){
-        this.$ajax({
+        /*this.$ajax({
           method: 'get',
           url:findBonusesJsonByStore()+'?id='+this.$route.params.id
         }).then( (res) =>{
           this.data1 = res.data;
         }).catch( (error) =>{
-        });
+        });*/
         this.$ajax({
           method: 'get',
-          url:findSalaryByStore()+'?id='+this.$route.params.id
+          url:findSalaryByStore()+'/'+this.$route.params.id
         }).then( (res) =>{
-          this.data = res.data;
-          this.data.oneDayPassengerFlowAward = this.data1.oneDayPassengerFlowAward;
-          this.data.singleDayPassengerFlow = this.data1.singleDayPassengerFlow;
-          this.data.accumulativePassengerFlow = this.data1.accumulativePassengerFlow;
-          this.data.accumulativePassengerFlowAward = this.data1.accumulativePassengerFlowAward;
-          this.data.cashType = this.data1.cashType;
-          this.data.storeId = this.$route.params.id;
+          this.data={
+            practicalExercises: this.transferBack(res.data.salaryMangeInfo.poCommission),
+            performanceDrawinges: this.transferBack(res.data.salaryMangeInfo.acCommission),
+            manualFee: this.transferBack(res.data.salaryMangeInfo.handworkPay),
+            teamBonuses: this.transferBack(res.data.salaryMangeInfo.rewardTeam),
+            activityBonuses: this.transferBack(res.data.salaryMangeInfo.rewardEvent),
+            complaintFines: this.transferBack(res.data.salaryMangeInfo.forfeitComplaint),
+            leaveEarlyFines: this.transferBack(res.data.salaryMangeInfo.forfeitLate),
+            leaveAfine: '',
+            absenteeismFine: this.transferBack(res.data.salaryMangeInfo.forfeitAbsent),
+            cashPerformancePpenalty: this.transferBack(res.data.salaryMangeInfo.forfeitAchievement),
+            passengerFines: this.transferBack(res.data.salaryMangeInfo.forfeitPagerFlow),
+            consumptionPenalty: this.transferBack(res.data.salaryMangeInfo.forfeitConsume),
+            otherFines: this.transferBack(res.data.salaryMangeInfo.forfeitOther),
+            typeOfBaseSalary: res.data.salaryMangeInfo.baseSalaryRule,
+            typeOfBonus: res.data.salaryMangeInfo.rewardRule,
+            storeId: this.$route.params.id,
+            storeName: '',
+            id: '',
+            absenteeismFineAmount:'',
+            accumulativePassengerFlow:'',
+            accumulativePassengerFlowAward: '',
+            baseSalary:'',
+            complaintFinesAmount: '',
+            oneDayPassengerFlowAward: '',
+            singleDayPassengerFlow: '',
+            monthlyCashType: res.data.salaryMangeInfo.baseSalaryOption,
+            cashType: res.data.salaryMangeInfo.rewardOption,
+            typeOfLeave: res.data.salaryMangeInfo.forfeitPleave,
+            leaveThePenaltyRules:''
+          }
+          console.log(this.data.practicalExercises);
         }).catch( (error) =>{
         });
 
       },
       save(){
-        this.$ajax({
-          method: 'post',
-          url:editSalarySystem(),
-          data: this.data,
-        }).then( (res) =>{
-          this.$Message.success('保存成功');
-          this.getData();
-          // window.location.reload();
-        }).catch( (err) =>{
-          this.$Message.error('失败');
-        })
+        var salaryManage = {
+            storeId: this.$route.params.id,
+            // 底薪是否启用，1 启用，0 不启用
+            baseSalary: '1',
+            // 底薪方式，推荐使用数字，1 按月现金总量 ...
+            baseSalaryRule: this.data.typeOfBaseSalary,
+            // 底薪方式后的单选框，可为空，推荐使用数字，1 个人，2 全店
+            baseSalaryOption: this.data.monthlyCashType,
+            // 实操提成，1 启用，0 不启用
+            poCommission: this.transfer(this.data.practicalExercises),
+            // 业绩提成，1 启用，0 不启用
+            acCommission: this.transfer(this.data.performanceDrawinges),
+            //手工费，1 启用，0 不启用
+            handworkPay: this.transfer(this.data.manualFee),
+            // 奖金 奖励方式，推荐使用数字，1 按客流奖励 ...
+            rewardRule: this.data.typeOfBonus,
+            // 奖金 奖励方式 后的单选框，可为空，推荐使用数字，1 个人，2 全店
+            rewardOption: this.data.cashType,            
+            // 团队奖金，1 选中， 0 不选中
+            rewardTeam: this.transfer(this.data.teamBonuses),
+            // 活动奖金， 1 选中， 0 不选中
+            rewardEvent: this.transfer(this.data.activityBonuses),
+            // 事假罚金，推荐使用数字，1 固定罚金，2 按计算规则
+            forfeitPleave: this.data.typeOfLeave,
+            // 投诉罚金，1 选中， 0 不选中 
+            forfeitComplaint: this.transfer(this.data.complaintFines),
+            // 迟到早退罚金，1 选中， 0 不选中 
+            forfeitLate: this.transfer(this.data.leaveEarlyFines),
+            // 旷工罚金，1 选中， 0 不选中  
+            forfeitAbsent: this.transfer(this.data.absenteeismFine),
+            // 现金业绩罚金，1 选中， 0 不选中
+            forfeitAchievement: this.transfer(this.data.cashPerformancePpenalty),
+            // 客流罚金，1 选中， 0 不选中
+            forfeitPagerFlow: this.transfer(this.data.passengerFines),
+            // 消耗罚金，1 选中， 0 不选中
+            forfeitConsume: this.transfer(this.data.consumptionPenalty),
+            // 其它，1 选中， 0 不选中
+            forfeitOther: this.transfer(this.data.otherFines)
+        }
+        let URL = editSalarySystem();
+          this.$ajax({
+            method: 'POST',
+            dataType: 'JSON',
+            contentType: 'application/json;charset=UTF-8',
+            headers: {
+              "authToken": sessionStorage.getItem('authToken')
+            },
+            data: salaryManage,
+            url: URL,
+          }).then((res) => {
+            this.$Message.success('操作成功');
+            this.getList();
+            this.storeFlag=false;
+          }).catch((error) => {
+            this.$Message.error('操作失败');
+          });
       },
       more(){
         this.$router.push({name: 'sa_index2'})

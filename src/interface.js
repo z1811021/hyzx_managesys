@@ -375,13 +375,13 @@ export const saveOrUpateShopDailyDetails = function () {
 
 //保存薪资启用与部分数据
 export const editSalarySystem = function () {
-  const URL = '/app/api/salary/editSalarySystem';
+  const URL = '/salary/manage/add';
   const API = host + URL;
   return API;
 };
 //查询薪资（实操提成，业绩提成，奖金，）
 export const findSalaryByStore = function () {
-  const URL = '/app/api/salary/findSalaryByStore';
+  const URL = '/salary/manage/store';
   const API = host + URL;
   return API;
 };

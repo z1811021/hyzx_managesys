@@ -1,11 +1,11 @@
 <template>
   <div class="sa1">
-    <h3>{{cityList1[typeOfBaseSalary-1].label}}<span style="margin-left:10px;">{{this.data.monthlyCashType}}</span></h3>
+    <h3>{{typeOfBaseSalaryIndex}}<span style="margin-left:10px;">{{this.data.monthlyCashType}}</span></h3>
     <div v-if="typeOfBaseSalary!=5&&typeOfBaseSalary!=6">
      <Button class="hy_btn btn" @click="salaryFlag= true;">新增</Button>
      <br>
      <vtable :sdata="salarydata" :stype="salaryType" @Monitor="takeMonitor"></vtable>
-     <Modal v-model="salaryFlag" :mask-closable="false" title="新增" @on-ok="ok">
+     <Modal class="modalProjects" v-model="salaryFlag" :mask-closable="false" title="新增" @on-ok="ok">
        低限：<Input v-model="add.lowLimit" @on-keyup="add.lowLimit=check(add.lowLimit)" placeholder="低限" style="width: 300px"/>
        <br/>
        <br/>
@@ -26,7 +26,7 @@
       <Button class="hy_btn btn" @click="Add">新增</Button>
       <br>
       <Table  :columns="columns" :data="salarydata" ></Table>
-      <Modal  v-model="salaryFlag2" :mask-closable="false" title="修改" @on-ok="ok()">
+      <Modal  class="modalProjects" v-model="salaryFlag2" :mask-closable="false" title="修改" @on-ok="ok()">
         员工类型：<Select v-model="add2.typeOfEmployee" style="width:300px;" >
         <Option value="美容师" >美容师</Option>
         <Option value="美发师" >美发师</Option>
@@ -59,7 +59,8 @@
       return{
         data:{},
         baseSalary: '',
-        typeOfBaseSalary: 6 ,
+        typeOfBaseSalary: '' ,
+        typeOfBaseSalaryIndex: '',
         columns: [
           {
             title: '员工类型',
@@ -189,20 +190,35 @@
 
         })
       },
+      transfer(b){
+        if(b == true){
+          return 1;
+        }else{
+          return 0;
+        }
+      },
+      transferBack(c){
+        if(c == 1){
+          return true;
+        }else{
+          return false;
+        }
+      },
       getData2(){
-        this.$ajax({
+        /*this.$ajax({
           method: 'get',
           url:findBonusesJsonByStore()+'?id='+this.$route.params.id
         }).then( (res) =>{
           this.data1 = res.data;
         }).catch( (error) =>{
-        });
+        });*/
         this.$ajax({
           method: 'get',
-          url:findSalaryByStore()+'?id='+this.$route.params.id
+          url:findSalaryByStore()+'/'+this.$route.params.id
         }).then( (res) => {
-          this.data2 = res.data;
-          this.typeOfBaseSalary = res.data.typeOfBaseSalary;
+          this.typeOfBaseSalary = res.data.salaryMangeInfo.baseSalaryRule;
+          this.monthlyCashType = res.data.salaryMangeInfo.baseSalaryOption;
+          this.typeOfBaseSalaryIndex = this.cityList1[this.typeOfBaseSalary-1].label;
         }).catch((error)=>{
         })
       },
@@ -370,6 +386,10 @@
 </script>
 
 <style scoped>
+  .modalProjects {
+    margin: 0 auto;            
+    text-align: center;    
+  }
   .sa1{
     padding-left: .6rem;
   }
