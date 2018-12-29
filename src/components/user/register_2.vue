@@ -237,7 +237,7 @@
         const params = {
           storeId: sessionStorage['storeId'],
           roomTypes: roomTypes,
-          room: Object.assign({area: this.roomVal.roomSize}, {rent: this.roomVal.annualRent},{rent: this.roomVal.annualRentYear}, {rent: this.roomVal.growthRate}, {roomCount: this.roomVal.roomCount}, {storeId: sessionStorage['storeId']}),
+          room: Object.assign({area: this.roomVal.roomSize}, {rent: this.roomVal.annualRent},{annualRentYear: this.roomVal.annualRentYear}, {growthRate: this.roomVal.growthRate}, {roomCount: this.roomVal.roomCount}, {storeId: sessionStorage['storeId']}),
           member: {
             cosmeTologist: this.roomVal.cosmetologist,
             therapist: this.roomVal.Therapist,
