@@ -5,8 +5,22 @@
       <FormItem label="店平方数：" prop="roomSize"  class="formItemStyle" >
             <Input v-model="roomVal.roomSize" placeholder="店平方数(平方米)"></Input>
       </FormItem>
-      <FormItem label="年房租：" prop="annualRent"  class="formItemStyle" >
-            <Input v-model="roomVal.annualRent" placeholder="年房租(元)"></Input>
+      <FormItem label="年房租：" class="formItemStyle" >
+          <Row>
+            <Col span="10">
+              <FormItem  prop="annualRentYear">
+                <Input v-model="roomVal.annualRentYear" placeholder="年"></Input>
+              </FormItem>  
+            </Col>
+            <Col span="10" offset="2">
+              <FormItem  prop="annualRent">
+                <Input v-model="roomVal.annualRent" placeholder="房租(元)"></Input>
+              </FormItem>
+            </Col>
+          </Row>  
+      </FormItem>
+      <FormItem label="房租增长率" prop="growthRate"  class="formItemStyle" >
+            <Input v-model="roomVal.growthRate" placeholder="房租增长率"></Input>
       </FormItem>
       <FormItem label="房间总数详情"  class="formItemStyle" prop="roomCount">
           <RadioGroup v-model="roomRadio" @on-change="hiddenDetailLabel()">
@@ -102,11 +116,20 @@
             callback();
           }
         };
+        const valueEqualString = (rule, value, callback) => {
+          if (value.length === 0 && (typeof this[`show${rule.field}`] ==='undefined' || this[`show${rule.field}`])){
+            callback(new Error('所填不能为空'));
+          }else {
+            callback();
+          }
+        };
       return{
         roomVal: {
           roomSize: '',
           annualRent: '',
+          annualRentYear: '',
           roomCount: 0,
+          growthRate: '',
           singleRoom: singleRoomArr,
           doubleRoom: doubleRoomArr,
           tribleRoom: tribleRoomArr,
@@ -159,6 +182,12 @@
           ],
           annualRent: [
             { validator: valueEqualNumber, trigger: 'blur' }
+          ],
+          annualRentYear: [
+            { validator: valueEqualNumber, trigger: 'blur' }
+          ],
+          growthRate: [
+            { validator: valueEqualString, trigger: 'blur' }
           ],
           cosmetologist: [
             { validator: valueEqualNumber, trigger: 'blur' }

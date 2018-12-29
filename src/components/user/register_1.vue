@@ -93,17 +93,17 @@
             }
         }, 1000);
     };
-    const validateTelephone = (rule, value, callback) => {
-        const myreg=/0\d{2}-\d{7,8}/
-        setTimeout(() => {
-            if (!myreg.test(value) && value) {
-                callback(new Error('请输入正确的座机号码格式 例如xxx-xxxxxxxx'));
-            }
-            else {
-                callback();
-            }
-        }, 1000);
-    };
+    // const validateTelephone = (rule, value, callback) => {
+    //     const myreg=/0\d{2}-\d{7,8}/
+    //     setTimeout(() => {
+    //         if (!myreg.test(value) && value) {
+    //             callback(new Error('请输入正确的座机号码格式 例如xxx-xxxxxxxx'));
+    //         }
+    //         else {
+    //             callback();
+    //         }
+    //     }, 1000);
+    // };
       return{
         storeVal: {
           franchType: '',
@@ -157,9 +157,6 @@
             ],
             address: [
                 { required: true, message: '地址不能为空', trigger: 'blur' }
-            ],
-            telephone: [
-                { validator: validateTelephone, trigger: 'blur' }
             ],
             storeType: [
                 { required: true, message: '门店类型不能为空', trigger: 'change' }
