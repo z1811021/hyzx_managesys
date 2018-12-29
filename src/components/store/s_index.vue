@@ -183,135 +183,45 @@
       <br/>
       </section>
     </Modal>
-     <Modal footer-hide v-model="yearLsFlag" height="20%" width="48%">&nbsp;&nbsp;&nbsp;&nbsp;连续十二个月店内现金流水
+     <Modal footer-hide v-model="yearLsFlag" height="20%" width="48%">&nbsp;&nbsp;&nbsp;&nbsp;连续十二个月店内现金流水 &nbsp;&nbsp;&nbsp;&nbsp; 总计{{question.register3MonthCount.type1}}元
        <br/>
        <br/>
-       <div style="margin-left: 30px;">
-    1月: &nbsp;&nbsp; <Input v-model="question.register3Month.type1.month_1" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 2月:&nbsp;&nbsp; <Input v-model="question.register3Month.type1.month_2" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;3月:&nbsp;&nbsp; <Input v-model="question.register3Month.type1.month_3" class="modalMonthInput" disabled/>
-       <br/>
-       <br/>
-    4月: &nbsp;&nbsp; <Input v-model="question.register3Month.type1.month_4" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 5月:&nbsp;&nbsp; <Input v-model="question.register3Month.type1.month_5" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;6月:&nbsp;&nbsp; <Input v-model="question.register3Month.type1.month_6" class="modalMonthInput" disabled/>
-       <br/>
-       <br/>
-    7月: &nbsp;&nbsp; <Input v-model="question.register3Month.type1.month_7" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 8月:&nbsp;&nbsp; <Input v-model="question.register3Month.type1.month_8" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;9月:&nbsp;&nbsp; <Input v-model="question.register3Month.type1.month_9" class="modalMonthInput" disabled/>
-       <br/>
-       <br/>
-    10月: &nbsp;<Input v-model="question.register3Month.type1.month_10" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 11月:&nbsp;<Input v-model="question.register3Month.type1.month_11" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;12月:&nbsp;<Input v-model="question.register3Month.type1.month_12" class="modalMonthInput" disabled/>
-       <br/>
-       <br/>
+       <div style="margin-left: 30px;" v-for="value in question.register3Month.type1">
+          {{Object.keys(value)[0]}}: &nbsp;&nbsp; <Input v-model="Object.values(value)[0]" class="modalMonthInput" disabled/>
+          
         </div>
 </Modal>
-     <Modal footer-hide v-model="yearScFlag" height="20%" width="48%" >&nbsp;&nbsp;&nbsp;&nbsp;连续十二个月店内实操
+     <Modal footer-hide v-model="yearScFlag" height="20%" width="48%" >&nbsp;&nbsp;&nbsp;&nbsp;连续十二个月店内实操 &nbsp;&nbsp;&nbsp;&nbsp; 总计{{question.register3MonthCount.type2}}元
        <br/>
        <br/>
-       <div style="margin-left: 30px;">
-    1月: &nbsp;&nbsp; <Input v-model="question.register3Month.type2.month_1" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 2月:&nbsp;&nbsp; <Input v-model="question.register3Month.type2.month_2" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;3月:&nbsp;&nbsp; <Input v-model="question.register3Month.type2.month_3" class="modalMonthInput" disabled/>
-       <br/>
-       <br/>
-    4月: &nbsp;&nbsp; <Input v-model="question.register3Month.type2.month_4" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 5月:&nbsp;&nbsp; <Input v-model="question.register3Month.type2.month_5" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;6月:&nbsp;&nbsp; <Input v-model="question.register3Month.type2.month_6" class="modalMonthInput" disabled/>
-       <br/>
-       <br/>
-    7月: &nbsp;&nbsp; <Input v-model="question.register3Month.type2.month_7" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 8月:&nbsp;&nbsp; <Input v-model="question.register3Month.type2.month_8" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;9月:&nbsp;&nbsp; <Input v-model="question.register3Month.type2.month_9" class="modalMonthInput" disabled/>
-       <br/>
-       <br/>
-    10月: &nbsp;<Input v-model="question.register3Month.type2.month_10" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 11月:&nbsp;<Input v-model="question.register3Month.type2.month_11" class="modalMonthInput" disabled/>
-    &nbsp;&nbsp;&nbsp;12月:&nbsp;<Input v-model="question.register3Month.type2.month_12" class="modalMonthInput" disabled/>
-       <br/>
-       <br/>
+        <div style="margin-left: 30px;" v-for="value in question.register3Month.type2">
+          {{Object.keys(value)[0]}}: &nbsp;&nbsp; <Input v-model="Object.values(value)[0]" class="modalMonthInput" disabled/>
+          
         </div>
 </Modal>
-     <Modal footer-hide v-model="yearKlFlag" height="20%" width="48%" >&nbsp;&nbsp;&nbsp;&nbsp;连续十二个月店内客流
+     <Modal footer-hide v-model="yearKlFlag" height="20%" width="48%" >&nbsp;&nbsp;&nbsp;&nbsp;连续十二个月店内客流 &nbsp;&nbsp;&nbsp;&nbsp; 总计{{question.register3MonthCount.type3}}元
        <br/>
        <br/>
-       <div style="margin-left: 30px;">
-    1月: &nbsp;&nbsp; <Input v-model="question.register3Month.type3.month_1" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 2月:&nbsp;&nbsp; <Input v-model="question.register3Month.type3.month_2" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;3月:&nbsp;&nbsp; <Input v-model="question.register3Month.type3.month_3" style="width: 128px" disabled/>
-       <br/>
-       <br/>
-    4月: &nbsp;&nbsp; <Input v-model="question.register3Month.type3.month_4" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 5月:&nbsp;&nbsp; <Input v-model="question.register3Month.type3.month_5" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;6月:&nbsp;&nbsp; <Input v-model="question.register3Month.type3.month_6" style="width: 128px" disabled/>
-       <br/>
-       <br/>
-    7月: &nbsp;&nbsp; <Input v-model="question.register3Month.type3.month_7" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 8月:&nbsp;&nbsp; <Input v-model="question.register3Month.type3.month_8" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;9月:&nbsp;&nbsp; <Input v-model="question.register3Month.type3.month_9" style="width: 128px" disabled/>
-       <br/>
-       <br/>
-    10月: &nbsp;<Input v-model="question.register3Month.type3.month_10" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 11月:&nbsp;<Input v-model="question.register3Month.type3.month_11" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;12月:&nbsp;<Input v-model="question.register3Month.type3.month_12" style="width: 128px" disabled/>
-       <br/>
-       <br/>
+      <div style="margin-left: 30px;" v-for="value in question.register3Month.type3">
+          {{Object.keys(value)[0]}}: &nbsp;&nbsp; <Input v-model="Object.values(value)[0]" class="modalMonthInput" disabled/>
+          
         </div>
 </Modal>
-     <Modal footer-hide v-model="yearYjFlag" height="20%" width="48%" >&nbsp;&nbsp;&nbsp;&nbsp;连续十二个月店内产品业绩
+     <Modal footer-hide v-model="yearYjFlag" height="20%" width="48%" >&nbsp;&nbsp;&nbsp;&nbsp;连续十二个月店内产品业绩&nbsp;&nbsp;&nbsp;&nbsp; 总计{{question.register3MonthCount.type4}}元
        <br/>
        <br/>
-       <div style="margin-left: 30px;">
-    1月: &nbsp;&nbsp; <Input v-model="question.register3Month.type4.month_1" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 2月:&nbsp;&nbsp; <Input v-model="question.register3Month.type4.month_2" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;3月:&nbsp;&nbsp; <Input v-model="question.register3Month.type4.month_3" style="width: 128px" disabled/>
-       <br/>
-       <br/>
-    4月: &nbsp;&nbsp; <Input v-model="question.register3Month.type4.month_4" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 5月:&nbsp;&nbsp; <Input v-model="question.register3Month.type4.month_5" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;6月:&nbsp;&nbsp; <Input v-model="question.register3Month.type4.month_6" style="width: 128px" disabled/>
-       <br/>
-       <br/>
-    7月: &nbsp;&nbsp; <Input v-model="question.register3Month.type4.month_7" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 8月:&nbsp;&nbsp; <Input v-model="question.register3Month.type4.month_8" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;9月:&nbsp;&nbsp; <Input v-model="question.register3Month.type4.month_9" style="width: 128px" disabled/>
-       <br/>
-       <br/>
-    10月: &nbsp;<Input v-model="question.register3Month.type4.month_10" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 11月:&nbsp;<Input v-model="question.register3Month.type4.month_11" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;12月:&nbsp;<Input v-model="question.register3Month.type4.month_12" style="width: 128px" disabled/>
-       <br/>
-       <br/>
+        <div style="margin-left: 30px;" v-for="value in question.register3Month.type4">
+          {{Object.keys(value)[0]}}: &nbsp;&nbsp; <Input v-model="Object.values(value)[0]" class="modalMonthInput" disabled/>
+          
         </div>
 </Modal>
-    <Modal footer-hide v-model="yearYgxsFlag" height="20%" width="48%" class-name="my-modal" >员工12个月薪资
+    <Modal footer-hide v-model="yearYgxsFlag" height="20%" width="48%" class-name="my-modal" >员工12个月薪资 &nbsp;&nbsp;&nbsp;&nbsp; 总计{{question.register5MonthCount}}元
        <br/>
        <br/>
-       <div style="margin-left: 30px;">
-    1月: &nbsp;&nbsp; <Input v-model="question.register5Month.month_1" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 2月:&nbsp;&nbsp; <Input v-model="question.register5Month.month_2" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;3月:&nbsp;&nbsp; <Input v-model="question.register5Month.month_3" style="width: 128px" disabled/>
-       <br/>
-       <br/>
-    4月: &nbsp;&nbsp; <Input v-model="question.register5Month.month_4" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 5月:&nbsp;&nbsp; <Input v-model="question.register5Month.month_5" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;6月:&nbsp;&nbsp; <Input v-model="question.register5Month.month_6" style="width: 128px" disabled/>
-       <br/>
-       <br/>
-    7月: &nbsp;&nbsp; <Input v-model="question.register5Month.month_7" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 8月:&nbsp;&nbsp; <Input v-model="question.register5Month.month_8" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;9月:&nbsp;&nbsp; <Input v-model="question.register5Month.month_9" style="width: 128px" disabled/>
-       <br/>
-       <br/>
-    10月: &nbsp;<Input v-model="question.register5Month.month_10" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 11月:&nbsp;<Input v-model="question.register5Month.month_11" style="width: 128px" disabled/>
-    &nbsp;&nbsp;&nbsp;12月:&nbsp;<Input v-model="question.register5Month.month_12" style="width: 128px" disabled/>
-       <br/>
-       <br/>
-      </div>
+       <div style="margin-left: 30px;" v-for="value in question.register5Month">
+          {{Object.keys(value)[0]}}: &nbsp;&nbsp; <Input v-model="Object.values(value)[0]" class="modalMonthInput" disabled/>
+          
+        </div>
   </Modal>
   </div>
 </template>
@@ -406,85 +316,87 @@
           numberOfTransactions: '',
           register3Month:{
             type1:
-              {
-                  "month_1": "9",
-                  "month_2": "8",
-                  "month_3": "7",
-                  "month_4": "6",
-                  "month_5": "5",
-                  "month_6": "4",
-                  "month_7": "3",
-                  "month_8": "2",
-                  "month_9": "1",
-                  "month_10": "12",
-                  "month_11": "11",
-                  "month_12": "10",
-              },
+              [
+                  {"month_1": "9"},
+                  {"month_2": "8"},
+                  {"month_3": "7"},
+                  {"month_4": "6"},
+                  {"month_5": "5"},
+                  {"month_6": "4"},
+                  {"month_7": "3"},
+                  {"month_8": "2"},
+                  {"month_9": "1"},
+                  {"month_10": "12"},
+                  {"month_11": "11"},
+                  {"month_12": "10"}],
             type2:
-              {
-                  "month_1": "",
-                  "month_2": "88",
-                  "month_3": "77",
-                  "month_4": "66",
-                  "month_5": "55",
-                  "month_6": "44",
-                  "month_7": "33",
-                  "month_8": "22",
-                  "month_9": "11",
-                  "month_10": "122",
-                  "month_11": "111",
-                  "month_12": "100",
-              },
+              [
+                  {"month_1": "9"},
+                  {"month_2": "8"},
+                  {"month_3": "7"},
+                  {"month_4": "6"},
+                  {"month_5": "5"},
+                  {"month_6": "4"},
+                  {"month_7": "3"},
+                  {"month_8": "2"},
+                  {"month_9": "1"},
+                  {"month_10": "12"},
+                  {"month_11": "11"},
+                  {"month_12": "10"}],
             type3:
-              {
-                  "month_1": "",
-                  "month_2": "",
-                  "month_3": "",
-                  "month_4": "",
-                  "month_5": "",
-                  "month_6": "",
-                  "month_7": "",
-                  "month_8": "",
-                  "month_9": "",
-                  "month_10": "",
-                  "month_11": "",
-                  "month_12": "",
-              },
+              [
+                  {"month_1": "9"},
+                  {"month_2": "8"},
+                  {"month_3": "7"},
+                  {"month_4": "6"},
+                  {"month_5": "5"},
+                  {"month_6": "4"},
+                  {"month_7": "3"},
+                  {"month_8": "2"},
+                  {"month_9": "1"},
+                  {"month_10": "12"},
+                  {"month_11": "11"},
+                  {"month_12": "10"}],
             type4:
-              {
-                  "month_1": "",
-                  "month_2": "",
-                  "month_3": "",
-                  "month_4": "",
-                  "month_5": "",
-                  "month_6": "",
-                  "month_7": "",
-                  "month_8": "",
-                  "month_9": "",
-                  "month_10": "",
-                  "month_11": "",
-                  "month_12": "",
-              }
+              [
+                  {"month_1": "9"},
+                  {"month_2": "8"},
+                  {"month_3": "7"},
+                  {"month_4": "6"},
+                  {"month_5": "5"},
+                  {"month_6": "4"},
+                  {"month_7": "3"},
+                  {"month_8": "2"},
+                  {"month_9": "1"},
+                  {"month_10": "12"},
+                  {"month_11": "11"},
+                  {"month_12": "10"}],
     },
+          register3MonthCount: {
+            type1:'',
+            type2: '',
+            type3: '',
+            type4:''
+          },
           register4Columns:[],
           register4Columns2:[],
           register4Data:[],
           register4Data2:[],
           register5_desc:'',
-          register5Month: {
-            "month_1": "",
-            "month_2": "",
-            "month_3": "",
-            "month_4": "",
-            "month_5": "",
-            "month_6": "",
-            "month_7": "",
-            "month_8": "",
-            "month_9": "",
-            "month_10": "",
-            "month_11": "",
-            "month_12": "",
-          },
+          register5Month: [
+                  {"month_1": "9"},
+                  {"month_2": "8"},
+                  {"month_3": "7"},
+                  {"month_4": "6"},
+                  {"month_5": "5"},
+                  {"month_6": "4"},
+                  {"month_7": "3"},
+                  {"month_8": "2"},
+                  {"month_9": "1"},
+                  {"month_10": "12"},
+                  {"month_11": "11"},
+                  {"month_12": "10"}],
+          register5MonthCount: '',
           register6Colum1:[],
           register6Data1:[],
           register6Colum2:[],
@@ -1043,13 +955,25 @@
       },
       register3(rowData){
         for (let i =0;i <rowData.waterInfos.length;i++){
-          let newObj = {}
+          let count = 0;
+          let newArr = []
+          let diffMonth = this.moment().diff(this.moment(rowData.waterInfos[i].curMonth,'YYYY-MM'), 'months')
+          let noVal = 0;
+          let total = 0;
           for (let objVal in rowData.waterInfos[i]) {
             if (objVal.includes('month_')){
-              newObj = Object.assign(newObj, JSON.parse(`{"${objVal}":"${rowData.waterInfos[i][objVal]}"}`))
+              let val = isNaN(parseInt(rowData.waterInfos[i][objVal])) ? 0 : parseInt(rowData.waterInfos[i][objVal])
+              if (noVal < diffMonth) {
+                val = 0
+              }
+              total = total + val
+              noVal++
+              newArr.push(JSON.parse(`{"${this.moment().subtract(count, 'months').format('YYYY-MM')}":"${val}"}`))
+              count++
             }
           }
-          this.question.register3Month['type'+rowData.waterInfos[i].type] = newObj
+          this.question.register3Month['type'+rowData.waterInfos[i].type] = newArr
+          this.question.register3MonthCount['type'+rowData.waterInfos[i].type] = total
         }
       },
       register4(rowData){
@@ -1077,13 +1001,25 @@
       },
       register5(rowData){
         this.question.register5_desc = rowData.salary.desc;
-        let newObj = {}
-        for (let objVal in rowData.salary) {
-          if (objVal.includes('month_')){
-            newObj = Object.assign(newObj, JSON.parse(`{"${objVal}":"${rowData.salary[objVal]}"}`))
+          let count = 0;
+          let newArr = []
+          let diffMonth = this.moment().diff(this.moment(rowData.salary.curMonth,'YYYY-MM'), 'months')
+          let noVal = 0;
+          let total = 0;
+          for (let objVal in rowData.salary) {
+            if (objVal.includes('month_')){
+              let val = isNaN(parseInt(rowData.salary[objVal])) ? 0 : parseInt(rowData.salary[objVal])
+              if (noVal < diffMonth) {
+                val = 0
+              }
+              total = total + val
+              noVal++
+              newArr.push(JSON.parse(`{"${this.moment().subtract(count, 'months').format('YYYY-MM')}":"${val}"}`))
+              count++
+            }
           }
-        }
-        this.question.register5Month = newObj
+          this.question.register5Month = newArr
+          this.question.register5MonthCount = total
       },
       register6(rowData){
         this.question.register6Colum1 = []

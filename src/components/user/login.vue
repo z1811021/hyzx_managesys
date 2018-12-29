@@ -46,6 +46,8 @@
             this.$Message.error('该用户不存在!');
           }else if(res.data.msg == '2'){
             this.$Message.error('密码不正确!');
+          }else if(res.data.msg == '3'){
+            this.$Message.error('登录权限被锁');
           }else{
             this.$Message.success('登陆成功');
             sessionStorage.setItem('authToken',res.data.authToken);
