@@ -269,8 +269,7 @@
             url: URL,
           }).then((res) => {
             this.$Message.success('操作成功');
-            this.getList();
-            this.storeFlag=false;
+            this.getData();
           }).catch((error) => {
             this.$Message.error('操作失败');
           });

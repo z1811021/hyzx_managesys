@@ -4,7 +4,7 @@
     <div v-if="performanceDrawinges == true">
       <Button class="hy_btn btn" @click="add">新增</Button>
       <Table :columns="columns" :data="data"></Table>
-      <Modal  v-model="salaryFlag" :mask-closable="false" :title="title" @on-ok="ok">
+      <Modal  class="modalProjects" v-model="salaryFlag" :mask-closable="false" :title="title" @on-ok="ok">
         <span class="text">低限：</span><Input v-model="ut.lowLimit" @on-keyup="ut.lowLimit=check(ut.lowLimit)" placeholder="低限" style="width: 300px"/>
         <br/>
         <br/>
@@ -287,6 +287,10 @@
 
 </script>
 <style scoped>
+  .modalProjects {
+    margin: 0 auto;            
+    text-align: center;    
+  }
   .text{
     display: inline-block;
     width: 75px;

@@ -4,7 +4,7 @@
     <div v-if="typeOfBaseSalary!=5&&typeOfBaseSalary!=6">
      <Button class="hy_btn btn" @click="salaryFlag= true;">新增</Button>
      <br>
-     <vtable :sdata="salarydata" :stype="salaryType" @Monitor="takeMonitor"></vtable>
+     <vtable :sdata="salarydata" :stype="salaryType" @Monitor="takeMonitor" v-if="typeOfBaseSalary!=5"></vtable>
      <Modal class="modalProjects" v-model="salaryFlag" :mask-closable="false" title="新增" @on-ok="ok">
        低限：<Input v-model="add.lowLimit" @on-keyup="add.lowLimit=check(add.lowLimit)" placeholder="低限" style="width: 300px"/>
        <br/>
@@ -18,10 +18,10 @@
      </Modal>
    </div>
     <div v-if="typeOfBaseSalary==5">
-      固定底薪：<Input v-model="data2.baseSalary" @on-keyup="data2.baseSalary=check2(data2.baseSalary)" placeholder="固定底薪" size="small" style="width: 100px"/>
+      固定底薪：<Input v-model="data2.baseSalary" placeholder="固定底薪" size="small" style="width: 100px"/>
       <Button class="btn" size="small" type="success" @click="save">保存</Button>
     </div>
-    <div v-if="typeOfBaseSalary == 6">
+    <div v-if="typeOfBaseSalary==6">
 
       <Button class="hy_btn btn" @click="Add">新增</Button>
       <br>
@@ -216,7 +216,7 @@
           method: 'get',
           url:findSalaryByStore()+'/'+this.$route.params.id
         }).then( (res) => {
-          this.typeOfBaseSalary = res.data.salaryMangeInfo.baseSalaryRule;
+          this.typeOfBaseSalary = parseInt(res.data.salaryMangeInfo.baseSalaryRule);
           this.monthlyCashType = res.data.salaryMangeInfo.baseSalaryOption;
           this.typeOfBaseSalaryIndex = this.cityList1[this.typeOfBaseSalary-1].label;
         }).catch((error)=>{
@@ -366,7 +366,7 @@
     mounted(){
       this.getData();
     },
-    watch:{
+    /*watch:{
       typeOfBaseSalary(){
         this.getData();
         switch(this.typeOfBaseSalary){
@@ -380,7 +380,7 @@
             break;
         }
       }
-    }
+    }*/
   }
 
 </script>
