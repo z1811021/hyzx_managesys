@@ -90,7 +90,7 @@
      </div> 
      <section v-show="isRoomShow">
      <div class="modalInputs"><div style="margin-left:14%;">店平方数：<Input v-model="question.area" style="width: 88px" disabled/></div>
-      <div style="margin: 0 auto;">年房租：<Input v-model="question.rent" style="width: 88px" disabled/></div><div style="margin-right:14%;">床位数：<Input v-model="question.bedCount" style="width: 88px" disabled/></div></div>
+      <div style="margin: 0 auto;">{{question.annualRentYear}}年房租：<Input v-model="question.rent" style="width: 88px" disabled/></div><div style="margin-right:14%;">床位数：<Input v-model="question.bedCount" style="width: 88px" disabled/></div><div style="margin-right:14%;">增长率：<Input v-model="question.growthRate" style="width: 88px" disabled/></div></div>
       <br/>
         <Table border :columns="question.roomTypesColumns" :data="question.roomTypes"></Table>
       <br/>
@@ -291,6 +291,8 @@
           area: '',
           rent: '',
           bedCount:'',
+          annualRentYear:'',
+          growthRate:'',
           severalStores: '',
           numberOfRooms: '',
           numberOfBeds: '',
@@ -927,6 +929,8 @@
       register2(rowData){
         this.question.area = rowData.room.area;
         this.question.rent = rowData.room.rent;
+        this.question.annualRentYear = rowData.room.annualRentYear;
+        this.question.growthRate = rowData.room.growthRate;
         this.question.bedCount = rowData.room.roomCount;
         let memberObj = {}
         const arrRule =  new Map([['onlyShower','仅淋浴'], ['onlyToilet','仅坐便'], ['onlyBubble','仅泡浴'], ['showerAndToilet','淋浴+坐便'], ['bubbleAndToilet','泡浴+坐便'], ['showerAndBubble','淋浴+泡浴'], ['showerAndToiletAndBubble','淋浴+坐便+泡浴']])
@@ -1061,6 +1065,8 @@
       },
       cancelQuestion(){
         this.question.area = ''
+        this.question.annualRentYear = '';
+        this.question.growthRate = '';
         this.question.rent = ''
         this.question.bedCount = ''
         this.question.memberColumns = []
