@@ -19,10 +19,10 @@
             </Col>
           </Row>  
       </FormItem>
-      <FormItem label="房租增长率" prop="growthRate"  class="formItemStyle" >
+      <FormItem label="房租增长率：" prop="growthRate"  class="formItemStyle" >
             <Input v-model="roomVal.growthRate" placeholder="房租增长率"></Input>
       </FormItem>
-      <FormItem label="房间总数详情"  class="formItemStyle" prop="roomCount">
+      <FormItem label="房间总数详情："  class="formItemStyle" prop="roomCount">
           <RadioGroup v-model="roomRadio" @on-change="hiddenDetailLabel()">
               <Radio label="displayDetail">输入具体房间数量</Radio>
               <Radio label="noDisplayDetail">直接输入房间总数</Radio>
@@ -237,7 +237,7 @@
         const params = {
           storeId: sessionStorage['storeId'],
           roomTypes: roomTypes,
-          room: Object.assign({area: this.roomVal.roomSize}, {rent: this.roomVal.annualRent}, {roomCount: this.roomVal.roomCount}, {storeId: sessionStorage['storeId']}),
+          room: Object.assign({area: this.roomVal.roomSize}, {rent: this.roomVal.annualRent},{rent: this.roomVal.annualRentYear}, {rent: this.roomVal.growthRate}, {roomCount: this.roomVal.roomCount}, {storeId: sessionStorage['storeId']}),
           member: {
             cosmeTologist: this.roomVal.cosmetologist,
             therapist: this.roomVal.Therapist,
