@@ -392,21 +392,28 @@ export const findByStore = function () {
   return API;
 };
 
+//获取实操提成
+export const getPracticalExercise = function () {
+  const URL = '/practical/commission/store';
+  const API = host + URL;
+  return API;
+};
+
 //保存实操提成
 export const editPracticalExercise = function () {
-  const URL = '/app/api/salary/editPracticalExercise';
+  const URL = '/practical/commission/add';
   const API = host + URL;
   return API;
 };
 //删除实操提成
 export const deletePracticalExercise = function () {
-  const URL = '/app/api/salary/deletePracticalExercise';
+  const URL = '/practical/commission/delete';
   const API = host + URL;
   return API;
 };
 //修改实操启用状态
 export const editPracticalExerciseStatus = function () {
-  const URL = '/app/api/salary/editPracticalExerciseStatus';
+  const URL = '/practical/commission/edit';
   const API = host + URL;
   return API;
 };

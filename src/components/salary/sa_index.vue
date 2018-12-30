@@ -212,7 +212,6 @@
             typeOfLeave: res.data.salaryMangeInfo.forfeitPleave,
             leaveThePenaltyRules:''
           }
-          console.log(this.data.practicalExercises);
         }).catch( (error) =>{
         });
 

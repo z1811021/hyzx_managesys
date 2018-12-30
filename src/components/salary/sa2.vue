@@ -4,36 +4,40 @@
     <div v-if="practicalExercises==true">
       <Button class="hy_btn btn" @click="add">新增</Button>
       <Table :columns="columns" :data="data"></Table>
-      <Modal  class="modalProjects" v-model="salaryFlag" :mask-closable="false" :title="title" @on-ok="ok">
-        <span class="text">低限：</span><Input v-model="ut.lowLimit" @on-keyup="ut.lowLimit=check(ut.lowLimit)" placeholder="低限" style="width: 300px"/>
+      <Modal  class="modalProjects" v-model="salaryFlag" :mask-closable="false" :title="title">
+        <span class="text">低限：</span><Input v-model="ut.lowLimit"  placeholder="低限" style="width: 300px"/>
         <br/>
         <br/>
-        <span class="text">高限：</span><Input v-model="ut.highLimit" @on-keyup="ut.highLimit=check(ut.highLimit)"placeholder="高限" style="width: 300px"/>
+        <span class="text">高限：</span><Input v-model="ut.highLimit" placeholder="高限" style="width: 300px"/>
         <br/>
         <br/>
-        <span class="text">面部指定：</span><Input v-model="ut.facialPracticeAppoint" placeholder="面部指定" style="width: 150px"/>%
+        <span class="text">面部指定：</span><Input v-model="ut.faceDesignated" placeholder="面部指定" style="width: 150px"/>%
         <br/>
         <br/>
-        <span class="text">面部非指定：</span><Input v-model="ut.facialPracticeNonSpecifiedt" placeholder="面部非指定" style="width: 150px"/>%
+        <span class="text">面部非指定：</span><Input v-model="ut.nFaceDesignated" placeholder="面部非指定" style="width: 150px"/>%
         <br/>
         <br/>
-        <span class="text">身体指定：</span><Input v-model="ut.physicalExerciseAppoint" placeholder="身体指定" style="width: 150px"/>%
+        <span class="text">身体指定：</span><Input v-model="ut.bodyDesignated" placeholder="身体指定" style="width: 150px"/>%
         <br/>
         <br/>
-        <span class="text">身体非指定：</span><Input v-model="ut.physicalExerciseNonSpecifiedt" placeholder="身体非指定" style="width: 150px"/>%
+        <span class="text">身体非指定：</span><Input v-model="ut.nBodyDesignated" placeholder="身体非指定" style="width: 150px"/>%
         <br/>
         <br/>
+        <div slot="footer">
+          <Button type="primary" @click="ok">添加</Button>
+          <Button type="ghost" @click="close">取消</Button>
+      </div>
       </Modal>
     </div>
   </div>
 </template>
 <script>
-  import {findSalaryByStore,editPracticalExercise,deletePracticalExercise} from '../../interface.js'
+  import {findSalaryByStore,editPracticalExercise,deletePracticalExercise,getPracticalExercise} from '../../interface.js'
   export default{
     name: 'sa2',
     data(){
       return{
-        practicalExercises: true,
+        practicalExercises: false,
         columns: [
         {
           title: '低限',
@@ -45,30 +49,30 @@
         },
         {
           title: '面部指定',
-          key: 'facialPracticeAppoint',
+          key: 'faceDesignated',
           render: (h, params) => {
-            return h('span', params.row.facialPracticeAppoint*100+'%')
+            return h('span', params.row.faceDesignated+'%')
           }
         },
         {
           title: '面部非指定',
-          key: 'facialPracticeNonSpecifiedt',
+          key: 'nFaceDesignated',
           render: (h, params) => {
-            return h('span', params.row.facialPracticeNonSpecifiedt*100+'%')
+            return h('span', params.row.nFaceDesignated+'%')
           }
         },
         {
           title: '身体指定',
-          key: 'physicalExerciseAppoint',
+          key: 'bodyDesignated',
           render: (h, params) => {
-            return h('span', params.row.physicalExerciseAppoint*100+'%')
+            return h('span', params.row.bodyDesignated+'%')
           }
         },
         {
           title: '身体非指定',
-          key: 'physicalExerciseNonSpecifiedt',
+          key: 'nBodyDesignated',
           render: (h, params) => {
-            return h('span', params.row.physicalExerciseNonSpecifiedt*100+'%')
+            return h('span', params.row.nBodyDesignated+'%')
           }
         },
         {
@@ -112,18 +116,34 @@
         data: [],
         title: '',
         ut:{
-          facialPracticeAppoint: '',
-          facialPracticeNonSpecifiedt: '',
-          highLimit: "",
-          lowLimit: "",
-          physicalExerciseAppoint: '',
-          physicalExerciseNonSpecifiedt: '',
-          storeId: this.$route.params.id,
+          // 门店id
+              storeId:this.$route.params.id,
+              // 低限
+              lowLimit:"",
+              // 高限
+              highLimit:"",
+              // 面部指向
+              faceDesignated:"",
+              // 面部非指向
+              nFaceDesignated:"",
+              // 身体指向
+              bodyDesignated:"",
+              // 身体非指向
+              nBodyDesignated:""
         },
         salaryFlag: false,
       }
     },
     methods:{
+      getPracticalExercise(){
+        this.$ajax({
+          method: 'get',
+          url: getPracticalExercise()+'/'+this.$route.params.id,
+        }).then( (res) =>{
+          this.data=res.data.practicalCommissionInfo;
+        }).catch( (error) =>{
+        })
+      },
       getData(){
         this.$ajax({
           method: 'get',
@@ -132,48 +152,70 @@
           this.practicalExercises = this.transferBack(res.data.salaryMangeInfo.poCommission);
           this.typeOfBaseSalary = res.data.salaryMangeInfo.baseSalaryRule;
           this.monthlyCashType = res.data.salaryMangeInfo.baseSalaryOption;
-          console.log(this.practicalExercises);
         }).catch( (error) =>{
         })
+      },
+      update(data){
+        this.title = '修改';
+        this.salaryFlag = true;
+        this.ut = data;
+      },
+      transfer(b){
+        if(b == true){
+          return 1;
+        }else{
+          return 0;
+        }
+      },
+      transferBack(c){
+        if(c == 1){
+          return true;
+        }else{
+          return false;
+        }
+      },
+      close(){
+        this.salaryFlag = false;
       },
       add(){
         this.title = '新增';
         this.salaryFlag = true;
         this.ut={
-          facialPracticeAppoint: '',
-          facialPracticeNonSpecifiedt: '',
-          highLimit: "",
-          lowLimit: "",
-          physicalExerciseAppoint: '',
-          physicalExerciseNonSpecifiedt: '',
-          storeId: this.$route.params.id,
+          // 门店id
+              storeId:this.$route.params.id,
+              // 低限
+              lowLimit:"",
+              // 高限
+              highLimit:"",
+              // 面部指向
+              faceDesignated:"",
+              // 面部非指向
+              nFaceDesignated:"",
+              // 身体指向
+              bodyDesignated:"",
+              // 身体非指向
+              nBodyDesignated:""
         };
-      },
-      update(row){
-        this.title = '修改';
-        this.salaryFlag = true;
-        this.ut = JSON.parse(JSON.stringify(row));
-        this.ut.facialPracticeAppoint = this.ut.facialPracticeAppoint*100;
-        this.ut.facialPracticeNonSpecifiedt = this.ut.facialPracticeNonSpecifiedt*100;
-        this.ut.physicalExerciseAppoint = this.ut.physicalExerciseAppoint*100;
-        this.ut.physicalExerciseNonSpecifiedt = this.ut.physicalExerciseNonSpecifiedt*100;
       },
       ok(){
         if(this.ut.lowLimit==""&& this.ut.highLimit=="" && this.ut.facialPracticeAppoint=="" && this.ut.facialPracticeNonSpecifiedt=="" &&this.ut.physicalExerciseAppoint=="" && this.ut.physicalExerciseNonSpecifiedt==""){
-          this.$Message.warning('不能全为空');
+          this.$Message.warning('实操提成选项不能全为空！');
           return;
         }
         this.ut.facialPracticeAppoint = this.ut.facialPracticeAppoint/100;
         this.ut.facialPracticeNonSpecifiedt = this.ut.facialPracticeNonSpecifiedt/100;
         this.ut.physicalExerciseAppoint = this.ut.physicalExerciseAppoint/100;
         this.ut.physicalExerciseNonSpecifiedt = this.ut.physicalExerciseNonSpecifiedt/100;
+        var practicalCommission = this.ut;
         this.$ajax({
           method: 'post',
           url: editPracticalExercise(),
-          data:this.ut,
+          data: practicalCommission,
         }).then( (res) =>{
           this.$Message.success('保存成功');
+          this.salaryFlag = false;
           this.getData();
+          this.getPracticalExercise();
         }).catch( (error) =>{
           this.$Message.error('保存失败');
         })
@@ -188,32 +230,11 @@
         }).catch( (error) =>{
           this.$Message.error('删除失败');
         })
-      },
-      checkNum(value){
-        if(value.match(/[\d]*[\%]/g) == null) return true;
-        else return false;
-      },
-      check(value){
-        return value.replace(/[^\d]/g,'');
-      },
-      check2(value){
-        return value.replace(/[^\d\.]/g,'');
-      },
-      changeNm(num,type){
-        if(type==1){
-          return num/100;
-        }
-        if(type == 2){
-          if(num>1){
-            var arr = num.toString().split('.');
-            console.log(arr);
-          }
-          return num*100+'%'
-        }
       }
     },
     created(){
       this.getData();
+      this.getPracticalExercise();
     }
   }
 

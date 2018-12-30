@@ -198,12 +198,27 @@
       getData(){
         this.$ajax({
           method: 'get',
-          url: findSalaryByStore() + '?id='+this.$route.params.id,
+          url: findSalaryByStore() + '/'+this.$route.params.id,
         }).then( (res) =>{
-          this.performanceDrawinges = res.data.performanceDrawinges;
-          this.data = res.data.performanceDrawing;
+          this.practicalExercises = this.transferBack(res.data.salaryMangeInfo.poCommission);
+          this.typeOfBaseSalary = res.data.salaryMangeInfo.baseSalaryRule;
+          this.monthlyCashType = res.data.salaryMangeInfo.baseSalaryOption;
         }).catch( (error) =>{
         })
+      },
+      transfer(b){
+        if(b == true){
+          return 1;
+        }else{
+          return 0;
+        }
+      },
+      transferBack(c){
+        if(c == 1){
+          return true;
+        }else{
+          return false;
+        }
       },
       add(){
         this.title = '新增';
