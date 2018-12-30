@@ -387,7 +387,28 @@ export const findSalaryByStore = function () {
 };
 //查询底薪
 export const findByStore = function () {
-  const URL = '/app/api/salary/findByStore';
+  const URL = '/specific/rules/store';
+  const API = host + URL;
+  return API;
+};
+
+//保存底薪
+export const saveBaseSalary = function () {
+  const URL = '/specific/rules/add';
+  const API = host + URL;
+  return API;
+};
+
+//编辑底薪
+export const editBaseSalary = function () {
+  const URL = '/specific/rules/store';
+  const API = host + URL;
+  return API;
+};
+
+//删除底薪
+export const deleteBaseSalary = function () {
+  const URL = '/specific/rules/delete';
   const API = host + URL;
   return API;
 };
@@ -417,21 +438,28 @@ export const editPracticalExerciseStatus = function () {
   const API = host + URL;
   return API;
 };
+
+//获取业绩提成
+export const getPerformanceDrawing = function () {
+  const URL = '/performance/commission/store';
+  const API = host + URL;
+  return API;
+};
 //保存业绩提成
 export const editPerformanceDrawing = function () {
-  const URL = '/app/api/salary/editPerformanceDrawing';
+  const URL = '/performance/commission/add';
   const API = host + URL;
   return API;
 };
 //删除业绩提成
 export const deletePerformanceDrawing = function () {
-  const URL = '/app/api/salary/deletePerformanceDrawing';
+  const URL = '/performance/commission/delete';
   const API = host + URL;
   return API;
 };
 //修改业绩启用状态
 export const editPerformanceDrawingStatus = function () {
-  const URL = '/app/api/salary/editPerformanceDrawingStatus';
+  const URL = '/performance/commission/edit';
   const API = host + URL;
   return API;
 };
@@ -615,18 +643,6 @@ export const editTotalMonthlyProject = function () {
 //删除月项目总数
 export const deleteTotalMonthlyProject = function () {
   const URL = '/app/api/salary/deleteTotalMonthlyProject';
-  const API = host + URL;
-  return API;
-};
-//保存员工底薪
-export const editStaffLevelBaseSalary = function () {
-  const URL = '/app/api/salary/editStaffLevelBaseSalary';
-  const API = host + URL;
-  return API;
-};
-//删除员工底薪
-export const deleteStaffLevelBaseSalary = function () {
-  const URL = '/app/api/salary/deleteStaffLevelBaseSalary';
   const API = host + URL;
   return API;
 };

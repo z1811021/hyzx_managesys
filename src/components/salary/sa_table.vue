@@ -3,13 +3,13 @@
     <div v-if="stype == 'MonthlyCashVolume' || stype == 'TotalMonthlyPassengerFlow' || stype == 'TotalMonthlyExercise' ||stype == 'TotalMonthlyProject' ||stype == 'accumulativedata' || stype=='CashReward' || stype=='PracticeReward'">
       <Table  :columns="columns2" :data="sdata"></Table>
       <Modal  v-model="salaryFlag" title="修改" @on-ok="ok()">
-        低限：<Input v-model="ut.lowLimit" @on-keyup="ut.lowLimit=check(ut.lowLimit)" placeholder="低限" style="width: 300px"/>
+        低限：<Input v-model="ut.lowLimit" placeholder="低限" style="width: 300px"/>
         <br/>
         <br/>
-        高限：<Input v-model="ut.highLimit" @on-keyup="ut.highLimit=check(ut.highLimit)" placeholder="高限" style="width: 300px"/>
+        高限：<Input v-model="ut.highLimit" placeholder="高限" style="width: 300px"/>
         <br/>
         <br/>
-        金额：<Input v-model="ut.amountOfReward" @on-keyup="ut.amountOfReward=check2(ut.amountOfReward)"  placeholder="金额" style="width: 300px"/>
+        金额：<Input v-model="ut.amountOfReward" placeholder="金额" style="width: 300px"/>
         <br/>
         <br/>
       </Modal>
@@ -17,13 +17,13 @@
     <div v-else>
       <Table  :columns="columns" :data="sdata"></Table>
       <Modal  v-model="salaryFlag" title="修改" @on-ok="ok()">
-        低限：<Input v-model="ut.lowLimit" @on-keyup="ut.lowLimit=check(ut.lowLimit)" placeholder="低限" style="width: 300px"/>
+        低限：<Input v-model="ut.lowLimit" placeholder="低限" style="width: 300px"/>
         <br/>
         <br/>
-        高限：<Input v-model="ut.highLimit" @on-keyup="ut.highLimit=check(ut.highLimit)" placeholder="高限" style="width: 300px"/>
+        高限：<Input v-model="ut.highLimit" placeholder="高限" style="width: 300px"/>
         <br/>
         <br/>
-        金额：<Input v-model="ut.totalBonus" @on-keyup="ut.totalBonus=check2(ut.totalBonus)" placeholder="金额" style="width: 300px"/>
+        金额：<Input v-model="ut.totalBonus" placeholder="金额" style="width: 300px"/>
         <br/>
         <br/>
       </Modal>

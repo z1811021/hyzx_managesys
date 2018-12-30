@@ -5,22 +5,22 @@
       <Button class="hy_btn btn" @click="add">新增</Button>
       <Table :columns="columns" :data="data"></Table>
       <Modal  class="modalProjects" v-model="salaryFlag" :mask-closable="false" :title="title">
-        <span class="text">低限：</span><Input v-model="ut.lowLimit"  placeholder="低限" style="width: 300px"/>
+        <span class="text">低限：</span><InputNumber :min="0" max="100000" v-model="ut.lowLimit"  placeholder="低限" style="width: 300px"/></InputNumber>
         <br/>
         <br/>
-        <span class="text">高限：</span><Input v-model="ut.highLimit" placeholder="高限" style="width: 300px"/>
+        <span class="text">高限：</span><InputNumber :min="0" max="100000" v-model="ut.highLimit" placeholder="高限" style="width: 300px"/></InputNumber>
         <br/>
         <br/>
-        <span class="text">面部指定：</span><Input v-model="ut.faceDesignated" placeholder="面部指定" style="width: 150px"/>%
+        <span class="text">面部指定：</span><InputNumber :min="0" max="200" v-model="ut.faceDesignated" placeholder="面部指定" style="width: 150px"/>%</InputNumber>
         <br/>
         <br/>
-        <span class="text">面部非指定：</span><Input v-model="ut.nFaceDesignated" placeholder="面部非指定" style="width: 150px"/>%
+        <span class="text">面部非指定：</span><InputNumber :min="0" max="200" v-model="ut.nFaceDesignated" placeholder="面部非指定" style="width: 150px"/>%</InputNumber>
         <br/>
         <br/>
-        <span class="text">身体指定：</span><Input v-model="ut.bodyDesignated" placeholder="身体指定" style="width: 150px"/>%
+        <span class="text">身体指定：</span><InputNumber :min="0" max="200" v-model="ut.bodyDesignated" placeholder="身体指定" style="width: 150px"/>%</InputNumber>
         <br/>
         <br/>
-        <span class="text">身体非指定：</span><Input v-model="ut.nBodyDesignated" placeholder="身体非指定" style="width: 150px"/>%
+        <span class="text">身体非指定：</span><InputNumber :min="0" max="200" v-model="ut.nBodyDesignated" placeholder="身体非指定" style="width: 150px"/>%</InputNumber>
         <br/>
         <br/>
         <div slot="footer">
@@ -32,12 +32,13 @@
   </div>
 </template>
 <script>
-  import {findSalaryByStore,editPracticalExercise,deletePracticalExercise,getPracticalExercise} from '../../interface.js'
+  import {findSalaryByStore,editPracticalExercise,deletePracticalExercise,getPracticalExercise,editPracticalExerciseStatus} from '../../interface.js'
   export default{
     name: 'sa2',
     data(){
       return{
         practicalExercises: false,
+        modifyId: '',
         columns: [
         {
           title: '低限',
@@ -159,6 +160,7 @@
         this.title = '修改';
         this.salaryFlag = true;
         this.ut = data;
+        this.modifyId = data.id;
       },
       transfer(b){
         if(b == true){
@@ -180,6 +182,7 @@
       add(){
         this.title = '新增';
         this.salaryFlag = true;
+        this.modifyId = '';
         this.ut={
           // 门店id
               storeId:this.$route.params.id,
@@ -198,7 +201,7 @@
         };
       },
       ok(){
-        if(this.ut.lowLimit==""&& this.ut.highLimit=="" && this.ut.facialPracticeAppoint=="" && this.ut.facialPracticeNonSpecifiedt=="" &&this.ut.physicalExerciseAppoint=="" && this.ut.physicalExerciseNonSpecifiedt==""){
+        if(this.ut.lowLimit==""&& this.ut.highLimit=="" && this.ut.faceDesignated=="" && this.ut.nFaceDesignated=="" &&this.ut.bodyDesignated=="" && this.ut.nBodyDesignated==""){
           this.$Message.warning('实操提成选项不能全为空！');
           return;
         }
@@ -206,27 +209,45 @@
         this.ut.facialPracticeNonSpecifiedt = this.ut.facialPracticeNonSpecifiedt/100;
         this.ut.physicalExerciseAppoint = this.ut.physicalExerciseAppoint/100;
         this.ut.physicalExerciseNonSpecifiedt = this.ut.physicalExerciseNonSpecifiedt/100;
-        var practicalCommission = this.ut;
-        this.$ajax({
-          method: 'post',
-          url: editPracticalExercise(),
-          data: practicalCommission,
-        }).then( (res) =>{
-          this.$Message.success('保存成功');
-          this.salaryFlag = false;
-          this.getData();
-          this.getPracticalExercise();
-        }).catch( (error) =>{
-          this.$Message.error('保存失败');
-        })
+        if(this.title == "新增"){
+          var practicalCommission = this.ut;
+          this.$ajax({
+            method: 'post',
+            url: editPracticalExercise(),
+            data: practicalCommission,
+          }).then( (res) =>{
+            this.$Message.success('保存成功');
+            this.salaryFlag = false;
+            this.getData();
+            this.getPracticalExercise();
+          }).catch( (error) =>{
+            this.$Message.error('保存失败');
+          })
+        }else if(this.title == "修改"){
+          this.ut.id = this.modifyId;
+          var practicalCommission = this.ut;
+          this.$ajax({
+            method: 'post',
+            url: editPracticalExerciseStatus(),
+            data: practicalCommission,
+          }).then( (res) =>{
+            this.$Message.success('保存成功');
+            this.salaryFlag = false;
+            this.getData();
+            this.getPracticalExercise();
+          }).catch( (error) =>{
+            this.$Message.error('保存失败');
+          })
+        }
       },
       delete(row){
         this.$ajax({
           method: 'get',
-          url: deletePracticalExercise() + '?id=' + row.id,
+          url: deletePracticalExercise()+'/'+this.$route.params.id+'?id='+row.id,
         }).then( (res) =>{
           this.$Message.success('删除成功');
           this.getData();
+          this.getPracticalExercise();
         }).catch( (error) =>{
           this.$Message.error('删除失败');
         })
