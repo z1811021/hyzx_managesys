@@ -5,6 +5,14 @@
       <Button class="hy_btn btn" @click="add">新增</Button>
       <Table :columns="columns" :data="data"></Table>
       <Modal  class="modalProjects" v-model="salaryFlag" :mask-closable="false" :title="title">
+        <Select v-model="ut.perComType" placeholder="请选择业绩提点方式" style="width:360px;">
+          <Option value="消耗">根据消耗设计业绩提点</Option>
+          <Option value="实操">根据实操设计业绩提点</Option>
+          <Option value="业绩">根据业绩来设计提点</Option>
+          <Option value="客流">根据客流设计业绩提点</Option>
+        </Select>
+        <br/>
+        <br/>
         <span class="text">低限：</span><InputNumber :min="0" max="100000" v-model="ut.lowLimit" placeholder="低限" style="width: 300px"/></InputNumber>
         <br/>
         <br/>
@@ -35,19 +43,6 @@
         <span class="text">其他：</span><InputNumber :min="0" max="200" v-model="ut.other" placeholder="其他" style="width: 150px"/>%</InputNumber>
         <br/>
         <br/>
-        <!---->
-       <!-- <span class="text">卡项销售：</span><Input v-model="ut.cardSales" placeholder="卡项销售" style="width: 300px"/>
-        <br/>
-        <br/>
-        <span class="text">卡扣项目：</span><Input v-model="ut.buckleProject" placeholder="卡扣项目" style="width: 300px"/>
-        <br/>
-        <br/>
-        <span class="text">卡扣产品：</span><Input v-model="ut.buckleProduct" placeholder="卡扣产品" style="width: 300px"/>
-        <br/>
-        <br/>
-        <span class="text">高端项目：</span><Input v-model="ut.highEndProject" placeholder="高端项目" style="width: 300px"/>
-        <br/>
-        <br/>-->
         <div slot="footer">
           <Button type="primary" @click="ok">添加</Button>
           <Button type="ghost" @click="close">取消</Button>
@@ -62,7 +57,7 @@
     name: 'sa3',
     data(){
       return{
-        performanceDrawinges: true,
+        performanceDrawinges: false,
         modifyId: '',
         columns: [
           {
@@ -202,7 +197,9 @@
           // 高端产品
           highEndProducts:"",
           // 其他
-          other:""
+          other:"",
+          //业绩提点方式
+          perComType:""
         },
         title: '',
         salaryFlag: false,
@@ -223,9 +220,10 @@
           method: 'get',
           url: findSalaryByStore() + '/'+this.$route.params.id,
         }).then( (res) =>{
-          this.practicalExercises = this.transferBack(res.data.salaryMangeInfo.poCommission);
+          //this.practicalExercises = this.transferBack(res.data.salaryMangeInfo.poCommission);
           this.typeOfBaseSalary = res.data.salaryMangeInfo.baseSalaryRule;
-          this.monthlyCashType = res.data.salaryMangeInfo.baseSalaryOption;
+          //this.monthlyCashType = res.data.salaryMangeInfo.baseSalaryOption;
+          this.performanceDrawinges = this.transferBack(res.data.salaryMangeInfo.acCommission);
         }).catch( (error) =>{
         })
       },
@@ -269,7 +267,9 @@
           // 高端产品
           highEndProducts:"",
           // 其他
-          other:""
+          other:"",
+          //业绩提点方式
+          perComType:""
         };
         this.ut.type = '1';
       },

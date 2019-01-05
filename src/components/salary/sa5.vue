@@ -1,8 +1,8 @@
 <template>
   <div class="sa5" >
     <br>
-    <div class="content" v-if="data1.typeOfBonus==1">
-      <h3>按客流奖励<span class="notice">{{data1.typeOfBonus == 1?'已启用':'未启用'}}</span></h3>
+    <div class="content" v-if="data1.rewardRule==1">
+      <h3>按客流奖励<span class="notice">{{data1.rewardRule == 1?'已启用':'未启用'}}</span></h3>
       <div>
         <h4>1.单日客流奖励</h4>
         单日客流：<Input v-model="data1.singleDayPassengerFlow" placeholder="单日客流" size="small" class="Input"/>
@@ -34,52 +34,52 @@
       <br/>
     </Modal>
 
-    <div class="content" v-if="data1.typeOfBonus==2">
-      <h3>按现金业绩奖励 <span>{{data1.cashType}}</span> <span class="notice">{{data2.typeOfBonus == 2?'已启用':'未启用'}}</span>
+    <div class="content" v-if="data1.rewardRule==2">
+      <h3>按现金业绩奖励 <span>{{data1.cashType}}</span> <span class="notice">{{data1.rewardRule == 2?'已启用':'未启用'}}</span>
         <Button class="hy_btn btn" style="margin-left: 10px;" size="small" @click="cashRewarFlag=true">新增</Button>
         <vtable :sdata="data1.data" :stype="CashRewardType" @Monitor="takeMonitor" ></vtable>
-
       </h3>
     </div>
     <Modal  v-model="cashRewarFlag" title="新增" @on-ok="saveCashReward">
       <span class="text">低限：</span>
-      <Input v-model="cashRewardadd.lowLimit" @on-keyup="cashRewardadd.lowLimit=check(cashRewardadd.lowLimit)" placeholder="低限" style="width: 300px"/>
+      <Input v-model="cashRewardadd.lowLimit" placeholder="低限" style="width: 300px"/>
       <br>
       <br>
       <span class="text">高限：</span>
-      <Input v-model="cashRewardadd.highLimit" @on-keyup="cashRewardadd.highLimit=check(cashRewardadd.highLimit)" placeholder="高限" style="width: 300px"/>
+      <Input v-model="cashRewardadd.highLimit" placeholder="高限" style="width: 300px"/>
       <br>
       <br>
       <span class="text">金额：</span>
-      <Input v-model="cashRewardadd.amountOfReward" @on-keyup="cashRewardadd.amountOfReward=check2(cashRewardadd.amountOfReward)" placeholder="奖金总额" style="width: 300px"/>
+      <Input v-model="cashRewardadd.amountOfReward" placeholder="奖金总额" style="width: 300px"/>
       <br/>
       <br/>
     </Modal>
-    <div class="content" v-if="data1.typeOfBonus==3">
-      <h3>按实操奖励<span class="notice">{{data2.typeOfBonus == 3?'已启用':'未启用'}}</span>
+    <div class="content" v-if="data1.rewardRule==3">
+      <h3>按实操奖励<span class="notice">{{data1.rewardRule == 3?'已启用':'未启用'}}</span>
         <Button class="hy_btn btn" style="margin-left: 10px;" size="small" @click="practiceRewardFlag=true">新增</Button>
       </h3>
       <vtable :sdata="data1.data" :stype="CashRewardType" @Monitor="takeMonitor" ></vtable>
     </div>
     <Modal  v-model="practiceRewardFlag" title="新增" @on-ok="savePracticeReward">
       <span class="text">低限：</span>
-      <Input v-model="practiceRewardadd.lowLimit" @on-keyup="practiceRewardadd.lowLimit=check(practiceRewardadd.lowLimit)" placeholder="低限" style="width: 300px"/>
+      <Input v-model="practiceRewardadd.lowLimit" placeholder="低限" style="width: 300px"/>
       <br>
       <br>
       <span class="text">高限：</span>
-      <Input v-model="practiceRewardadd.highLimit" @on-keyup="practiceRewardadd.highLimit=check(practiceRewardadd.highLimit)"  placeholder="高限" style="width: 300px"/>
+      <Input v-model="practiceRewardadd.highLimit" placeholder="高限" style="width: 300px"/>
       <br>
       <br>
       <span class="text">金额：</span>
-      <Input v-model="practiceRewardadd.amountOfReward" @on-keyup="practiceRewardadd.amountOfReward=check2(practiceRewardadd.amountOfReward)" placeholder="奖金总额" style="width: 300px"/>
+      <Input v-model="practiceRewardadd.amountOfReward" placeholder="奖金总额" style="width: 300px"/>
       <br/>
       <br/>
     </Modal>
 
     <div class="content">
-      <h3>团队奖金<span class="notice">{{data2.teamBonuses==true ? '已启用':'未启用'}}</span>
-      <span v-if="data2.teamBonuses==true">
-        <Button class="hy_btn btn" style="margin-left: 10px;" size="small" @click="Addteam">新增</Button>
+      <h3>团队奖金<span class="notice">{{data1.rewardTeam==true ? '已启用':'未启用'}}</span>
+      <span>
+        <Button class="hy_btn btn" style="margin-left: 10px;background-color:#cccccc;color:#666666;" size="small" v-if="data1.rewardTeam!=true">停用</Button>
+        <Button class="hy_btn btn" style="margin-left: 10px;" size="small" @click="Addteam" v-if="data1.rewardTeam==true">新增</Button>
       </span>
       </h3>
       <Table  :columns="columnsTeam" :data="teamBonus" v-if="teamBonus!=null" ></Table>
@@ -131,9 +131,10 @@
     </Modal>
 
     <div class="content">
-      <h3>活动奖金<span class="notice">{{data2.activityBonuses==true ? '已启用':'未启用'}}</span>
-       <span v-if="data2.activityBonuses==true">
-          <Button class="hy_btn btn" style="margin-left: 10px;" size="small" @click="Addactivity">新增</Button>
+      <h3>活动奖金<span class="notice">{{data1.rewardEvent==true ? '已启用':'未启用'}}</span>
+       <span >
+        <Button class="hy_btn btn" style="margin-left: 10px;background-color:#cccccc;color:#666666;" size="small" v-if="data1.rewardEvent!=true">停用</Button >
+        <Button class="hy_btn btn" style="margin-left: 10px;" size="small" @click="Addactivity" v-if="data1.rewardEvent==true">新增</Button>
        </span>
       </h3>
       <Table  :columns="columnsActivity" :data="activityBonus" v-if="activityBonus!=null" ></Table>
@@ -261,6 +262,20 @@
         activityFlag: false,
         cashRewarFlag:false,
         practiceRewardFlag:false,
+        transfer(b){
+          if(b == true){
+            return 1;
+          }else{
+            return 0;
+          }
+        },
+        transferBack(c){
+          if(c == 1){
+            return true;
+          }else{
+            return false;
+          }
+        },
         columnsTeam:[
           {
             title: '周期类型',
@@ -406,22 +421,14 @@
       getData(){
         this.$ajax({
           method: 'get',
-          url:findBonusesJsonByStore()+'?id='+this.$route.params.id
+          url: findSalaryByStore() + '/'+this.$route.params.id,
         }).then( (res) =>{
-          this.data1 = res.data;
-          this.accumulativedata= res.data.data;
+          this.data1 = res.data.salaryMangeInfo;
+          this.data1.rewardEvent = this.transferBack(this.data1.rewardEvent);
+          this.data1.rewardTeam = this.transferBack(this.data1.rewardTeam);
         }).catch( (error) =>{
-        });
-        this.$ajax({
-          method: 'get',
-          url:findSalaryByStore()+'?id='+this.$route.params.id
-        }).then( (res) =>{
-          this.data2 = res.data;
-          this.teamBonus = res.data.teamBonus;
-          this.activityBonus = res.data.activityBonus;
-        }).catch( (error) =>{
-        });
-
+          console.log(error);
+        })
       },
       savecomplaint(){
         this.$ajax({

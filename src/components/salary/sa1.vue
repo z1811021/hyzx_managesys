@@ -1,6 +1,6 @@
 <template>
   <div class="sa1">
-    <h3>{{typeOfBaseSalaryIndex}}<span style="margin-left:10px;">{{this.data.monthlyCashType}}</span></h3>
+    <h3>{{typeOfBaseSalaryIndex}}<span style="margin-left:10px;">{{monthlyCashType}}</span></h3>
     <div v-if="typeOfBaseSalary!=5&&typeOfBaseSalary!=6">
      <Button class="hy_btn btn" @click="Add">新增</Button>
      <br>

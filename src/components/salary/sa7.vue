@@ -1,31 +1,31 @@
 <template>
   <div style="margin-left:5px;">
     <div class="content">
-      <h3>投诉罚金 <span class="notice">{{data.complaintFines==true ? '已启用':'未启用'}}</span>
+      <h3>投诉罚金 <span class="notice">{{data.forfeitComplaint==true ? '已启用':'未启用'}}</span>
       </h3>
-      <span v-if="data.complaintFines==true">
-        金额:<Input v-model="data.complaintFinesAmount" @on-keyup="data.complaintFinesAmount=check2(data.complaintFinesAmount)" placeholder="投诉罚金  元" size="small" class="Input"/>
-      <Button class="btn" size="small" type="success" @click="savecomplaint">保存</Button>
+      <span v-if="data.forfeitComplaint==true">
+        金额:<Input v-model="data.complaintFinesAmount" placeholder="投诉罚金  元" size="small" class="Input"/>
+      <Button class="btn" size="small" type="success" >保存</Button>
       </span>
     </div>
 
     <div class="content">
-      <h3>迟到早退罚金<span class="notice">{{data.leaveEarlyFines==true ? '已启用':'未启用'}}</span>
-        <span v-if="data.leaveEarlyFines==true"><Button class="hy_btn btn" style="margin-left: 10px;" size="small" @click="AddleaveEarlyFines">新增</Button></span>
+      <h3>迟到早退罚金<span class="notice">{{data.forfeitLate==true ? '已启用':'未启用'}}</span>
+        <span v-if="data.forfeitLate==true"><Button class="hy_btn btn" style="margin-left: 10px;" size="small" @click="AddleaveEarlyFines">新增</Button></span>
       </h3>
       <div v-for="item in leaveEarlyFiness" style="margin: 10px 0;">
-        时间(min)：<Input v-model="item.leaveEarlyTime" @on-keyup="item.leaveEarlyTime=check(item.leaveEarlyTime)" placeholder="迟到早退时间 min" size="small"  class="Input"/>
-        金额:<Input v-model="item.totalBonus" @on-keyup="item.totalBonus=check2(item.totalBonus)" placeholder="迟到早退罚金" size="small"  class="Input"/>
-        <Button class="btn" size="small" type="success" @click="update(2,item)">保存</Button>
-        <Button class="btn" size="small" type="warning" @click="Delete(2,item)">删除</Button>
+        时间(min)：<Input v-model="item.leaveEarlyTime" placeholder="迟到早退时间 min" size="small"  class="Input"/>
+        金额:<Input v-model="item.totalBonus" placeholder="迟到早退罚金" size="small"  class="Input"/>
+        <Button class="btn" size="small" type="success" >保存</Button>
+        <Button class="btn" size="small" type="warning" >删除</Button>
       </div>
     </div>
 
     <div class="content">
-      <h3>事假罚金<span class="notice">{{data.leaveAfine==true ? '已启用':'未启用'}}</span>
+      <h3>事假罚金<span class="notice">{{data.forfeitPleave==true ? '已启用':'未启用'}}</span>
       </h3>
-      <div v-if="data.typeOfLeave=='1'">
-        按固定罚金：<Input v-model="data.leaveThePenaltyRules" @on-keyup="data.leaveThePenaltyRules=check(data.leaveThePenaltyRules)"  size="small" class="Input"/>元/天<Button class="btn" size="small" type="success" @click="savecomplaint" style="margin-left: 10px;">保存</Button>
+      <div v-if="data.forfeitPleave=='1'">
+        按固定罚金：<Input v-model="data.leaveThePenaltyRules" size="small" class="Input"/>元/天<Button class="btn" size="small" type="success" style="margin-left: 10px;">保存</Button>
       </div>
       <div v-else>
         按计算规则：月收入／实际出勤天数*请假天数
@@ -33,17 +33,17 @@
     </div>
 
     <div class="content">
-      <h3>旷工罚金<span class="notice">{{data.absenteeismFine==true ? '已启用':'未启用'}}</span>
+      <h3>旷工罚金<span class="notice">{{data.forfeitAbsent==true ? '已启用':'未启用'}}</span>
       </h3>
-      <span v-if="data.absenteeismFine==true">
-        金额:<Input v-model="data.absenteeismFineAmount"  @on-keyup="data.absenteeismFineAmount=check2(data.absenteeismFineAmount)" placeholder="旷工罚金" size="small" class="Input"/>
-      <Button class="btn" size="small" type="success" @click="ok(4)">保存</Button>
+      <span v-if="data.forfeitAbsent==true">
+        金额:<Input v-model="data.absenteeismFineAmount" placeholder="旷工罚金" size="small" class="Input"/>
+      <Button class="btn" size="small" type="success">保存</Button>
       </span>
     </div>
 
     <div class="content">
-     <h3>现金业绩罚金<span class="notice">{{data.cashPerformancePpenalty==true ? '已启用':'未启用'}}</span>
-       <span v-if="data.cashPerformancePpenalty">
+     <h3>现金业绩罚金<span class="notice">{{data.forfeitAchievement==true ? '已启用':'未启用'}}</span>
+       <span v-if="data.forfeitAchievement">
          <Button class="hy_btn btn" style="margin-left: 10px;" size="small" @click="Add(5)">新增</Button>
        </span>
      </h3>
@@ -51,8 +51,8 @@
     </div>
 
     <div class="content">
-      <h3>客流罚金<span class="notice">{{data.passengerFines==true ? '已启用':'未启用'}}</span>
-        <span v-if="data.passengerFines==true">
+      <h3>客流罚金<span class="notice">{{data.forfeitPagerFlow==true ? '已启用':'未启用'}}</span>
+        <span v-if="data.forfeitPagerFlow==true">
           <Button class="hy_btn btn" style="margin-left: 10px;" size="small" @click="Add(6)">新增</Button>
         </span>
       </h3>
@@ -60,8 +60,8 @@
     </div>
 
     <div class="content">
-      <h3>消耗罚金<span class="notice">{{data.consumptionPenalty==true ? '已启用':'未启用'}}</span>
-        <span v-if="data.consumptionPenalty==true">
+      <h3>消耗罚金<span class="notice">{{data.forfeitConsume==true ? '已启用':'未启用'}}</span>
+        <span v-if="data.forfeitConsume==true">
           <Button class="hy_btn btn" style="margin-left: 10px;" size="small" @click="Add(7)">新增</Button>
         </span>
       </h3>
@@ -69,7 +69,7 @@
     </div>
 
     <div class="content">
-      <h3>其他<span class="notice">{{data.otherFines==true ? '已启用':'未启用'}}</span>
+      <h3>其他<span class="notice">{{data.forfeitOther==true ? '已启用':'未启用'}}</span>
       </h3>
     </div>
 
@@ -212,29 +212,32 @@
       getData(){
         this.$ajax({
           method: 'get',
-          url:findBonusesJsonByStore()+'?id='+this.$route.params.id
+          url: findSalaryByStore() + '/'+this.$route.params.id,
         }).then( (res) =>{
-          this.data1 = res.data;
+          this.data = res.data.salaryMangeInfo;
+          this.data.forfeitLate = this.transferBack(this.data.forfeitLate);
+          this.data.forfeitComplaint = this.transferBack(this.data.forfeitComplaint);
+          this.data.forfeitAbsent = this.transferBack(this.data.forfeitAbsent);
+          this.data.forfeitPagerFlow = this.transferBack(this.data.forfeitPagerFlow);
+          this.data.forfeitConsume = this.transferBack(this.data.forfeitConsume);
+          this.data.forfeitOther = this.transferBack(this.data.forfeitOther);
         }).catch( (error) =>{
-        });
-        this.$ajax({
-          method: 'get',
-          url:findSalaryByStore()+'?id='+this.$route.params.id
-        }).then( (res) =>{
-          this.data = res.data;
-          this.data.oneDayPassengerFlowAward = this.data1.oneDayPassengerFlowAward;
-          this.data.singleDayPassengerFlow = this.data1.singleDayPassengerFlow;
-          this.data.accumulativePassengerFlow = this.data1.accumulativePassengerFlow;
-          this.data.accumulativePassengerFlowAward = this.data1.accumulativePassengerFlowAward;
-
-          this.leaveEarlyFiness = res.data.leaveEarlyFiness;
-          this.leaveAfines = res.data.leaveAfines;
-          this.cashPerformancePpenaltyes = res.data.cashPerformancePpenaltyes;
-          this.passengerFiness = res.data.passengerFiness;
-          this.consumptionPenaltyes = res.data.consumptionPenaltyes;
-        }).catch( (error) =>{
-        });
-
+          console.log(error);
+        })
+      },
+      transfer(b){
+        if(b == true){
+          return 1;
+        }else{
+          return 0;
+        }
+      },
+      transferBack(c){
+        if(c == 1){
+          return true;
+        }else{
+          return false;
+        }
       },
       AddleaveEarlyFines(){
         this.salaryFlag2=true;

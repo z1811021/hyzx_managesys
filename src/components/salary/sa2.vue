@@ -5,6 +5,13 @@
       <Button class="hy_btn btn" @click="add">新增</Button>
       <Table :columns="columns" :data="data"></Table>
       <Modal  class="modalProjects" v-model="salaryFlag" :mask-closable="false" :title="title">
+        <Select placeholder="请选择实操规则范围" style="width:360px;">
+          <Option value="个人">个人</Option>
+          <Option value="小组">小组</Option>
+          <Option value="全店">全店</Option>
+        </Select>
+        <br/>
+        <br/>
         <span class="text">低限：</span><InputNumber :min="0" max="100000" v-model="ut.lowLimit"  placeholder="低限" style="width: 300px"/></InputNumber>
         <br/>
         <br/>

@@ -12,26 +12,52 @@
     </Select>
     <Select v-model="data.monthlyCashType" size="small" style="width:150px;margin-right: 10px;" v-if="data.typeOfBaseSalary==1||data.typeOfBaseSalary ==2">
       <Option  value="个人">个人</Option>
+      <Option  value="小组">小组</Option>
       <Option  value="全店">全店</Option>
     </Select>
     <br>
     <br>
 
     <Row>
-      <Col span="8">
+      <Col span="6">
       <h3>实操提成
         <Checkbox v-model="data.practicalExercises">启用</Checkbox>
       </h3>
       </Col>
-      <Col span="8">
+      <Col span="6">
       <h3>业绩提成
         <Checkbox v-model="data.performanceDrawinges">启用</Checkbox>
       </h3>
       </Col>
-      <Col span="8">
+      <Col span="6">
       <h3>手工费
         <Checkbox v-model="data.manualFee">启用</Checkbox>
       </h3>
+      </Col>
+      <Col span="6">
+      <h3>绩效
+        <Checkbox v-model="data.achievementRule">启用</Checkbox>
+      </h3>
+      </Col>
+    </Row>
+    <br>
+
+    <Row>
+      <Col span="8">
+      <h4>赠送项目实操/手工费规则：</h4>
+        <!-- <Select v-model="selectedActivities" placeholder="请选择赠送项目提成方式" style="width:170px;" :transfer=true @on-change="changeActivity()" size="small">
+          <Option value="实操">实操</Option>
+          <Option value="手工费">手工费</Option>      
+        </Select> -->
+        <RadioGroup v-model="data.giveSC" style="margin-top:8px;" @on-change="changeSC">
+          <Radio label="实操">
+              <span>实操</span>
+          </Radio>
+          <Radio label="手工费" style="margin-left:10px;">
+              <span>手工费</span>
+          </Radio>
+        </RadioGroup>
+        <div style="float:right;margin-top:5px;margin-right:40px;" v-show="showSC">赠送项目实操比例： <InputNumber :max="100" :min="0" :transfer=true style="width: 40px;margin-left:-8px;" size="small" v-model="data.giveSCpercent"></InputNumber> %</div>
       </Col>
     </Row>
     <br>
@@ -42,8 +68,9 @@
       <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
     </Select>
     <Select v-if="data.typeOfBonus==2" v-model="data.cashType" size="small" style="width:150px;margin-right: 10px;">
-      <Option value="个人" >个人</Option>
-      <Option value="全店" >全店</Option>
+      <Option  value="个人">个人</Option>
+      <Option  value="小组">小组</Option>
+      <Option  value="全店">全店</Option>
     </Select>
     <Checkbox v-model="data.teamBonuses">团队奖金</Checkbox>
     <Checkbox v-model="data.activityBonuses">活动奖金</Checkbox>
@@ -51,10 +78,11 @@
     <br>
 
     <h3>罚金</h3>
-    事假罚金:<Select v-model="data.typeOfLeave" size="small" style="width:150px;margin-right: 10px;">
-    <Option value="1" >固定罚金</Option>
-    <Option value="2" >按计算规则</Option>
-  </Select>
+    <Checkbox v-model="data.forfeitPleaveable">事假罚金:</Checkbox>
+    <Select v-if="data.forfeitPleaveable==1" v-model="data.typeOfLeave" size="small" style="width:150px;margin-right: 10px;">
+      <Option value="1" >固定罚金</Option>
+      <Option value="2" >按计算规则</Option>
+    </Select>
     <Checkbox v-model="data.complaintFines">投诉罚金</Checkbox>
     <Checkbox v-model="data.leaveEarlyFines">迟到早退罚金</Checkbox>
     <Checkbox v-model="data.absenteeismFine">旷工罚金</Checkbox>
@@ -105,9 +133,14 @@
           monthlyCashType: '',
           cashType: '',
           typeOfLeave: '',
-          leaveThePenaltyRules:''
+          leaveThePenaltyRules:'',
+          giveSC: '',
+          giveSCpercent: '',
+          achievementRule: '',
+          forfeitPleaveable: ''
         },
         data1:{},
+        showSC:false,
         cityList:[
           {
             value: '1',
@@ -210,11 +243,29 @@
             monthlyCashType: res.data.salaryMangeInfo.baseSalaryOption,
             cashType: res.data.salaryMangeInfo.rewardOption,
             typeOfLeave: res.data.salaryMangeInfo.forfeitPleave,
-            leaveThePenaltyRules:''
+            leaveThePenaltyRules:'',
+            giveSC: res.data.salaryMangeInfo.praOperation,
+            giveSCpercent: res.data.salaryMangeInfo.manualCost/*,
+            achievementRule: res.data.salaryMangeInfo.manualCost
+            forfeitPleaveable: res.data.salaryMangeInfo.manualCost*/
+          }
+          if(this.data.giveSC == '实操'){
+            this.showSC = true;
+          }else{
+            this.showSC = false;
           }
         }).catch( (error) =>{
         });
 
+      },
+      changeSC(){
+            //console.log(this.giveSC);
+            if(this.data.giveSC == '实操'){
+              this.showSC = true;
+            }else{
+              this.showSC = false;
+            }
+            this.data.giveSCpercent = '';
       },
       save(){
         var salaryManage = {
@@ -254,7 +305,15 @@
             // 消耗罚金，1 选中， 0 不选中
             forfeitConsume: this.transfer(this.data.consumptionPenalty),
             // 其它，1 选中， 0 不选中
-            forfeitOther: this.transfer(this.data.otherFines)
+            forfeitOther: this.transfer(this.data.otherFines),
+            // 赠送项目提成形式
+            praOperation: this.data.giveSC,
+            // 赠送项目实操百分比
+            manualCost: this.data.giveSCpercent/*,
+            // 绩效规则
+            achievementRule: this.data.achievementRule,*/
+            // 启用事假
+            /*forfeitPleaveable: this.data.achievementRule*/
         }
         let URL = editSalarySystem();
           this.$ajax({

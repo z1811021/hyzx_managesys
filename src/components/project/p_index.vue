@@ -9,7 +9,7 @@
     <Table :columns="columns" :data="data"></Table>
 
     <Modal class="modalProjects" v-model="storeFlag" :mask-closable="false"  :title="store">
-      <div style="float:left;;margin-left: 63px;">项目类别：</div>
+      <h4 style="float:left;;margin-left: 63px;">项目类别：</h4>
       <br/>
       <br/>
       <RadioGroup v-model="projectChoose" @on-change="changePro" prop="test">
@@ -142,7 +142,34 @@
             :parser="value => value.replace('元', '')" placeholder="疗程卡扣价：元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;">
           </InputNumber>
           </div>
-      <div style="float: left;margin-left: 12%;margin-top:3%;">项目属性：</div>
+      <div style="float:left;margin-left: 63px;margin-top:18px;">实操方式：</div>
+        <RadioGroup v-show="!(pis.face || pis.body)" style="margin-top:10px;margin-right:40%;">
+            <Radio label="实际实操" style="float:left;" disabled>
+                <span>实际实操</span>
+            </Radio>
+            <Radio label="固定实操" style="float:right;" disabled>
+                <span>固定实操</span>
+            </Radio>
+        </RadioGroup>
+        <RadioGroup v-show="pis.face || pis.body" v-model="pis.actualOperation" @on-change="changeOperation" style="margin-top:10px;margin-right:40%;">
+            <Radio label="实际实操" style="float:left;" >
+                <span>实际实操</span>
+            </Radio>
+            <Radio label="固定实操" style="float:right;" >
+                <span>固定实操</span>
+            </Radio>
+        </RadioGroup>
+        <div style="float:right;margin-top:-20px;margin-right:60px;" v-show="showStable" v-model="pis.fixedOperation">固定实操额： <InputNumber :min="0" :transfer=true style="width: 40px;margin-left:-8px;" size="small" v-model="pis.fixedOperation"></InputNumber>元</div>
+        <div style="float:left;margin-left: 63px;margin-top:10px;" v-show="!(pis.face || pis.body)">
+          项目手工费： <InputNumber :min="0" :transfer=true style="width: 40px;margin-left:-8px;" size="small" v-model="pis.manualCost" disabled></InputNumber> 元
+        </div>
+        <div style="float:left;margin-left: 63px;margin-top:10px;" v-show="pis.face || pis.body">
+          项目手工费： <InputNumber :min="0" :transfer=true style="width: 40px;margin-left:-8px;" size="small" v-model="pis.manualCost"></InputNumber> 元
+        </div>
+        <br/>
+        <br/>
+        <br/>
+      <h4 style="float: left;margin-left: 12%;margin-top:3%;">项目属性：</h4>
           <br/>
           <br/>
           <br/>
@@ -188,6 +215,7 @@
         showAgenda: false,
         showTc: false,
         projectChoose: '',
+        showStable: false,
         projectFilterList: [],
         pis: {
               // 门店id，本地测试 24，服务器测试可用 22
@@ -225,14 +253,20 @@
               //专业说明, 字数应限制在 512 个字符
               proDescription:'',
               //技术要点, 字数应限制在 512 个字符
-              technicalPoints:''
+              technicalPoints:'',
+              //实操类型
+              actualOperation:'',
+              //固定实操额
+              fixedOperation:'',
+              //手工费
+              manualCost:''
         },
         columns: [
           {
             title: '项目类别',
             key: 'projectCategory',
             filters: [],
-              filterMultiple: false,
+              //filterMultiple: false,
               filterMethod (value, row) {
                   if (value === 1) {
                       return row.projectCategory === '面部 - 清洁';
@@ -262,34 +296,36 @@
                       return row.projectCategory === '面部 - 整骨';
                   } else if (value === 14) {
                       return row.projectCategory === '面部 - 其他';
-                  } else if (value === 15) {
+                  } else if (value === 1001) {
                       return row.projectCategory === '身体 - 头部';
-                  } else if (value === 16) {
+                  } else if (value === 1002) {
                       return row.projectCategory === '身体 - 肩颈';
-                  } else if (value === 17) {
+                  } else if (value === 1003) {
                       return row.projectCategory === '身体 - 背部';
-                  } else if (value === 18) {
+                  } else if (value === 1004) {
                       return row.projectCategory === '身体 - 胸部';
-                  } else if (value === 19) {
+                  } else if (value === 1005) {
                       return row.projectCategory === '身体 - 腹部';
-                  } else if (value === 20) {
+                  } else if (value === 1006) {
                       return row.projectCategory === '身体 - 腰部';
-                  } else if (value === 21) {
+                  } else if (value === 1007) {
                       return row.projectCategory === '身体 - 臀部';
-                  } else if (value === 22) {
+                  } else if (value === 1008) {
                       return row.projectCategory === '身体 - 大腿';
-                  } else if (value === 23) {
+                  } else if (value === 1009) {
                       return row.projectCategory === '身体 - 小腿';
-                  } else if (value === 24) {
+                  } else if (value === 1010) {
                       return row.projectCategory === '身体 - 足部';
-                  } else if (value === 25) {
+                  } else if (value === 1011) {
                       return row.projectCategory === '身体 - 其他';
                   }
-              }
+              },
+              width:120
           },
           {
             title: '项目',
-            key: 'itemName'
+            key: 'itemName',
+            width:100
           },
           {
             title: '单价',
@@ -302,27 +338,42 @@
           },*/
           {
             title: '疗程次数',
-            key: 'courseTimes',
-            sortable: true
+            key: 'courseTimes'/*,
+            sortable: true*/
           },
           {
             title: '疗程价格',
-            key: 'coursePrice',
-            sortable: true
+            key: 'coursePrice'/*,
+            sortable: true*/
           },
           {
-            title: '疗程卡扣价格',
+            title: '疗程卡扣价',
             key: 'courseCharges',
-            sortable: true
+            width: 100
           },
           {
-            title: '项目间隔',
+            title: '间隔',
             key: 'courseInterval',
-            sortable: true
+            width:70
+          },
+          {
+            title: '实操类型',
+            key: 'actualOperation',
+            width: 90
+          },
+          {
+            title: '实操金额',
+            key: 'realUseOperation',
+            width: 90
+          },
+          {
+            title: '手工费',
+            key: 'manualCost'
           },
           {
             title: '操作',
             key: 'action',
+            width: 130,
             render: (h, params) => {
               return h('div', [
                 h('Button', {
@@ -370,6 +421,7 @@
         this.showBody = false;
         this.showAgenda = false;
         this.showTc = false;
+        this.showStable = false;
         this.projectChoose = '';
         this.pis = {
               // 门店id，本地测试 24，服务器测试可用 22
@@ -407,7 +459,13 @@
               //专业说明, 字数应限制在 512 个字符
               proDescription:'',
               //技术要点, 字数应限制在 512 个字符
-              technicalPoints:''
+              technicalPoints:'',
+              //实操类型
+              actualOperation:'',
+              //固定实操额
+              fixedOperation:'',
+              //手工费
+              manualCost:''
         };
         this.$refs.setFaceQuery.$data.query = '';
         //this.$refs.setBodyQuery.$data.query = '';
@@ -428,6 +486,13 @@
           }
         }
         return result;
+      },
+      changeOperation(){
+        if(this.pis.actualOperation == "实际实操"){
+            this.showStable = false; 
+          }else if(this.pis.actualOperation == "固定实操"){
+            this.showStable = true; 
+          }
       },
       getList() {
         this.$ajax({
@@ -472,27 +537,27 @@
                     this.data[i].projectCategory = "面部 - 整骨";
               }else if(this.data[i].face != '' && this.data[i].face == 14){
                     this.data[i].projectCategory = "面部 - 其他";
-              }else if(this.data[i].face == '' && this.data[i].body == 1){
+              }else if(this.data[i].body != '' && this.data[i].body == 1){
                     this.data[i].projectCategory = "身体 - 头部";
-              }else if(this.data[i].face != '' && this.data[i].body == 2){
+              }else if(this.data[i].body != '' && this.data[i].body == 2){
                     this.data[i].projectCategory = "身体 - 肩颈";
-              }else if(this.data[i].face != '' && this.data[i].body == 3){
+              }else if(this.data[i].body != '' && this.data[i].body == 3){
                     this.data[i].projectCategory = "身体 - 背部";
-              }else if(this.data[i].face != '' && this.data[i].body == 4){
+              }else if(this.data[i].body != '' && this.data[i].body == 4){
                     this.data[i].projectCategory = "身体 - 胸部";
-              }else if(this.data[i].face != '' && this.data[i].body == 5){
+              }else if(this.data[i].body != '' && this.data[i].body == 5){
                     this.data[i].projectCategory = "身体 - 腹部";
-              }else if(this.data[i].face != '' && this.data[i].body == 6){
+              }else if(this.data[i].body != '' && this.data[i].body == 6){
                     this.data[i].projectCategory = "身体 - 腰部";
-              }else if(this.data[i].face != '' && this.data[i].body == 7){
+              }else if(this.data[i].body != '' && this.data[i].body == 7){
                     this.data[i].projectCategory = "身体 - 臀部";
-              }else if(this.data[i].face != '' && this.data[i].body == 8){
+              }else if(this.data[i].body != '' && this.data[i].body == 8){
                     this.data[i].projectCategory = "身体 - 大腿";
-              }else if(this.data[i].face != '' && this.data[i].body == 9){
+              }else if(this.data[i].body != '' && this.data[i].body == 9){
                     this.data[i].projectCategory = "身体 - 小腿";
-              }else if(this.data[i].face != '' && this.data[i].body == 10){
+              }else if(this.data[i].body != '' && this.data[i].body == 10){
                     this.data[i].projectCategory = "身体 - 足部";
-              }else if(this.data[i].face != '' && this.data[i].body == 11){
+              }else if(this.data[i].body != '' && this.data[i].body == 11){
                     this.data[i].projectCategory = "身体 - 其他";
               }
               this.data[i].itemPrice = this.data[i].itemPrice + "元/次";
@@ -500,17 +565,25 @@
               this.data[i].coursePrice = this.data[i].coursePrice + "元";
               this.data[i].courseCharges = this.data[i].courseCharges + "元";
               this.data[i].courseInterval = this.data[i].courseInterval + "天";
+              this.data[i].manualCost = this.data[i].manualCost + "元";
               this.data[i].index = i+1;
+              if(this.data[i].actualOperation == '实际实操'){
+                this.data[i].realUseOperation = parseInt(this.data[i].courseCharges)/parseInt(this.data[i].courseTimes) + "元"; 
+              }else if(this.data[i].actualOperation == '固定实操'){
+                this.data[i].realUseOperation = this.data[i].fixedOperation + "元"; 
+              }
             }
             //console.log(JSON.parse(JSON.stringify(this.columns)));
             this.projectFilterList = this.uniqueArray(this.data,"projectCategory");
             for(var j=0;j<this.projectFilterList.length;j++){
               var currentFitlerItem = {
                         label: this.projectFilterList[j].projectCategory,
-                        value: j+1
+                        value: parseInt((this.projectFilterList[j].face != '')?this.projectFilterList[j].face:"100"+this.projectFilterList[j].body)
                     };
               this.columns[0].filters.push(currentFitlerItem);
             }
+            this.columns[0].filters = this.uniqueArray(this.columns[0].filters,"label");
+            console.log(JSON.parse(JSON.stringify(this.columns[0].filters)));
           }
         }).catch((error) => {
           this.$Message.error('获取失败');
@@ -556,8 +629,14 @@
         if(this.pis.resolveProblem == '' ){
           validateMessage = validateMessage + "请输入解决方案！<br/>";
         }
-        if(this.pis.courseInterval == null ){
-          validateMessage = validateMessage + "请输入项目间隔天数！<br/>";
+        if(this.pis.actualOperation == '' ){
+          validateMessage = validateMessage + "请选择实操类型！<br/>";
+        }
+        if(this.pis.actualOperation == '固定实操' && this.pis.fixedOperation == ''){
+          validateMessage = validateMessage + "请输入固定实操额！<br/>";
+        }
+        if(this.pis.manualCost == '' ){
+          validateMessage = validateMessage + "请输入项目手工费！<br/>";
         }
         if(validateMessage != ''){
           this.$Message.warning(validateMessage);
@@ -604,6 +683,7 @@
         this.pis.courseTimes = this.pis.courseTimes.replace("次","");
         this.pis.coursePrice = this.pis.coursePrice.replace("元","");
         this.pis.courseCharges = this.pis.courseCharges.replace("元","");
+        this.pis.manualCost = this.pis.manualCost.replace("元","");
         this.pis.highFreq = this.transferBack(this.pis.highFreq);
         this.pis.presents = this.transferBack(this.pis.presents);
         this.pis.superposition = this.transferBack(this.pis.superposition);
