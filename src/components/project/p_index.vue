@@ -142,7 +142,7 @@
             :parser="value => value.replace('元', '')" placeholder="疗程卡扣价：元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;">
           </InputNumber>
           </div>
-      <div style="float:left;margin-left: 63px;margin-top:18px;">实操方式：</div>
+      <div style="float:left;margin-left: 63px;margin-top:10px;">实操方式：</div>
         <RadioGroup v-show="!(pis.face || pis.body)" style="margin-top:10px;margin-right:40%;">
             <Radio label="实际实操" style="float:left;" disabled>
                 <span>实际实操</span>

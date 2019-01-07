@@ -611,6 +611,9 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
               if(this.data[i].actiDescs == ''){
                 this.data[i].actiDescs = '--';
               }
+              if(this.data[i].rechItems == ''){
+                this.data[i].rechItems = '--';
+              }
             }
           }).catch((error) => {
             this.$Message.error('获取失败');
