@@ -5,7 +5,7 @@
       <Button class="hy_btn btn" @click="add">新增</Button>
       <Table :columns="columns" :data="data"></Table>
       <Modal  class="modalProjects" v-model="salaryFlag" :mask-closable="false" :title="title">
-        <Select placeholder="请选择实操规则范围" style="width:360px;">
+        <Select placeholder="请选择实操规则范围" v-model="ut.practicalRange" style="width:360px;">
           <Option value="个人">个人</Option>
           <Option value="小组">小组</Option>
           <Option value="全店">全店</Option>
@@ -137,7 +137,9 @@
               // 身体指向
               bodyDesignated:"",
               // 身体非指向
-              nBodyDesignated:""
+              nBodyDesignated:"",
+              // 实操提成规则
+              practicalRange:""
         },
         salaryFlag: false,
       }
@@ -204,7 +206,9 @@
               // 身体指向
               bodyDesignated:"",
               // 身体非指向
-              nBodyDesignated:""
+              nBodyDesignated:"",
+              // 实操提成规则
+              practicalRange:""
         };
       },
       ok(){
@@ -212,10 +216,10 @@
           this.$Message.warning('实操提成选项不能全为空！');
           return;
         }
-        this.ut.facialPracticeAppoint = this.ut.facialPracticeAppoint/100;
+        /*this.ut.facialPracticeAppoint = this.ut.facialPracticeAppoint/100;
         this.ut.facialPracticeNonSpecifiedt = this.ut.facialPracticeNonSpecifiedt/100;
         this.ut.physicalExerciseAppoint = this.ut.physicalExerciseAppoint/100;
-        this.ut.physicalExerciseNonSpecifiedt = this.ut.physicalExerciseNonSpecifiedt/100;
+        this.ut.physicalExerciseNonSpecifiedt = this.ut.physicalExerciseNonSpecifiedt/100;*/
         if(this.title == "新增"){
           var practicalCommission = this.ut;
           this.$ajax({

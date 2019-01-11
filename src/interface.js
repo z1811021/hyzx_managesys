@@ -438,7 +438,54 @@ export const editPracticalExerciseStatus = function () {
   const API = host + URL;
   return API;
 };
-
+//保存手工费提成
+export const saveManualFee = function () {
+  const URL = '/manual/fee/add';
+  const API = host + URL;
+  return API;
+};
+//修改手工费提成
+export const editManualFee = function () {
+  const URL = '/manual/fee/edit';
+  const API = host + URL;
+  return API;
+};
+//删除手工费提成
+export const deleteManualFee = function () {
+  const URL = '/manual/fee/delete';
+  const API = host + URL;
+  return API;
+};
+//获取手工费提成
+export const getManualFee = function () {
+  const URL = '/manual/fee/store';
+  const API = host + URL;
+  return API;
+};
+//保存绩效提成
+export const savePerformance = function () {
+  const URL = '/performance/add';
+  const API = host + URL;
+  return API;
+};
+//修改绩效提成
+export const editPerformance = function () {
+  const URL = '/performance/edit';
+  const API = host + URL;
+  return API;
+};
+//删除绩效提成
+export const deletePerformance = function () {
+  const URL = '/performance/delete';
+  const API = host + URL;
+  return API;
+};
+//获取绩效提成
+export const getPerformance = function () {
+  const URL = '/performance/store';
+  const API = host + URL;
+  return API;
+};
 //获取业绩提成
 export const getPerformanceDrawing = function () {
   const URL = '/performance/commission/store';

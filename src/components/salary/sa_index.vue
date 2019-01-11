@@ -36,7 +36,7 @@
       </Col>
       <Col span="6">
       <h3>绩效
-        <Checkbox v-model="data.achievementRule">启用</Checkbox>
+        <Checkbox v-model="data.achEnable">启用</Checkbox>
       </h3>
       </Col>
     </Row>
@@ -45,10 +45,6 @@
     <Row>
       <Col span="8">
       <h4>赠送项目实操/手工费规则：</h4>
-        <!-- <Select v-model="selectedActivities" placeholder="请选择赠送项目提成方式" style="width:170px;" :transfer=true @on-change="changeActivity()" size="small">
-          <Option value="实操">实操</Option>
-          <Option value="手工费">手工费</Option>      
-        </Select> -->
         <RadioGroup v-model="data.giveSC" style="margin-top:8px;" @on-change="changeSC">
           <Radio label="实操">
               <span>实操</span>
@@ -78,8 +74,8 @@
     <br>
 
     <h3>罚金</h3>
-    <Checkbox v-model="data.forfeitPleaveable">事假罚金:</Checkbox>
-    <Select v-if="data.forfeitPleaveable==1" v-model="data.typeOfLeave" size="small" style="width:150px;margin-right: 10px;">
+    <Checkbox v-model="data.enableFpleave">事假罚金:</Checkbox>
+    <Select v-if="data.enableFpleave==1" v-model="data.typeOfLeave" size="small" style="width:150px;margin-right: 10px;">
       <Option value="1" >固定罚金</Option>
       <Option value="2" >按计算规则</Option>
     </Select>
@@ -136,8 +132,8 @@
           leaveThePenaltyRules:'',
           giveSC: '',
           giveSCpercent: '',
-          achievementRule: '',
-          forfeitPleaveable: ''
+          achEnable: '',
+          enableFpleave: ''
         },
         data1:{},
         showSC:false,
@@ -245,9 +241,9 @@
             typeOfLeave: res.data.salaryMangeInfo.forfeitPleave,
             leaveThePenaltyRules:'',
             giveSC: res.data.salaryMangeInfo.praOperation,
-            giveSCpercent: res.data.salaryMangeInfo.manualCost/*,
-            achievementRule: res.data.salaryMangeInfo.manualCost
-            forfeitPleaveable: res.data.salaryMangeInfo.manualCost*/
+            giveSCpercent: res.data.salaryMangeInfo.manualCost,
+            achEnable: this.transferBack(res.data.salaryMangeInfo.achEnable),
+            enableFpleave: this.transferBack(res.data.salaryMangeInfo.enableFpleave)
           }
           if(this.data.giveSC == '实操'){
             this.showSC = true;
@@ -309,11 +305,11 @@
             // 赠送项目提成形式
             praOperation: this.data.giveSC,
             // 赠送项目实操百分比
-            manualCost: this.data.giveSCpercent/*,
-            // 绩效规则
-            achievementRule: this.data.achievementRule,*/
+            manualCost: this.data.giveSCpercent,
+            // 启用绩效规则
+            achEnable: this.transfer(this.data.achEnable),
             // 启用事假
-            /*forfeitPleaveable: this.data.achievementRule*/
+            enableFpleave: this.transfer(this.data.enableFpleave)
         }
         let URL = editSalarySystem();
           this.$ajax({

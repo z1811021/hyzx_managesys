@@ -25,7 +25,7 @@
       <Input style="width:300px;" v-model="add.basePay" placeholder="元">
         <span slot="prepend">固定底薪：</span>
         <Button slot="append" icon="archive" @click="save">保存</Button>
-    </Input>   
+      </Input>   
     </div>
     <div v-if="typeOfBaseSalary==6">
 
