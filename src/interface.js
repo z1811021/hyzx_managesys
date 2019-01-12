@@ -577,54 +577,50 @@ export const deleteConsumptionPenalty = function () {
   return API;
 };
 
-//查询奖金
-export const findBonusesJsonByStore = function () {
-  const URL = '/app/api/salary/findBonusesJsonByStore';
+//保存客流奖金
+export const savecomplaint = function () {
+  const URL = '/reward/manage/passger/add';
   const API = host + URL;
   return API;
 };
-//保存累计客流区间奖励
-export const editAccumulativePassengerFlow = function () {
-  const URL = '/app/api/salary/editAccumulativePassengerFlow';
+//查询客流奖金
+export const getcomplaint = function () {
+  const URL = '/reward/manage/passger/store';
   const API = host + URL;
   return API;
 };
-//删除累计客流区间奖励
+//删除客流奖金
+export const deletecomplaint = function () {
+  const URL = '/reward/manage/passger/delete';
+  const API = host + URL;
+  return API;
+};
+
+//保存客流区间奖金
+export const saveAccumulativePassengerFlow = function () {
+  const URL = '/reward/manage/cumpass/add';
+  const API = host + URL;
+  return API;
+};
+//查询客流区间奖金
+export const getAccumulativePassengerFlow = function () {
+  const URL = '/reward/manage/cumpass/store';
+  const API = host + URL;
+  return API;
+};
+//删除客流区间奖金
 export const deleteAccumulativePassengerFlow = function () {
-  const URL = '/app/api/salary/deleteAccumulativePassengerFlow';
+  const URL = '/reward/manage/cumpass/delete';
   const API = host + URL;
   return API;
 };
-//保存现金业绩奖励
-export const editCashReward = function () {
-  const URL = '/app/api/salary/editCashReward';
+//编辑客流区间奖金
+export const editAccumulativePassengerFlow = function () {
+  const URL = '/reward/manage/cumpass/edit';
   const API = host + URL;
   return API;
 };
-//删除现金业绩奖励
-export const deleteCashReward = function () {
-  const URL = '/app/api/salary/deleteCashReward';
-  const API = host + URL;
-  return API;
-};
-//保存实操奖励
-export const editPracticeReward = function () {
-  const URL = '/app/api/salary/editPracticeReward';
-  const API = host + URL;
-  return API;
-};
-//删除实操奖励
-export const deletePracticeReward = function () {
-  const URL = '/app/api/salary/deletePracticeReward';
-  const API = host + URL;
-  return API;
-};
-//保存团队奖金
-export const editTeamBonus = function () {
-  const URL = '/app/api/salary/editTeamBonus';
-  const API = host + URL;
-  return API;
-};
+
 //删除团队奖金
 export const deleteTeamBonus = function () {
   const URL = '/app/api/salary/deleteTeamBonus';

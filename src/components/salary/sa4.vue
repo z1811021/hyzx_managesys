@@ -4,8 +4,7 @@
     <div>
       <Button class="hy_btn btn" @click="add">新增</Button>
       <Table :columns="columns" :data="data"></Table>
-      <Modal  class="modalProjects" v-model="salaryFlag" :mask-closable="false" :title="title">
-        <h3>{{modifyFlag}}</h3>
+      <Modal  class="modalProjects" v-model="salaryFlag" :mask-closable="false" :title="modifyFlag">
         <h3>设置手工费类型：</h3>
         <RadioGroup style="margin-top:8px;" v-model="manualSetting" @on-change="changeManual">
           <Radio label="项目自带手工费" v-model="projectFee">
