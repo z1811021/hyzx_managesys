@@ -142,6 +142,11 @@ export const verifyCode  = function () {
   const API = host + URL;
   return API;
 };
+export const changePassword  = function () {
+  const URL = '/customer/update/password';
+  const API = host + URL;
+  return API;
+};
 export const getRoomInfo  = function () {
   const URL = '/store/getRoomInfo/';
   const API = host + URL;
