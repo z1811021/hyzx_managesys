@@ -65,6 +65,25 @@
         })
       },
       ok(){
+        var validateMessage = '';
+        if( this.empPay == ''){
+            validateMessage = validateMessage + "请输入员工缴纳绩效基金！<br/>";
+          }
+        if( this.perOption == ''){
+            validateMessage = validateMessage + "请选择绩效考核项目！<br/>";
+          }
+        if( this.achMoney == ''){
+            validateMessage = validateMessage + "请输入需要达到金额！<br/>";
+          }
+        if( this.retMoney == ''){
+            validateMessage = validateMessage + "请输入达到返还金额！<br/>";
+          }
+        if( this.nAchMoney == ''){
+            validateMessage = validateMessage + "请输入未到达到金额！<br/>";
+          }
+        if( this.dedMoney == ''){
+            validateMessage = validateMessage + "请输入扣除基金金额！<br/>";
+          }
         var performance = {
             // 门店的 id             
             storeId: this.$route.params.id,
@@ -81,24 +100,28 @@
             // k扣掉 ? 元
             dedMoney: this.dedMoney
           }
-        console.log(JSON.parse(JSON.stringify(this.performance)));
-        let URL = savePerformance();
-          this.$ajax({
-            method: 'POST',
-            dataType: 'JSON',
-            contentType: 'application/json;charset=UTF-8',
-            headers: {
-              "authToken": sessionStorage.getItem('authToken')
-            },
-            data: performance,
-            url: URL,
-          }).then((res) => {
-            this.$Message.success('操作成功');
-            this.getList();
-            this.getData();
-          }).catch((error) => {
-            this.$Message.error('操作失败');
-          });
+          let URL = savePerformance();
+        if(validateMessage != ''){
+            this.$Message.warning(validateMessage);
+            validateMessage = '';
+          }else{
+            this.$ajax({
+              method: 'POST',
+              dataType: 'JSON',
+              contentType: 'application/json;charset=UTF-8',
+              headers: {
+                "authToken": sessionStorage.getItem('authToken')
+              },
+              data: performance,
+              url: URL,
+            }).then((res) => {
+              this.$Message.success('操作成功');
+              this.getList();
+              this.getData();
+            }).catch((error) => {
+              this.$Message.error('操作失败');
+            });
+          }
       },
       deletePerformance(){
         this.$ajax({

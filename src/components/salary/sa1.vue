@@ -6,13 +6,13 @@
      <br>
      <Table  :columns="columns1" :data="salarydata1" ></Table>
      <Modal class="modalProjects" v-model="salaryFlag" :mask-closable="false" :title="title">
-       低限：<Input v-model="add.lowLimit" placeholder="低限" style="width: 300px"/>
+       低限：<InputNumber :min="0" max="100000" v-model="add.lowLimit" placeholder="低限" style="width: 300px"></InputNumber>
        <br/>
        <br/>
-       高限：<Input v-model="add.highLimit" placeholder="高限" style="width: 300px"/>
+       高限：<InputNumber :min="0" max="100000" v-model="add.highLimit" placeholder="高限" style="width: 300px"></InputNumber>
        <br/>
        <br/>
-       金额：<Input v-model="add.money" placeholder="金额" style="width: 300px"/>
+       金额：<InputNumber :min="0" max="100000" v-model="add.money" placeholder="金额" style="width: 300px"></InputNumber>
        <br/>
        <br/>
        <div slot="footer">
