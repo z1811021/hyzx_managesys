@@ -311,22 +311,33 @@
             // 启用事假
             enableFpleave: this.transfer(this.data.enableFpleave)
         }
-        let URL = editSalarySystem();
-          this.$ajax({
-            method: 'POST',
-            dataType: 'JSON',
-            contentType: 'application/json;charset=UTF-8',
-            headers: {
-              "authToken": sessionStorage.getItem('authToken')
-            },
-            data: salaryManage,
-            url: URL,
-          }).then((res) => {
-            this.$Message.success('操作成功');
-            this.getData();
-          }).catch((error) => {
-            this.$Message.error('操作失败');
-          });
+        var validateMessage = '';
+        if(this.data.giveSC == '实操'){
+            if(this.data.giveSCpercent == ''){
+              validateMessage = validateMessage + "请输赠送项目实操比例！<br/>";
+            }
+          }
+            let URL = editSalarySystem();
+            if(validateMessage != ''){
+                this.$Message.warning(validateMessage);
+                validateMessage = '';
+              }else{
+              this.$ajax({
+                method: 'POST',
+                dataType: 'JSON',
+                contentType: 'application/json;charset=UTF-8',
+                headers: {
+                  "authToken": sessionStorage.getItem('authToken')
+                },
+                data: salaryManage,
+                url: URL,
+              }).then((res) => {
+                this.$Message.success('操作成功');
+                this.getData();
+              }).catch((error) => {
+                this.$Message.error('操作失败');
+              });
+          }
       },
       more(){
         this.$router.push({name: 'sa_index2'})
