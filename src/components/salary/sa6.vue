@@ -1,5 +1,6 @@
 <template>
   <div class="sa6">
+    <h3>{{achEnable==true ? '已启用':'未启用'}}</h3>
     <div class="content" v-if="achEnable==true">
       <h3>绩效PK <span class="notice">{{achEnable == true?'已启用':'未启用'}}</span><Button @click="ok" size="small" style="background-color: #66368C;color: #fff;margin-left:10px;">保存</Button><Button @click="deletePerformance" size="small" style="background-color: #66368C;color: #fff;margin-left:10px;">清空</Button></h3>
       <br>

@@ -1,7 +1,7 @@
 <template>
   <div class="sa4">
     <h3>{{manualFee == true ? '已启用':'未启用'}}</h3>
-    <div>
+    <div v-if="manualFee == true">
       <Button class="hy_btn btn" @click="add">新增</Button>
       <Table :columns="columns" :data="data"></Table>
       <Modal  class="modalProjects" v-model="salaryFlag" :mask-closable="false" :title="modifyFlag">

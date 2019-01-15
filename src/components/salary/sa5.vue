@@ -96,11 +96,11 @@
       </h3>
       <Table :columns="columnsTeam" :data="teamBonus" v-if="teamBonus!=null" ></Table>
     </div>
-    <Modal v-model="teamFlag" title="新增" @on-ok="saveTeamBonus">
+    <Modal v-model="teamFlag" :title="teamBonusFlag">
       <div style="margin-left:20px;">
         <div>
           <span class="text">周期类型：</span>
-          <Select v-model="teamadd.periodType" :transfer=true style="width:200px">
+          <Select v-model="teamadd.cycleType" :transfer=true style="width:200px">
             <Option value="单月" >单月</Option>
             <Option value="季度" >季度</Option>
             <Option value="年度" >年度</Option>
@@ -108,13 +108,13 @@
         </div>
         <br/>
         <span class="text">开始时间：</span>
-        <DatePicker v-model="teamadd.startingTime" type="date" placeholder="Select date" style="width: 120px"></DatePicker>
+        <DatePicker v-model="teamadd.startDate" type="date" placeholder="Select date" style="width: 120px"></DatePicker>
         <span class="text" style="padding-left: 10px;">结束时间：</span>
-        <DatePicker v-model="teamadd.endTime" type="date" placeholder="Select date" style="width: 120px"></DatePicker>
+        <DatePicker v-model="teamadd.endDate" type="date" placeholder="Select date" style="width: 120px"></DatePicker>
         <br>
         <br>
         <span class="text">计算类型：</span>
-        <Select v-model="teamadd.calculateTheType" :transfer=true style="width:200px">
+        <Select v-model="teamadd.calcuType" :transfer=true style="width:200px">
           <Option value="现金" >现金</Option>
           <Option value="实操" >实操</Option>
           <Option value="客流" >客流</Option>
@@ -122,30 +122,30 @@
         <br>
         <br>
         <span class="text">奖金总额：</span>
-        <Input v-model="teamadd.totalBonus" @on-keyup="teamadd.totalBonus=check2(teamadd.totalBonus)" placeholder="奖金总额" style="width: 300px"/>
+        <Input v-model="teamadd.rewardCount" placeholder="奖金总额" style="width: 300px"/>
 
         <br>
         <br>
         <span class="text">低限：</span>
-        <Input v-model="teamadd.lowLimit" @on-keyup="teamadd.lowLimit=check(teamadd.lowLimit)" placeholder="低限" style="width: 300px"/>
+        <Input v-model="teamadd.lowLimit" placeholder="低限" style="width: 300px"/>
         <br>
         <br>
         <span class="text">高限：</span>
-        <Input v-model="teamadd.highLimit" @on-keyup="teamadd.highLimit=check(teamadd.highLimit)" placeholder="高限" style="width: 300px"/>
+        <Input v-model="teamadd.highLimit" placeholder="高限" style="width: 300px"/>
         <br>
         <br>
         <span class="text">分配类型：</span>
-        <Select v-model="teamadd.assignmentType" :transfer=true style="width:200px">
+        <Select v-model="teamadd.distrType" :transfer=true style="width:200px">
           <Option value="平均" >平均</Option>
           <Option value="比例" >比例</Option>
         </Select>
         <br/>
         <br/>
-        <div slot="footer">
-          <Button type="primary" @click="saveAccumulativePassengerFlow">添加</Button>
-          <Button type="ghost" @click="close">取消</Button>
-        </div>
-      </div> 
+      </div>
+      <div slot="footer">
+          <Button type="primary" @click="saveTeamBonus">添加</Button>
+          <Button type="ghost" @click="closeTeamBonus">取消</Button>
+        </div> 
     </Modal>
 
     <div class="content">
@@ -157,22 +157,22 @@
       </h3>
       <Table :columns="columnsActivity" :data="activityBonus" v-if="activityBonus!=null" ></Table>
     </div>
-    <Modal v-model="activityFlag" title="新增" @on-ok="saveActivityBonus">
+    <Modal v-model="activityFlag" :title="activityBonusFlag">
       <div style="margin-left:20px;">
         <span class="text">开始时间：</span>
-        <DatePicker v-model="activityadd.startingTime" type="date"  style="width: 100px"></DatePicker>
+        <DatePicker v-model="activityadd.startDate" type="date"  style="width: 100px"></DatePicker>
         <span class="text" style="padding-left: 10px;">结束时间：</span>
-        <DatePicker v-model="activityadd.endTime" type="date"  style="width: 100px"></DatePicker>
+        <DatePicker v-model="activityadd.endDate" type="date"  style="width: 100px"></DatePicker>
         <br>
         <br>
         <span class="text">计算类型：</span>
-        <Select v-model="activityadd.calculateTheType" :transfer=true style="width:200px">
+        <Select v-model="activityadd.calcuType" :transfer=true style="width:200px">
           <Option value="现金" >现金</Option>
         </Select>
         <br>
         <br>
         <span class="text">奖金总额：</span>
-        <Input v-model="activityadd.totalBonus" placeholder="奖金总额" style="width: 300px"/>
+        <Input v-model="activityadd.rewardCount" placeholder="奖金总额" style="width: 300px"/>
         <br>
         <br>
         <span class="text">低限：</span>
@@ -184,20 +184,24 @@
         <br>
         <br>
         <span class="text">分配类型：</span>
-        <Select v-model="activityadd.assignmentType" :transfer=true style="width:200px">
+        <Select v-model="activityadd.distrType" :transfer=true style="width:200px">
           <Option value="平均">平均</Option>
           <Option value="比例">比例</Option>
         </Select>
         <br/>
         <br/>
     </div>
+        <div slot="footer">
+          <Button type="primary" @click="saveActivityBonus">添加</Button>
+          <Button type="ghost" @click="closeActivityBonus">取消</Button>
+        </div>
     </Modal>
 
   </div>
 </template>
 
 <script>
-  import {editSalarySystem,findBonusesJsonByStore,findSalaryByStore,editCashReward,editTeamBonus,deleteTeamBonus,editActivityBonus,deleteActivityBonus,editPassengerFlowAwardJson,editPracticeReward,deletecomplaint,getcomplaint,savecomplaint,saveAccumulativePassengerFlow,editAccumulativePassengerFlow,deleteAccumulativePassengerFlow,getAccumulativePassengerFlow} from '../../interface'
+  import {editSalarySystem,findBonusesJsonByStore,findSalaryByStore,editCashReward,editTeamBonus,saveTeamBonus,getTeamBonus,deleteTeamBonus,editActivityBonus,deleteActivityBonus,saveActivityBonus,getActivityBonus,editPassengerFlowAwardJson,editPracticeReward,deletecomplaint,getcomplaint,savecomplaint,saveAccumulativePassengerFlow,editAccumulativePassengerFlow,deleteAccumulativePassengerFlow,getAccumulativePassengerFlow} from '../../interface'
   export default{
     name: 'sa5',
     data(){
@@ -237,6 +241,10 @@
         teamBonus:[],
         activityBonus:[],
         totalDataTable:[],
+        teamBonusFlag: '',
+        activityBonusFlag: '',
+        currentTeamBonusId: '',
+        currentActivityBonusId: '',
         teamadd:{
           assignmentType: "",
           calculateTheType: "",
@@ -443,23 +451,23 @@
         columnsTeam:[
           {
             title: '周期类型',
-            key: 'periodType'
+            key: 'cycleType'
           },
           {
             title: '开始时间',
-            key: 'startingTime'
+            key: 'startDate'
           },
           {
             title: '结束时间',
-            key: 'endTime'
+            key: 'endDate'
           },
           {
             title: '计算类型',
-            key: 'calculateTheType'
+            key: 'calcuType'
           },
           {
             title: '奖金总额',
-            key: 'totalBonus'
+            key: 'rewardCount'
           },
           {
             title: '低限',
@@ -471,7 +479,7 @@
           },
           {
             title: '分配类型',
-            key: 'assignmentType'
+            key: 'distrType'
           },
           {
             title: '操作',
@@ -514,19 +522,19 @@
         columnsActivity:[
           {
             title: '开始时间',
-            key: 'startingTime'
+            key: 'startDate'
           },
           {
             title: '结束时间',
-            key: 'endTime'
+            key: 'endDate'
           },
           {
             title: '计算类型',
-            key: 'calculateTheType'
+            key: 'calcuType'
           },
           {
             title: '奖金总额',
-            key: 'totalBonus'
+            key: 'rewardCount'
           },
           {
             title: '低限',
@@ -538,7 +546,7 @@
           },
           {
             title: '分配类型',
-            key: 'assignmentType'
+            key: 'distrType'
           },
           {
             title: '操作',
@@ -635,6 +643,12 @@
       },
       close3(){
         this.practiceRewardFlag = false;
+      },
+      closeActivityBonus(){
+        this.activityFlag = false;
+      },
+      closeTeamBonus(){
+        this.teamFlag = false;
       },
       transfer(b){
         if(b == true){
@@ -829,93 +843,187 @@
       },
       Addteam(){
         this.teamFlag=true;
+        this.teamBonusFlag='新建';
         this.teamadd={
-          assignmentType: "",
-            calculateTheType: "",
-            endTime: "",
-            highLimit: "",
-            id: '',
-            lowLimit: "",
-            periodType: "",
-            startingTime: "",
-            storeName: "",
-            totalBonus: 0,
-            storeId: this.$route.params.id,
+          // 门店 id              
+          storeId: this.$route.params.id,
+          // 周期类型，推荐使用数字，1 单月，2 季度，3 全年
+          cycleType: "",
+          // 开始时间
+          startDate:"",
+          // 结束时间
+          endDate: "",
+          // 计算类型，推荐使用数字，1 现金，2 实操，3 客流
+          calcuType: "",
+          // 奖金总额
+          rewardCount: "",
+          // 低限
+          lowLimit: "",
+          // 高限 
+          highLimit: "",
+          // 分配类型，推荐使用数字 1 平均，2 比例
+          distrType: ""
         };
       },
       saveTeamBonus(){
-        this.teamadd.startingTime = this.changeDate(this.teamadd.startingTime);
-        this.teamadd.endTime = this.changeDate(this.teamadd.endTime);
-        this.$ajax({
-          method: 'post',
-          url: editTeamBonus(),
-          data: this.teamadd,
-        }).then( (res) =>{
-          this.$Message.success('保存成功');
-          this.getData();
-        }).catch( (error) =>{
-          this.$Message.error('保存失败');
-
-        })
+        if(this.teamBonusFlag == '新建'){
+          var teamReward = this.teamadd;
+          this.$ajax({
+            method: 'post',
+            url: saveTeamBonus(),
+            data: teamReward,
+          }).then( (res) =>{
+            this.$Message.success('保存成功');
+            this.getTeamBonus();
+            this.teamFlag = false;
+          }).catch( (error) =>{
+            this.$Message.error('保存失败');
+          })
+        }else if(this.teamBonusFlag == '修改'){
+          var teamReward = {
+            // 记录 id，非常重要
+            id:this.currentTeamBonusId,
+            // 门店 id              
+            storeId: this.$route.params.id,
+            // 周期类型，推荐使用数字，1 单月，2 季度，3 全年
+            cycleType: this.teamadd.cycleType,
+            // 开始时间
+            startDate:this.teamadd.startDate,
+            // 结束时间
+            endDate: this.teamadd.endDate,
+            // 计算类型，推荐使用数字，1 现金，2 实操，3 客流
+            calcuType: this.teamadd.calcuType,
+            // 奖金总额
+            rewardCount: this.teamadd.rewardCount,
+            // 低限
+            lowLimit: this.teamadd.lowLimit,
+            // 高限 
+            highLimit: this.teamadd.highLimit,
+            // 分配类型，推荐使用数字 1 平均，2 比例
+            distrType: this.teamadd.distrType
+          }
+          this.$ajax({
+              method: 'post',
+              url: editTeamBonus(),
+              data: teamReward,
+            }).then( (res) =>{
+              this.$Message.success('保存成功');
+              this.getTeamBonus();
+              this.teamFlag = false;
+            }).catch( (error) =>{
+              this.$Message.error('保存失败');
+            })
+        }
       },
       updateTeamBonus(row){
         this.teamFlag = true;
+        this.teamBonusFlag = '修改';
         this.teamadd = JSON.parse(JSON.stringify(row));
+        this.currentTeamBonusId=row.id;
       },
       deleteTeamBonus(row){
         this.$ajax({
           method: 'get',
-          url: deleteTeamBonus()+'?id='+row.id,
+          url: deleteTeamBonus()+'/'+this.$route.params.id+'?id='+row.id,
         }).then( (res) =>{
           this.$Message.success('删除成功');
-          this.getData();
+          this.getTeamBonus();
         }).catch( (error) =>{
           this.$Message.error('删除失败');
-
         })
-
+      },
+      getTeamBonus(){
+        this.$ajax({
+          method: 'get',
+          url: getTeamBonus() + '/'+this.$route.params.id,
+        }).then( (res) =>{
+          this.teamBonus = res.data.teamRewardInfo;
+        }).catch( (error) =>{
+          console.log(error);
+        })
+      },
+      getActivityBonus(){
+        this.$ajax({
+          method: 'get',
+          url: getActivityBonus() + '/'+this.$route.params.id,
+        }).then( (res) =>{
+          this.activityBonus = res.data.activityRewardInfo;
+        }).catch( (error) =>{
+          console.log(error);
+        })
       },
       Addactivity(){
         this.activityFlag=true;
+        this.activityBonusFlag='新建',
         this.activityadd={
-          assignmentType: "",
-            calculateTheType: "",
-            endTime: "",
-            highLimit: "",
-            id: '',
-            lowLimit: "",
-            startingTime: "",
-            storeName: "",
-            totalBonus: 0,
-            storeId: this.$route.params.id,
+          // 门店 id
+          storeId: this.$route.params.id,
+          // 开始时间
+          startDate: "",
+          // 结束时间
+          endDate: "",
+          // 计算类型,推荐数字，1 现金
+          calcuType: "",
+          // 奖金总额
+          rewardCount: "",
+          // 低限
+          lowLimit: "",
+          // 高限
+          highLimit: "",
+          // 分配类型,推荐数字，1 平均 2 比例
+          distrType: ""
         };
       },
       saveActivityBonus(){
-        this.activityadd.startingTime = this.changeDate(this.activityadd.startingTime);
-        this.activityadd.endTime = this.changeDate(this.activityadd.endTime);
-        this.$ajax({
-          method: 'post',
-          url: editActivityBonus(),
-          data: this.activityadd,
-        }).then( (res) =>{
-          this.$Message.success('保存成功');
-          this.getData();
-        }).catch( (error) =>{
-          this.$Message.error('保存失败');
-
-        })
+        if(this.activityBonusFlag == '新建'){
+          var activityReward = this.activityadd;
+            this.$ajax({
+              method: 'post',
+              url: saveActivityBonus(),
+              data: activityReward,
+            }).then( (res) =>{
+              this.$Message.success('保存成功');
+              this.activityFlag = false;
+              this.getActivityBonus();
+            }).catch( (error) =>{
+              this.$Message.error('保存失败');
+            })
+        }else if(this.activityBonusFlag == '修改'){
+          var activityReward = {
+              //id
+              id: this.updateActivityBonus,
+              // 门店 id
+              storeId: this.$route.params.id,
+              // 开始时间
+              startDate: this.activityadd.startDate,
+              // 结束时间
+              endDate: this.activityadd.endDate,
+              // 计算类型,推荐数字，1 现金
+              calcuType: this.activityadd.calcuType,
+              // 奖金总额
+              rewardCount: this.activityadd.rewardCount,
+              // 低限
+              lowLimit: this.activityadd.lowLimit,
+              // 高限
+              highLimit: this.activityadd.highLimit,
+              // 分配类型,推荐数字，1 平均 2 比例
+              distrType: this.activityadd.distrType
+          }
+        }
       },
       updateActivityBonus(row){
         this.activityFlag = true;
+        this.activityBonusFlag = '修改';
         this.activityadd = JSON.parse(JSON.stringify(row));
+        this.currentActivityBonusId = row.id;
       },
       deleteActivityBonus(row){
         this.$ajax({
           method: 'get',
-          url: deleteActivityBonus()+'?id='+row.id,
+          url: deleteActivityBonus()+'/'+this.$route.params.id+'?id='+row.id,
         }).then( (res) =>{
           this.$Message.success('删除成功');
-          this.getData();
+          this.getActivityBonus();
         }).catch( (error) =>{
           this.$Message.error('删除失败');
 
@@ -927,6 +1035,8 @@
       this.getData();
       this.getComplaint();
       this.getAccumulativePassengerFlow();
+      this.getTeamBonus();
+      this.getActivityBonus();
     }
   }
 

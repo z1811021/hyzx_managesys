@@ -623,25 +623,119 @@ export const editAccumulativePassengerFlow = function () {
 
 //删除团队奖金
 export const deleteTeamBonus = function () {
-  const URL = '/app/api/salary/deleteTeamBonus';
+  const URL = '/reward/manage/team/delete';
   const API = host + URL;
   return API;
 };
+//保存团队奖金
+export const saveTeamBonus = function () {
+  const URL = '/reward/manage/team/add';
+  const API = host + URL;
+  return API;
+};
+//查询团队奖金
+export const getTeamBonus = function () {
+  const URL = '/reward/manage/team/store';
+  const API = host + URL;
+  return API;
+};
+//编辑团队奖金
+export const editTeamBonus = function () {
+  const URL = '/reward/manage/team/edit';
+  const API = host + URL;
+  return API;
+};
+
 //保存活动奖金
-export const editActivityBonus = function () {
-  const URL = '/app/api/salary/editActivityBonus';
+export const saveActivityBonus = function () {
+  const URL = '/reward/manage/activity/add';
   const API = host + URL;
   return API;
 };
 //删除活动奖金
 export const deleteActivityBonus = function () {
-  const URL = '/app/api/salary/deleteActivityBonus';
+  const URL = '/reward/manage/activity/delete';
   const API = host + URL;
   return API;
 };
-//保存客流奖励
-export const editPassengerFlowAwardJson = function () {
-  const URL = '/app/api/salary/editPassengerFlowAwardJson';
+//查询活动奖金
+export const getActivityBonus = function () {
+  const URL = '/reward/manage/activity/store';
+  const API = host + URL;
+  return API;
+};
+//编辑活动奖金
+export const editActivityBonus = function () {
+  const URL = '/reward/manage/activity/edit';
+  const API = host + URL;
+  return API;
+};
+
+//保存罚金金额
+export const saveforfeitMoney = function () {
+  const URL = '/forfeit/manage/conforfeit/add';
+  const API = host + URL;
+  return API;
+};
+//查询罚金金额
+export const getforfeitMoney = function () {
+  const URL = '/forfeit/manage/conforfeit/store';
+  const API = host + URL;
+  return API;
+};
+//删除罚金金额
+export const deleteforfeitMoney = function () {
+  const URL = '/forfeit/manage/conforfeit/delete';
+  const API = host + URL;
+  return API;
+};
+
+//保存迟到罚金金额
+export const savelateforfeit = function () {
+  const URL = '/forfeit/manage/lateforfeit/add';
+  const API = host + URL;
+  return API;
+};
+//查询迟到罚金金额
+export const getlateforfeit = function () {
+  const URL = '/forfeit/manage/lateforfeit/store';
+  const API = host + URL;
+  return API;
+};
+//删除迟到罚金金额
+export const deletelateforfeit = function () {
+  const URL = '/forfeit/manage/lateforfeit/delete';
+  const API = host + URL;
+  return API;
+};
+//编辑迟到罚金金额
+export const editlateforfeit = function () {
+  const URL = '/forfeit/manage/lateforfeit/edit';
+  const API = host + URL;
+  return API;
+};
+
+//保存表现罚金金额
+export const savespecialforfeit = function () {
+  const URL = '/forfeit/manage/specialforfeit/add';
+  const API = host + URL;
+  return API;
+};
+//查询表现罚金金额
+export const getspecialforfeit = function () {
+  const URL = '/forfeit/manage/specialforfeit/store';
+  const API = host + URL;
+  return API;
+};
+//删除表现罚金金额
+export const deletespecialforfeit = function () {
+  const URL = '/forfeit/manage/specialforfeit/delete';
+  const API = host + URL;
+  return API;
+};
+//编辑表现罚金金额
+export const editspecialforfeit = function () {
+  const URL = '/forfeit/manage/specialforfeit/edit';
   const API = host + URL;
   return API;
 };
