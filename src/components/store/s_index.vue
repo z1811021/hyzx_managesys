@@ -199,7 +199,7 @@
           
         </div>
 </Modal>
-     <Modal footer-hide v-model="yearKlFlag" height="20%" width="48%" >&nbsp;&nbsp;&nbsp;&nbsp;连续十二个月店内客流 &nbsp;&nbsp;&nbsp;&nbsp; 总计{{question.register3MonthCount.type3}}元
+     <Modal footer-hide v-model="yearKlFlag" height="20%" width="48%" >&nbsp;&nbsp;&nbsp;&nbsp;连续十二个月店内客流 &nbsp;&nbsp;&nbsp;&nbsp; 总计{{question.register3MonthCount.type3}}人
        <br/>
        <br/>
       <div style="margin-left: 30px;" v-for="value in question.register3Month.type3">

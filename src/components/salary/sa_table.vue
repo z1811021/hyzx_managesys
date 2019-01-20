@@ -32,7 +32,7 @@
   </div>
 </template>
 <script>
-  import {editCashPerformancePpenalty,deleteCashPerformancePpenalty,editPassengerFines,deletePassengerFines,editConsumptionPenalty,deleteConsumptionPenalty,editAccumulativePassengerFlow,deleteAccumulativePassengerFlow,editMonthlyCashVolume,deleteMonthlyCashVolume,editTotalMonthlyPassengerFlow,deleteTotalMonthlyPassengerFlow,editTotalMonthlyExercise,deleteTotalMonthlyExercise,editTotalMonthlyProject,deleteTotalMonthlyProject,editCashReward,deleteCashReward,editPracticeReward,deletePracticeReward} from '../../interface'
+  import {editCashPerformancePpenalty,deleteCashPerformancePpenalty,editPassengerFines,deletePassengerFines,editConsumptionPenalty,deleteConsumptionPenalty,editAccumulativePassengerFlow,deleteAccumulativePassengerFlow,editMonthlyCashVolume,deleteMonthlyCashVolume,editTotalMonthlyPassengerFlow,deleteTotalMonthlyPassengerFlow,editTotalMonthlyExercise,deleteTotalMonthlyExercise,editTotalMonthlyProject,deleteTotalMonthlyProject} from '../../interface'
   export default{
     name: 'sa_table',
     data(){
