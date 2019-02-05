@@ -164,7 +164,7 @@
           项目手工费： <InputNumber :min="0" :transfer=true style="width: 40px;margin-left:-8px;" size="small" v-model="pis.manualCost" disabled></InputNumber> 元
         </div>
         <div style="float:left;margin-left: 63px;margin-top:10px;" v-show="pis.face || pis.body">
-          项目手工费： <InputNumber :min="0" :transfer=true style="width: 40px;margin-left:-8px;" size="small" v-model="pis.manualCost"></InputNumber> 元
+          项目手工费： <InputNumber :min="0" :transfer=true style="width: 80px;margin-left:-8px;" size="small" v-model="pis.manualCost"></InputNumber> 元
         </div>
         <br/>
         <br/>
@@ -468,7 +468,7 @@
               manualCost:''
         };
         this.$refs.setFaceQuery.$data.query = '';
-        //this.$refs.setBodyQuery.$data.query = '';
+        this.$refs.setBodyQuery.$data.query = '';
       },
       uniqueArray(array, key){
         var result = [array[0]];
@@ -725,10 +725,12 @@
           this.showFace = true;
           this.showBody = false;
           this.pis.body = '';
+          this.$refs.setBodyQuery.$data.query = '';
         }else{
           this.showFace = false;
           this.showBody = true;
           this.pis.face = '';
+          this.$refs.setFaceQuery.$data.query = '';
         }
       },
       changeAgenda(){

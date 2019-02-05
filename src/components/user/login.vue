@@ -1,7 +1,7 @@
 <template>
   <div class="login-body">
     <div class="login" @keyup.enter="checkLogin()">
-      <div class="layout-logo-left"><div style="margin-top:10%;margin-left:20%;color:#8668b7;"><div style="float:left">华杨汇美</div><br/><div style="float:left">后台管理系统</div></div><img src="../../static/img/bigone.png" class="bigOne" alt="smile" /></div>
+      <div class="layout-logo-left"><div style="margin-top:10%;margin-left:20%;color:#8668b7;"><div style="float:left">华杨汇美</div><br/><div style="float:left">门店管理系统</div></div><img src="../../static/img/bigone.png" class="bigOne" alt="smile" /></div>
       <div style="padding:50px 20px 0 20px;float:right;width:60%;" >
         <span class="loginTitle">登陆</span><span class="loginEnglish">THE LOGIN</span>
         <br/><br/>

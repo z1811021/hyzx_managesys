@@ -10,7 +10,7 @@
 
     <Modal class="modalProgram" v-model="storeFlag" :mask-closable="false" :title="store">
       症状：<Select v-model="selectProblem" placeholder="症状" style="width:323px" :transfer=true>
-      <Option v-for="item in problemData" :value="item.symName" :key="index">{{ item.symName }}</Option>
+      <Option v-for="item in problemData" :value="item.symName" :key="item.symName">{{ item.symName }}</Option>
     </Select>
       <br><br>
       方案名称：<Input v-model="solutionName" placeholder="方案名称" style="width: 300px"/>
@@ -18,15 +18,15 @@
       <br/>
       基础解决方案：<Select v-model="selectBasePrograms" placeholder="基础解决方案" :multiple=true style="width:275px" :transfer=true>
         <OptionGroup label="项目方案">
-            <Option v-for="project in planList" :value="project.programName" :key="project.programName">{{project.programName}} {{project.programPrice}}元</Option>
+            <Option v-for="project in planList" :value="project.programName" :key="project.programName">{{project.programName}} 元</Option>
             <!-- <Option>abc</Option> -->
         </OptionGroup>
         <OptionGroup label="项目套餐">
-            <Option v-for="project in mealList" :value="project.programName" :key="project.programName">{{project.programName}} {{project.programPrice}}元</Option>
+            <Option v-for="project in mealList" :value="project.programName" :key="project.programName">{{project.programName}} 元</Option>
             <!-- <Option>abc</Option> -->
         </OptionGroup>
         <OptionGroup v-for="item in projectCategoryList" :value="item.projectCategory" :label="item.projectCategory" :key="item.projectCategory">
-            <Option v-for="project in item.curProjectList" :value="project.itemName" :key="project.itemName">{{ project.itemName }} {{project.itemPrice}}</Option>
+            <Option v-for="project in item.curProjectList" :value="project.itemName" :key="project.itemName">{{project.itemName}} 元/次</Option>
             <!-- <Option>abc</Option> -->
         </OptionGroup>
     </Select>
@@ -34,15 +34,15 @@
       <br/>
       最优解决方案：<Select v-model="selectBestPrograms" placeholder="最优解决方案" :multiple=true style="width:275px" :transfer=true>
         <OptionGroup label="项目方案">
-            <Option v-for="project in planList" :value="project.programName" :key="project.programName">{{project.programName}} {{project.programPrice}}元</Option>
+            <Option v-for="project in planList" :value="project.programName" :key="project.programName">{{project.programName}} 元</Option>
             <!-- <Option>abc</Option> -->
         </OptionGroup>
         <OptionGroup label="项目套餐">
-            <Option v-for="project in mealList" :value="project.programName" :key="project.programName">{{project.programName}} {{project.programPrice}}元</Option>
+            <Option v-for="project in mealList" :value="project.programName" :key="project.programName">{{project.programName}} 元</Option>
             <!-- <Option>abc</Option> -->
         </OptionGroup>
         <OptionGroup v-for="item in projectCategoryList" :value="item.projectCategory" :label="item.projectCategory" key="item.projectCategory">
-            <Option v-for="project in item.curProjectList" :value="project.itemName" :key="project.itemName">{{ project.itemName }} {{project.itemPrice}}</Option>
+            <Option v-for="project in item.curProjectList" :value="project.itemName" :key="project.itemName">{{ project.itemName }} 元/次</Option>
             <!-- <Option>abc</Option> -->
         </OptionGroup>
     </Select>
@@ -70,8 +70,12 @@
     data(){
       return {
         storeFlag: false,
+        selectBasePrograms: [],
+        selectBestPrograms: [],
         store: '',
         card: '',
+        basicPriceList: [],
+        bestPriceList: [],
         solutionName: '',
         selectProblem: '',
         selectBaseProgram: [],
@@ -113,16 +117,24 @@
 
           },
           {
-            title: '方案名称',
+            title: '解决方案名称',
             key: 'solutionName'
           },
           {
             title: '基础解决方案',
-            key: 'basicSolution'
+            key: 'basicLabel'
+          },
+          {
+            title: '基础解决方案总价',
+            key: 'basicPrice'
           },
           {
             title: '最优解决方案',
-            key: 'bestSolution'
+            key: 'bestLable'
+          },
+          {
+            title: '最优解决方案总价',
+            key: 'bestPrice'
           },
           {
             title: '操作',
@@ -186,8 +198,28 @@
             url: findSolutionList()+'/'+this.$route.params.id,
           }).then((res) => {
             this.data = res.data.solutionInfo;
+            for (var i = 0; i < this.data.length; i++) {
+              this.data[i].basicPrice = 0;
+              this.data[i].bestPrice = 0;
+              this.data[i].basicLabel = '';
+              this.data[i].bestLable = '';
+              var basicPriceList = this.data[i].basicSolution.split(",");
+              var bestPriceList = this.data[i].bestSolution.split(","); 
+              for (var j = 0; j < basicPriceList.length; j++) {
+                this.data[i].basicPrice = this.data[i].basicPrice + parseInt(basicPriceList[j].substring(basicPriceList[j].indexOf("-")+2,basicPriceList[j].length));
+                this.data[i].basicLabel = this.data[i].basicLabel + basicPriceList[j].substring(0,basicPriceList[j].indexOf("-"))+',';
+              }
+              for (var k = 0; k < bestPriceList.length; k++) {
+                this.data[i].bestPrice = this.data[i].bestPrice + parseInt(bestPriceList[k].substring(bestPriceList[k].indexOf("-")+2,bestPriceList[k].length));
+                this.data[i].bestLable = this.data[i].bestLable + bestPriceList[k].substring(0,bestPriceList[k].indexOf("-"))+',';
+              }
+              this.data[i].basicPrice = this.data[i].basicPrice + '元';
+              this.data[i].bestPrice = this.data[i].bestPrice + '元';
+              this.data[i].basicLabel = this.data[i].basicLabel.substring(0,this.data[i].basicLabel.length-1);
+            }
         }).catch((error) => {
           this.$Message.error('获取失败');
+          console.log(error);
         });
       },
       getProject(){
@@ -204,6 +236,9 @@
               this.planList = [];
             }else{
               this.planList = res.data.programManage;
+              for (var i = 0; i < this.planList.length; i++) {
+              this.planList[i].programName = this.planList[i].programName + "【方案】" + '- ' + this.planList[i].programPrice;
+            }
               this.getMeal();
             }
         }).catch((error) => {
@@ -221,6 +256,9 @@
             url: findProjectPlanList()+'/'+this.$route.params.id+'?programType=1',
           }).then((res) => {
             this.mealList = res.data.programManage;
+            for (var i = 0; i < this.mealList.length; i++) {
+              this.mealList[i].programName = this.mealList[i].programName + "【套餐】"+ '- ' + this.planList[i].programPrice;
+            }
             this.getList();
         }).catch((error) => {
           this.$Message.error('获取失败');
@@ -265,6 +303,7 @@
         }).then((res) => {
           this.projectList = res.data.itemManages;
           for(var i=0;i<this.projectList.length;i++){
+            this.projectList[i].itemName = this.projectList[i].itemName + " - " + this.projectList[i].itemPrice;
             this.projectList[i].itemPrice = this.projectList[i].itemPrice + "元/次";
             this.projectList[i].courseTimes = this.projectList[i].courseTimes + "次";
             this.projectList[i].coursePrice = this.projectList[i].coursePrice + "元";

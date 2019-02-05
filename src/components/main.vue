@@ -3,7 +3,7 @@
     <Row type="flex">
       <Col span="3" class="layout-menu-left">
         <Menu :active-name="activename" theme="light" width="auto" :open-names="['1']" @on-select="go">
-          <div class="layout-logo-left" style="width:auto;">华杨咨询</div>
+          <div class="layout-logo-left" style="width:auto;">华杨汇美</div>
           <MenuItem name="s_index"><i class="iconfont icon-homepage"></i>门店信息</MenuItem>
           <MenuItem name="s_check" v-if="isSystem == 'true'">
             <Icon type="clipboard"></Icon>审核门店

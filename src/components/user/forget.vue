@@ -204,7 +204,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   .forget{
     position:absolute;
     height:110%;
@@ -212,7 +212,7 @@
     background-image: url(../../static/img/background.png);
     background-repeat:no-repeat; 
     background-size:cover;
-    color: white;
+    color: white!important;
     margin: 0 auto;
     text-align: center;
   }
