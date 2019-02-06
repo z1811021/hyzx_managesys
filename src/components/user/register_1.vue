@@ -5,6 +5,15 @@
       <FormItem label="联系人：" prop="staffName"  class="formItemStyle" >
             <Input v-model="validatePhoneVal.staffName" placeholder="联系人"></Input>
       </FormItem>
+      <FormItem label="用户名 ：" prop="userName"  class="formItemStyle" >
+        <Input  v-model="validatePhoneVal.userName" placeholder="用户名"></Input>
+      </FormItem>
+      <FormItem label="密码 ：" prop="password"  class="formItemStyle" >
+        <Input type="password" v-model="validatePhoneVal.password" placeholder="密码"></Input>
+      </FormItem>
+      <FormItem label="重复密码 ：" prop="passwordRepeat"  class="formItemStyle" >
+        <Input type="password" v-model="validatePhoneVal.passwordRepeat" placeholder="重复密码"></Input>
+      </FormItem>
       <div class="container1">
         <FormItem label="联系人电话 ：" prop="phoneNumber"  class="formItemStyle" >
           <Input v-model="validatePhoneVal.phoneNumber" placeholder="联系人电话"></Input>
@@ -93,6 +102,41 @@
             }
         }, 1000);
     };
+    const validateUserName = (rule, value, callback) => {
+      for(i=0;i<value.length;i++){
+        let c = value.substr(i,1);
+        let ts = escape(c);
+        if(ts.substring(0,2) == "%u"){
+           callback(new Error('不能输入中文/全角字符'));
+        }
+      }
+      if (value.length < 6 ){
+          callback(new Error('用户名长度必须大于6'));
+        }
+      callback();
+    };
+    const validatePass = (rule, value, callback) => {
+        if (value === '') {
+            callback(new Error('请输入密码'));
+        } else if (value.length < 6 ){
+          callback(new Error('密码长度必须大于6'));
+        }else {
+            if (this.validatePhoneVal.passwordRepeat !== '') {
+                // 对第二个密码框单独验证
+                this.$refs.formValidate1.validateField('passwordRepeat');
+            }
+            callback();
+        }
+    };
+    const validatePassCheck = (rule, value, callback) => {
+        if (value === '') {
+            callback(new Error('请再次输入密码'));
+        } else if (value !== this.validatePhoneVal.password) {
+            callback(new Error('两次输入的密码不一致'));
+        } else {
+            callback();
+        }
+    };
     // const validateTelephone = (rule, value, callback) => {
     //     const myreg=/0\d{2}-\d{7,8}/
     //     setTimeout(() => {
@@ -126,6 +170,9 @@
           time:0,
           btntxt:"点击获取验证码",
           staffName: '',
+          userName: '',
+          password: '',
+          passwordRepeat: '',
           phoneNumber: '',
           validatePhoneNumber: '',
           footer1 : 'footer1Display1',
@@ -142,6 +189,15 @@
         ruleValidate: {
             staffName: [
                 { required: true, message: '联系人不能为空', trigger: 'blur' }
+            ],
+            userName: [
+                { validator: validateUserName, trigger: 'blur', required: true }
+            ],
+            password: [
+               { validator: validatePass, trigger: 'blur', required: true }
+            ],
+            passwordRepeat: [
+               { validator: validatePassCheck, trigger: 'blur', required: true }
             ],
             phoneNumber: [
                 { validator: validatePhoneNumber, trigger: 'blur', required: true }
@@ -345,7 +401,7 @@
       },
       handleSubmit (name) {
         this.$refs[name].validate((valid) => {
-          const customer  = {account: this.validatePhoneVal.phoneNumber, name: this.validatePhoneVal.staffName, role: '1', status: '1'}
+          const customer  = {account: this.validatePhoneVal.phoneNumber, name: this.validatePhoneVal.staffName, userName:this.validatePhoneVal.userName, password: this.validatePhoneVal.password, role: '1', status: '1'}
           const store = this.storeVal
             if (valid) {
               console.log(customer, store)

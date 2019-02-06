@@ -166,11 +166,6 @@ export default new Router({
       component: login,
     },
     {
-      path: '/login',
-      name: 'login',
-      component: login,
-    },
-    {
       path: '/register',
       redirect: '/register_1',
       name: 'register',
