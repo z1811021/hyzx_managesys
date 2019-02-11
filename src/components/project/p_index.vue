@@ -12,6 +12,11 @@
       <h4 style="float:left;;margin-left: 63px;">项目类别：</h4>
       <br/>
       <br/>
+      症状：<Select v-model="pis.resolveProblem" placeholder="症状" style="width:323px" :transfer=true>
+        <Option v-for="item in problemData" :value="item.symName" :key="item.symName">{{ item.symName }}</Option>
+      </Select>
+      <br/>
+      <br/>
       <RadioGroup v-model="projectChoose" @on-change="changePro" prop="test">
           <Radio label="1" style="float:left;">
               <span>面部</span>
@@ -180,9 +185,9 @@
           <Checkbox v-model="pis.strongEfficacy" label="强功效"></Checkbox>
           <Checkbox v-model="pis.generalProps" label="常规属性"></Checkbox>
       </Checkbox-group>
+      <!-- <br/>
       <br/>
-      <br/>
-      解决问题：<Input v-model="pis.resolveProblem" type="textarea" :rows="2" placeholder="解决问题" style="width:70%;"/>
+      解决问题：<Input v-model="pis.resolveProblem" type="textarea" :rows="2" placeholder="解决问题" style="width:70%;"/> -->
       <br/>
       <br/>
       专业说明：<Input v-model="pis.proDescription" type="textarea" :rows="2" placeholder="专业说明" style="width:70%;"/>
@@ -203,6 +208,7 @@
     name: 'p_index',
     created() {
       this.getList();
+      this.getProblem();
       //this.getProblem();
       //this.getProject();
     },
@@ -217,6 +223,7 @@
         projectChoose: '',
         showStable: false,
         projectFilterList: [],
+        problemData: [],
         pis: {
               // 门店id，本地测试 24，服务器测试可用 22
               storeId: this.$route.params.id,
@@ -469,6 +476,20 @@
         };
         this.$refs.setFaceQuery.$data.query = '';
         this.$refs.setBodyQuery.$data.query = '';
+      },
+      getProblem(){
+        this.$ajax({
+          method: 'GET',
+          dataType: 'JSON',
+          contentType: 'application/json;charset=UTF-8',
+          headers: {
+            "authToken": sessionStorage.getItem('authToken')
+          },
+          url: findproblemList() + '/'+this.$route.params.id,
+        }).then((res) => {
+          this.problemData = res.data.symptomManageInfo;
+        }).catch((error) => {
+        });
       },
       uniqueArray(array, key){
         var result = [array[0]];

@@ -7,9 +7,9 @@
         <br/><br/>
         <span class="txt">欢迎！</span>
         <br/><br/>
-        <span class="txt">用户名：</span><Input v-model="data.account" placeholder="用户名" style="width: 70%;" />
+        <span class="txt">用户名：</span><Input v-model="userName" placeholder="用户名" style="width: 70%;" />
         <br><br>
-        <span class="txt">密码：</span><Input v-model="data.password" type="password" placeholder="密码"  style="width: 70%;" />
+        <span class="txt">密码：</span><Input v-model="password" type="password" placeholder="密码"  style="width: 70%;" />
         <br>
         <div class="notice"><span style="float: left;"><!-- <a href="#/register">注册门店</a> --></span><span style="float: right;"><a href="#/forget">忘记密码</a></span></div>
         <div style="margin: 0 auto;text-align: center;"><Button class="hy_btn" size="large" @click="checkLogin">登录</Button></div>
@@ -24,23 +24,25 @@
     name: 'login',
     data(){
       return{
-        data:{
-          userName:this.account,
-          password:this.password
-        }
+        userName:'',
+        password:''
       }
     },
     created(){},
     methods:{
       checkLogin(){
-        if(this.data.account ==''||this.data.password==''){
+        if(this.userName ==''||this.password==''){
           this.$Message.warning('请填写用户名，密码');
           return;
         }
+        var data = {
+          userName: this.userName,
+          password: this.password
+        };
         this.$ajax({
           method: 'POST',
           url: userLogin(),
-          data: this.data
+          data: data
         }).then( (res) =>{
           if(res.data.msg == '1'){
             this.$Message.error('该用户不存在!');

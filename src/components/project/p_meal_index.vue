@@ -10,6 +10,12 @@
 
     <Modal class="modalProjects" v-model="storeFlag" :mask-closable="false"  :title="store" >
         <br/>
+        <br/>
+        症状：<Select placeholder="症状" style="width:323px" :transfer=true>
+          <Option v-for="item in problemData" :value="item.symName" :key="item.symName">{{ item.symName }}</Option>
+        </Select>
+        <br/>
+        <br/>
         套餐名称：<Input v-model="mealName" placeholder="套餐名称" style="width: 300px" />
         <br/>
         <br/>
@@ -63,7 +69,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {findProjectList, projectedit, projectdelete, projectPlansave, findProjectPlanList, projectPlandelete} from '../../interface';
+  import {findProjectList, projectedit, projectdelete, projectPlansave, findProjectPlanList, projectPlandelete,findproblemList} from '../../interface';
   import draggable from 'vuedraggable';
 
   export default {
@@ -74,6 +80,7 @@
     },
     created() {
       this.getList();
+      this.getProblem();
       this.getMealList();
     },
     data(){
@@ -91,6 +98,7 @@
         buttonSize: 'small',
         showModify: false,
         showModalTitle: '',
+        problemData: [],
         faceProjectList:[],
         bodyProjectList:[],
         projectCategoryList:[],
@@ -195,6 +203,20 @@
         this.inputTimesFlag = false;
         this.selectedProject = '';
         this.$refs.setHouseQuery.$data.query = '';
+      },
+      getProblem(){
+        this.$ajax({
+          method: 'GET',
+          dataType: 'JSON',
+          contentType: 'application/json;charset=UTF-8',
+          headers: {
+            "authToken": sessionStorage.getItem('authToken')
+          },
+          url: findproblemList() + '/'+this.$route.params.id,
+        }).then((res) => {
+          this.problemData = res.data.symptomManageInfo;
+        }).catch((error) => {
+        });
       },
       getMealList(){
           this.$ajax({
