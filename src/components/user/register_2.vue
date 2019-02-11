@@ -106,12 +106,38 @@
       let doubleRoomArr  = JSON.parse(JSON.stringify(temArr))
       let tribleRoomArr = JSON.parse(JSON.stringify(temArr))
       let aboveTribleRoomArr = JSON.parse(JSON.stringify(temArr))
-      const valueEqualNumber = (rule, value, callback) => {
+      // cannot be empty
+      const valueEqualNumber1 = (rule, value, callback) => {
         const valueInt = Number(value)
+        console.log(typeof this[`show${rule.field}`])
         if (!Number.isInteger(valueInt) && value.length !== 0 && (typeof this[`show${rule.field}`] ==='undefined' || this[`show${rule.field}`])) {
           callback(new Error('所填必须为数字'));
           } else if (value.length === 0 && (typeof this[`show${rule.field}`] ==='undefined' || this[`show${rule.field}`])){
             callback(new Error('所填不能为空'));
+          }else {
+            callback();
+          }
+        };
+        // can be empty
+        const valueEqualNumber2 = (rule, value, callback) => {
+          const valueInt = Number(value)
+          console.log(typeof this[`show${rule.field}`])
+          if (!Number.isInteger(valueInt) && value.length !== 0 && (typeof this[`show${rule.field}`] ==='undefined' || this[`show${rule.field}`])) {
+            callback(new Error('所填必须为数字'));
+            } else {
+              callback();
+            }
+        };
+        // roomSize * 4 need > room count need & cannot be empty
+        const valueEqualNumber3 = (rule, value, callback) => {
+        const valueInt = Number(value)
+        console.log(typeof this[`show${rule.field}`])
+        if (!Number.isInteger(valueInt) && value.length !== 0 && (typeof this[`show${rule.field}`] ==='undefined' || this[`show${rule.field}`])) {
+          callback(new Error('所填必须为数字'));
+          } else if (value.length === 0 && (typeof this[`show${rule.field}`] ==='undefined' || this[`show${rule.field}`])){
+            callback(new Error('所填不能为空'));
+          }else if (value.length !== 0 && this.roomVal.roomSize / 12 <= value && (typeof this[`show${rule.field}`] ==='undefined' || this[`show${rule.field}`])){
+            callback(new Error('床位不能超过总平方数除以12'));
           }else {
             callback();
           }
@@ -178,40 +204,40 @@
       },
         ruleValidate: {
           roomSize: [
-            { validator: valueEqualNumber, trigger: 'blur' }
+            { validator: valueEqualNumber1, trigger: 'blur' }
           ],
           annualRent: [
-            { validator: valueEqualNumber, trigger: 'blur' }
+            { validator: valueEqualNumber1, trigger: 'blur' }
           ],
           annualRentYear: [
-            { validator: valueEqualNumber, trigger: 'blur' }
+            { validator: valueEqualNumber1, trigger: 'blur' }
           ],
           growthRate: [
             { validator: valueEqualString, trigger: 'blur' }
           ],
           cosmetologist: [
-            { validator: valueEqualNumber, trigger: 'blur' }
+            { validator: valueEqualNumber2, trigger: 'blur' }
           ],
           Therapist: [
-            { validator: valueEqualNumber, trigger: 'blur' }
+            { validator: valueEqualNumber2, trigger: 'blur' }
           ],
           nurse: [
-            { validator: valueEqualNumber, trigger: 'blur' }
+            { validator: valueEqualNumber2, trigger: 'blur' }
           ],
           physicalTherapist: [
-            { validator: valueEqualNumber, trigger: 'blur' }
+            { validator: valueEqualNumber2, trigger: 'blur' }
           ],
           pedicure: [
-            { validator: valueEqualNumber, trigger: 'blur' }
+            { validator: valueEqualNumber2, trigger: 'blur' }
           ],
           roomCount: [
-            { validator: valueEqualNumber, trigger: 'change' }
+            { validator: valueEqualNumber3, trigger: 'change' }
           ],
           counselor: [
-            { validator: valueEqualNumber, trigger: 'change' }
+            { validator: valueEqualNumber1, trigger: 'change' }
           ],
           manager: [
-            { validator: valueEqualNumber, trigger: 'change' }
+            { validator: valueEqualNumber1, trigger: 'change' }
           ]
         }
       }

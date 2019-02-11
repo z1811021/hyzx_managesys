@@ -25,7 +25,7 @@
     data(){
       return{
         data:{
-          account:this.account,
+          userName:this.account,
           password:this.password
         }
       }

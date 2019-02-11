@@ -401,7 +401,7 @@
       },
       handleSubmit (name) {
         this.$refs[name].validate((valid) => {
-          const customer  = {account: this.validatePhoneVal.phoneNumber, name: this.validatePhoneVal.staffName, userName:this.validatePhoneVal.userName, password: this.validatePhoneVal.password, role: '1', status: '1'}
+          const customer  = {account: this.validatePhoneVal.phoneNumber, staffName: this.validatePhoneVal.staffName, userName:this.validatePhoneVal.userName, password: this.validatePhoneVal.password, role: '1', status: '1'}
           const store = this.storeVal
             if (valid) {
               console.log(customer, store)
