@@ -162,6 +162,11 @@ export const checkStorePhone  = function () {
   const API = host + URL;
   return API;
 };
+export const checkStoreUserName  = function () {
+  const URL = '/customer/userName/';
+  const API = host + URL;
+  return API;
+};
 export const validatePhone  = function () {
   const URL = '/verification/valid';
   const API = host + URL;

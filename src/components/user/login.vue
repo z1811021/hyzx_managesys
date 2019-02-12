@@ -50,6 +50,10 @@
             this.$Message.error('密码不正确!');
           }else if(res.data.msg == '3'){
             this.$Message.error('登录权限被锁');
+          }else if(res.data.msg == '4'){
+            this.$Message.error('检测到你为临时用户需要修改用户名和密码');
+          }else if(res.data.msg == '5'){
+            this.$Message.error('检测到运行环境不安全需要进行安全验证');
           }else{
             this.$Message.success('登陆成功');
             sessionStorage.setItem('authToken',res.data.authToken);

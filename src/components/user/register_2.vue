@@ -109,7 +109,6 @@
       // cannot be empty
       const valueEqualNumber1 = (rule, value, callback) => {
         const valueInt = Number(value)
-        console.log(typeof this[`show${rule.field}`])
         if (!Number.isInteger(valueInt) && value.length !== 0 && (typeof this[`show${rule.field}`] ==='undefined' || this[`show${rule.field}`])) {
           callback(new Error('所填必须为数字'));
           } else if (value.length === 0 && (typeof this[`show${rule.field}`] ==='undefined' || this[`show${rule.field}`])){
@@ -121,7 +120,6 @@
         // can be empty
         const valueEqualNumber2 = (rule, value, callback) => {
           const valueInt = Number(value)
-          console.log(typeof this[`show${rule.field}`])
           if (!Number.isInteger(valueInt) && value.length !== 0 && (typeof this[`show${rule.field}`] ==='undefined' || this[`show${rule.field}`])) {
             callback(new Error('所填必须为数字'));
             } else {
@@ -131,12 +129,11 @@
         // roomSize * 4 need > room count need & cannot be empty
         const valueEqualNumber3 = (rule, value, callback) => {
         const valueInt = Number(value)
-        console.log(typeof this[`show${rule.field}`])
-        if (!Number.isInteger(valueInt) && value.length !== 0 && (typeof this[`show${rule.field}`] ==='undefined' || this[`show${rule.field}`])) {
+        if (!Number.isInteger(valueInt) && value.length !== 0) {
           callback(new Error('所填必须为数字'));
-          } else if (value.length === 0 && (typeof this[`show${rule.field}`] ==='undefined' || this[`show${rule.field}`])){
+          } else if (value.length === 0 && this[`show${rule.field}`]){
             callback(new Error('所填不能为空'));
-          }else if (value.length !== 0 && this.roomVal.roomSize / 12 <= value && (typeof this[`show${rule.field}`] ==='undefined' || this[`show${rule.field}`])){
+          }else if (value.length !== 0 && this.roomVal.roomSize / 12 <= value){
             callback(new Error('床位不能超过总平方数除以12'));
           }else {
             callback();
@@ -294,11 +291,11 @@
                 this.$Message.error('无法进入下一步');
             }
         })
-	    },
-	    priviousPage(){
-	     this.$router.push({name: 'register_1'});
+      },
+      priviousPage(){
+       this.$router.push({name: 'register_1'});
        this.$emit('changeActivename','register_1')
-	    },
+      },
       hiddenDetailLabel(){
         if (this.roomRadio === 'noDisplayDetail') {
           this.showroomCount = true;

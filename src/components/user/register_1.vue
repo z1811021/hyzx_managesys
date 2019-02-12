@@ -5,8 +5,8 @@
       <FormItem label="联系人：" prop="staffName"  class="formItemStyle" >
             <Input v-model="validatePhoneVal.staffName" placeholder="联系人"></Input>
       </FormItem>
-      <FormItem label="用户名 ：" prop="userName"  class="formItemStyle" >
-        <Input  v-model="validatePhoneVal.userName" placeholder="用户名"></Input>
+      <FormItem label="用户名 ：" prop="userName"  class="formItemStyle">
+        <Input  v-model="validatePhoneVal.userName" placeholder="用户名" @on-blur="checkUserName(validatePhoneVal.userName)"></Input>
       </FormItem>
       <FormItem label="密码 ：" prop="password"  class="formItemStyle" >
         <Input type="password" v-model="validatePhoneVal.password" placeholder="密码"></Input>
@@ -85,7 +85,7 @@
 </template>
 
 <script>
-  import { getProvinces,getCities ,userRegister, checkStorePhone, validatePhone, checkRegisterStatus, verifyCode} from '../../interface';
+  import { getProvinces,getCities ,userRegister, checkStorePhone, validatePhone, checkRegisterStatus, verifyCode, checkStoreUserName} from '../../interface';
   export default{
     name: 'register_1',
     data(){
@@ -103,17 +103,47 @@
         }, 1000);
     };
     const validateUserName = (rule, value, callback) => {
-      for(i=0;i<value.length;i++){
-        let c = value.substr(i,1);
-        let ts = escape(c);
-        if(ts.substring(0,2) == "%u"){
-           callback(new Error('不能输入中文/全角字符'));
-        }
+      // check the user name validation first
+      const f1 = () => {
+        return new Promise((resolve, reject)=> {
+          for(i=0;i<value.length;i++){
+            let c = value.substr(i,1);
+            let ts = escape(c);
+            if(ts.substring(0,2) == "%u"){
+              callback(new Error('不能输入中文/全角字符'));
+            }
+          }
+          if (value.length < 6 ){
+            callback(new Error('用户名长度必须大于6'));
+          }
+          resolve('pass')
+          }); 
       }
-      if (value.length < 6 ){
-          callback(new Error('用户名长度必须大于6'));
-        }
-      callback();
+      //check the user name unique or not second
+      const f2 = () =>{
+        return new Promise((resolve, reject)=> {
+          this.$ajax({
+            method: 'GET',
+            url: checkStoreUserName()+this.validatePhoneVal.userName,
+            withCredentials: true,
+          }).then((res) => {
+            // if don't have the will pass
+            if(res.data.customer){
+              callback(new Error('当前用户名已经存在'));
+            } else {
+              resolve(null)
+            }
+          }).catch((error) =>{
+            reject();
+          })
+        });   
+      }
+      f1()
+      .then((result)=>{
+        return f2(result);
+      }).then((result)=>{
+        callback();
+      })
     };
     const validatePass = (rule, value, callback) => {
         if (value === '') {
@@ -244,12 +274,24 @@
         })
       },
       getCities(id){
-        console.log(id)
         this.$ajax({
           method: 'GET',
           url: getCities()+id,
         }).then( (res) =>{
           this.citiesData = res.data.cities;
+        })
+      },
+      checkUserName(userName){
+        this.$ajax({
+          method: 'GET',
+          url: checkStoreUserName()+this.validatePhoneVal.userName,
+          withCredentials: true,
+        }).then((res) => {
+          if(res.data.customer){
+
+          }
+        }).catch((error) =>{
+
         })
       },
       validatePhone(name){
@@ -402,7 +444,7 @@
       },
       handleSubmit (name) {
         this.$refs[name].validate((valid) => {
-          const customer  = {account: this.validatePhoneVal.phoneNumber, staffName: this.validatePhoneVal.staffName, userName:this.validatePhoneVal.userName, password: this.validatePhoneVal.password, role: '1', status: '1'}
+          const customer  = {account: this.validatePhoneVal.phoneNumber, staffName: this.validatePhoneVal.staffName, userName:this.validatePhoneVal.userName, password: this.validatePhoneVal.password, role: '2', status: '1'}
           const store = this.storeVal
             if (valid) {
               console.log(customer, store)
