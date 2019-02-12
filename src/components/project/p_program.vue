@@ -301,7 +301,7 @@
           },
           url: findProjectList()+'/'+this.$route.params.id,
         }).then((res) => {
-          this.projectList = res.data.itemManages;
+          this.projectList = res.data.itemManage;
           for(var i=0;i<this.projectList.length;i++){
             this.projectList[i].itemName = this.projectList[i].itemName + " - " + this.projectList[i].itemPrice;
             this.projectList[i].itemPrice = this.projectList[i].itemPrice + "元/次";

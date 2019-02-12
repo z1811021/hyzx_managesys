@@ -345,7 +345,7 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               },
               url: findProjectList()+'/'+this.$route.params.id,
             }).then((res) => {
-              this.projectList = res.data.itemManages;
+              this.projectList = res.data.itemManage;
               for(var i=0;i<this.projectList.length;i++){
                 this.projectList[i].itemPrice = this.projectList[i].itemPrice + "元/次";
                 this.projectList[i].courseTimes = this.projectList[i].courseTimes + "次";

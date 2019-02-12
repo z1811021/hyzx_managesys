@@ -11,7 +11,7 @@
     <Modal class="modalProjects" v-model="storeFlag" :mask-closable="false"  :title="store" >
         <br/>
         <br/>
-        症状：<Select placeholder="症状" style="width:323px" :transfer=true>
+        症状：<Select v-model="symptom" placeholder="症状" style="width:323px" :transfer=true>
           <Option v-for="item in problemData" :value="item.symName" :key="item.symName">{{ item.symName }}</Option>
         </Select>
         <br/>
@@ -87,6 +87,7 @@
       return {
         storeFlag: false,
         store:'',
+        symptom: '',
         projectList: [],
         selectedProject: '',
         selectedProjectTimes: '',
@@ -197,6 +198,7 @@
         this.storeFlag = true;
         this.planData = [];
         this.mealName='';
+        this.symptom = '';
         this.mealPrice='';
         this.showDataTable = false;
         this.showModalTitle = '';
@@ -301,7 +303,7 @@
           },
           url: findProjectList()+'/'+this.$route.params.id,
         }).then((res) => {
-          this.projectList = res.data.itemManages;
+          this.projectList = res.data.itemManage;
           for(var i=0;i<this.projectList.length;i++){
             this.projectList[i].itemPrice = this.projectList[i].itemPrice + "元/次";
             this.projectList[i].courseTimes = this.projectList[i].courseTimes + "次";
@@ -542,7 +544,9 @@
             // 方案价格
             programPrice: this.mealPrice.replace("元",""),
             // 与方案关联的项目
-            programItems: programItems
+            programItems: programItems,
+            // 解决方案
+            symptom: this.symptom
         };
         var params = {
             storeId:this.$route.params.id,

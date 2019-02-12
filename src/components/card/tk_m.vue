@@ -213,7 +213,7 @@ import {findMembership,findProjectList,findExtension,saveExtension,editExtension
             },
             url: findProjectList()+'/'+this.$route.params.id,
           }).then((res) => {
-            this.projectList = res.data.itemManages;
+            this.projectList = res.data.itemManage;
             for(var i=0;i<this.projectList.length;i++){
               if(this.projectList[i].face != ''){
                 this.projectList[i].projectCategory = "面部";

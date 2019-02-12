@@ -12,7 +12,7 @@
       <h4 style="float:left;;margin-left: 63px;">项目类别：</h4>
       <br/>
       <br/>
-      症状：<Select v-model="pis.resolveProblem" placeholder="症状" style="width:323px" :transfer=true>
+      症状：<Select v-model="pis.symptom" placeholder="症状" style="width:323px" :transfer=true>
         <Option v-for="item in problemData" :value="item.symName" :key="item.symName">{{ item.symName }}</Option>
       </Select>
       <br/>
@@ -146,6 +146,8 @@
             :formatter="value => `${value}元`"
             :parser="value => value.replace('元', '')" placeholder="疗程卡扣价：元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;">
           </InputNumber>
+          <br/>
+          <br/>
           </div>
       <div style="float:left;margin-left: 63px;margin-top:10px;">实操方式：</div>
         <RadioGroup v-show="!(pis.face || pis.body)" style="margin-top:10px;margin-right:40%;">
@@ -231,6 +233,8 @@
               face: '',
               //身体, 1:头部, 2:肩部 ... 也可以传递字符串
               body: '',
+              //解决问题
+              symptom: '',
               //项目名
               itemName: '',
               //项目单价 
@@ -422,60 +426,67 @@
     },
     methods: {
       newEm() {
-        this.storeFlag = true;
-        this.store = '新建项目';
-        this.showFace = false;
-        this.showBody = false;
-        this.showAgenda = false;
-        this.showTc = false;
-        this.showStable = false;
-        this.projectChoose = '';
-        this.pis = {
-              // 门店id，本地测试 24，服务器测试可用 22
-              storeId: this.$route.params.id,
-              //面部, 1：清洁, 2:补水 ... 也可以传递字符串
-              face: '',
-              //身体, 1:头部, 2:肩部 ... 也可以传递字符串
-              body: '',
-              //项目名
-              itemName: '',
-              //项目单价 
-              itemPrice:'',
-              //是否设计疗程, 0:否, 1:是
-              designCourse:'',
-              //疗程次数
-              courseTimes:'',
-              //疗程单价
-              coursePrice:'',
-              //疗程卡扣价
-              courseCharges:'',
-              //疗程间隔
-              courseInterval:'',
-              //高频到店, 0:未选中, 1:选中
-              highFreq:false,
-              //赠送属性, 0:未选中, 1:选中
-              presents:false,
-              //叠加属性, 0:未选中, 1:选中
-              superposition:false,
-              //强功效, 0:未选中, 1:选中
-              strongEfficacy:false,
-              //常规属性, 0:未选中, 1:选中
-              generalProps:false,
-              //解决问题, 字数应限制在 512 个字符
-              resolveProblem:'',
-              //专业说明, 字数应限制在 512 个字符
-              proDescription:'',
-              //技术要点, 字数应限制在 512 个字符
-              technicalPoints:'',
-              //实操类型
-              actualOperation:'',
-              //固定实操额
-              fixedOperation:'',
-              //手工费
-              manualCost:''
-        };
-        this.$refs.setFaceQuery.$data.query = '';
-        this.$refs.setBodyQuery.$data.query = '';
+        if(this.problemData.length == 0){
+          this.$Message.error('请先选择症状管理录入贵店可以解决的症状问题！');
+
+        }else{
+          this.storeFlag = true;
+          this.store = '新建项目';
+          this.showFace = false;
+          this.showBody = false;
+          this.showAgenda = false;
+          this.showTc = false;
+          this.showStable = false;
+          this.projectChoose = '';
+          this.pis = {
+                // 门店id，本地测试 24，服务器测试可用 22
+                storeId: this.$route.params.id,
+                //面部, 1：清洁, 2:补水 ... 也可以传递字符串
+                face: '',
+                //身体, 1:头部, 2:肩部 ... 也可以传递字符串
+                body: '',
+                //症状
+                d: '',
+                //项目名
+                itemName: '',
+                //项目单价 
+                itemPrice:'',
+                //是否设计疗程, 0:否, 1:是
+                designCourse:'',
+                //疗程次数
+                courseTimes:'',
+                //疗程单价
+                coursePrice:'',
+                //疗程卡扣价
+                courseCharges:'',
+                //疗程间隔
+                courseInterval:'',
+                //高频到店, 0:未选中, 1:选中
+                highFreq:false,
+                //赠送属性, 0:未选中, 1:选中
+                presents:false,
+                //叠加属性, 0:未选中, 1:选中
+                superposition:false,
+                //强功效, 0:未选中, 1:选中
+                strongEfficacy:false,
+                //常规属性, 0:未选中, 1:选中
+                generalProps:false,
+                //解决问题, 字数应限制在 512 个字符
+                resolveProblem:'',
+                //专业说明, 字数应限制在 512 个字符
+                proDescription:'',
+                //技术要点, 字数应限制在 512 个字符
+                technicalPoints:'',
+                //实操类型
+                actualOperation:'',
+                //固定实操额
+                fixedOperation:'',
+                //手工费
+                manualCost:''
+          };
+          this.$refs.setFaceQuery.$data.query = '';
+          this.$refs.setBodyQuery.$data.query = '';
+        }
       },
       getProblem(){
         this.$ajax({
@@ -525,10 +536,10 @@
           },
           url: findProjectList()+'/'+this.$route.params.id,
         }).then((res) => {
-          if(res.data.itemManages.length == 0){
+          if(res.data.itemManage.length == 0){
             this.data = [];
           }else{
-            this.data = res.data.itemManages;
+            this.data = res.data.itemManage;
             for(var i=0;i<this.data.length;i++){
               if(this.data[i].face != '' && this.data[i].face == 1){
                 this.data[i].projectCategory = "面部 - 清洁";
@@ -608,6 +619,7 @@
           }
         }).catch((error) => {
           this.$Message.error('获取失败');
+          console.log(error);
         });
       },
       transfer(b){
@@ -647,8 +659,8 @@
         if(this.pis.highFreq == false &&  this.pis.superposition == false && this.pis.strongEfficacy == false && this.pis.generalProps == false && this.pis.presents == false){
           validateMessage = validateMessage + "请选择项目属性！<br/>";
         }
-        if(this.pis.resolveProblem == '' ){
-          validateMessage = validateMessage + "请输入解决方案！<br/>";
+        if(this.pis.symptom == '' ){
+          validateMessage = validateMessage + "请选择该项目解决症状！<br/>";
         }
         if(this.pis.actualOperation == '' ){
           validateMessage = validateMessage + "请选择实操类型！<br/>";
