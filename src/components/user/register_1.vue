@@ -6,7 +6,7 @@
             <Input v-model="validatePhoneVal.staffName" placeholder="联系人"></Input>
       </FormItem>
       <FormItem label="用户名 ：" prop="userName"  class="formItemStyle">
-        <Input  v-model="validatePhoneVal.userName" placeholder="用户名" @on-blur="checkUserName(validatePhoneVal.userName)"></Input>
+        <Input  v-model="validatePhoneVal.userName" placeholder="用户名"></Input>
       </FormItem>
       <FormItem label="密码 ：" prop="password"  class="formItemStyle" >
         <Input type="password" v-model="validatePhoneVal.password" placeholder="密码"></Input>
@@ -279,19 +279,6 @@
           url: getCities()+id,
         }).then( (res) =>{
           this.citiesData = res.data.cities;
-        })
-      },
-      checkUserName(userName){
-        this.$ajax({
-          method: 'GET',
-          url: checkStoreUserName()+this.validatePhoneVal.userName,
-          withCredentials: true,
-        }).then((res) => {
-          if(res.data.customer){
-
-          }
-        }).catch((error) =>{
-
         })
       },
       validatePhone(name){
