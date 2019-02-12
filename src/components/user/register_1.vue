@@ -282,6 +282,7 @@
               }); 
             }
             const f2 = (customerId) => {
+              console.log(customerId)
               return new Promise((resolve, reject)=> {
                 if(customerId){
                   this.$ajax({
