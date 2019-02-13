@@ -15,46 +15,182 @@
         <div style="margin: 0 auto;text-align: center;"><Button class="hy_btn" size="large" @click="checkLogin">登录</Button></div>
       </div>
     </div>
+    <Modal v-model="userEditPassword" title="临时用户修改密码" :mask-closable="false">
+    <div style="padding-left: 20px;">
+    <Form ref="formValidate1" :model="editPassword" :rules="ruleValidate" :label-width="100">
+      <FormItem label="手机号 :" class="formItemStyle" >
+            <Input v-model="userName" disabled ></Input>
+      </FormItem>
+      <FormItem label="用户名：" prop="userName"  class="formItemStyle" >
+            <Input v-model="editPassword.userName" placeholder="用户名"></Input>
+      </FormItem>
+      <FormItem label="密码：" prop="password"  class="formItemStyle" >
+            <Input type="password" v-model="editPassword.password" placeholder="密码"></Input>
+      </FormItem>
+      <FormItem label="重复密码 ：" prop="passwordRepeat"  class="formItemStyle" >
+            <Input type="password" v-model="editPassword.passwordRepeat" placeholder="再输入密码"></Input>
+      </FormItem>
+    </Form>
+    </div>
+    <div slot="footer">
+      <Button size="large"  @click="userEditPassword=false">取消</Button>
+      <Button type="primary" style="margin-left:20px;" size="large" @click="submitEditPassword('formValidate1')" >确认</Button>
+    </div>
+    </Modal> 
   </div>
 </template>
 
 <script>
-  import {userLogin} from '../../interface'
+  import {userLogin, checkRegisterStatus, checkStoreUserName, edit} from '../../interface'
   export default{
     name: 'login',
     data(){
+      const validateUserName = (rule, value, callback) => {
+        // check the user name validation first
+        const f1 = () => {
+          return new Promise((resolve, reject)=> {
+            for(i=0;i<value.length;i++){
+              let c = value.substr(i,1);
+              let ts = escape(c);
+              if(ts.substring(0,2) == "%u"){
+                callback(new Error('不能输入中文/全角字符'));
+              }
+            }
+            if (value.length < 6 ){
+              callback(new Error('用户名长度必须大于6'));
+            }
+            resolve('pass')
+            }); 
+        }
+        //check the user name unique or not second
+        const f2 = () =>{
+          return new Promise((resolve, reject)=> {
+            this.$ajax({
+              method: 'GET',
+              url: checkStoreUserName()+this.editPassword.userName,
+              withCredentials: true,
+            }).then((res) => {
+              // if don't have the will pass
+              if(res.data.customer){
+                callback(new Error('当前用户名已经存在'));
+              } else {
+                resolve(null)
+              }
+            }).catch((error) =>{
+              reject();
+            })
+          });   
+        }
+        f1()
+        .then((result)=>{
+          return f2();
+        }).then((result)=>{
+          callback();
+        })
+      };
+      const validatePass = (rule, value, callback) => {
+        if (value === '') {
+            callback(new Error('请输入密码'));
+        } else if (value.length < 6 ){
+          callback(new Error('密码长度必须大于6'));
+        }else {
+            if (this.editPassword.passwordRepeat !== '') {
+                // 对第二个密码框单独验证
+                this.$refs.formValidate1.validateField('passwordRepeat');
+            }
+            callback();
+        }
+      };
+      const validatePassCheck = (rule, value, callback) => {
+        if (value === '') {
+            callback(new Error('请再次输入密码'));
+        } else if (value !== this.editPassword.password) {
+            callback(new Error('两次输入的密码不一致'));
+        } else {
+            callback();
+        }
+      };
       return{
         userName:'',
-        password:''
+        password:'',
+        userEditPassword: false,
+        editPassword: {
+          userName: '',
+          password: '',
+          passwordRepeat: ''
+        },
+        ruleValidate: {
+          userName: [
+             { validator: validateUserName, trigger: 'blur', required: true }
+          ],
+          password: [
+            { validator: validatePass, trigger: 'blur', required: true }
+          ],
+          passwordRepeat: [
+            { validator: validatePassCheck, trigger: 'blur', required: true }
+          ],
+        }
       }
     },
     created(){},
     methods:{
       checkLogin(){
-        if(this.userName ==''||this.password==''){
-          this.$Message.warning('请填写用户名，密码');
-          return;
-        }
-        var data = {
-          userName: this.userName,
-          password: this.password
-        };
+        this.validateUser()
+        .then(([result1, result2])=>{
+          console.log(result2)
+          if (result2 === 'pass'){
+            return this.validateRegistered(result1);
+          } else if (result2 === 4) {
+            return this.casualUserEdit(this.userName)
+          }
+        })
+      },
+      // validate username and password
+      validateUser(){
+        return new Promise((resolve, reject) => {
+          if(this.userName ==''||this.password==''){
+            this.$Message.warning('请填写用户名，密码');
+            return;
+          }
+          var data = {
+            userName: this.userName,
+            password: this.password
+          };
+          this.$ajax({
+            method: 'POST',
+            url: userLogin(),
+            data: data
+          }).then( (res) =>{
+            console.log(res.data)
+            if(res.data.msg == '1'){
+              this.$Message.error('该用户不存在!');
+            }else if(res.data.msg == '2'){
+              this.$Message.error('密码不正确!');
+            }else if(res.data.msg == '3'){
+              this.$Message.error('登录权限被锁');
+            }else if(res.data.msg == '4'){
+              resolve([null, 4])
+            }else if(res.data.msg == '5'){
+              this.$Message.error('检测到跟上次登陆的ip地址不同需要进行安全验证');
+            }else{
+              resolve([res.data.customer.id, 'pass'])
+            }
+          }).catch( (err) =>{
+            console.log(err)
+            this.$Message.error('登陆失败，请检查用户名，密码');
+          })
+        })  
+      },
+      // check the user registered done or not
+      validateRegistered(id){
+        // if id equals 0 means registered done then push to main page
         this.$ajax({
-          method: 'POST',
-          url: userLogin(),
-          data: data
-        }).then( (res) =>{
-          if(res.data.msg == '1'){
-            this.$Message.error('该用户不存在!');
-          }else if(res.data.msg == '2'){
-            this.$Message.error('密码不正确!');
-          }else if(res.data.msg == '3'){
-            this.$Message.error('登录权限被锁');
-          }else if(res.data.msg == '4'){
-            this.$Message.error('检测到你为临时用户需要修改用户名和密码');
-          }else if(res.data.msg == '5'){
-            this.$Message.error('检测到运行环境不安全需要进行安全验证');
-          }else{
+          method: 'GET',
+          url: checkRegisterStatus()+id,
+          withCredentials: true,
+        }).then((res)=>{
+          console.log(res.data)
+          if(res.data.registItem === 0) {
             this.$Message.success('登陆成功');
             sessionStorage.setItem('authToken',res.data.authToken);
             sessionStorage.setItem('isLogin','1');
@@ -62,14 +198,63 @@
             sessionStorage.setItem('storeId','');
             sessionStorage.setItem('reData',JSON.stringify(res.data));
             this.$router.push({name: 'main'});
+          } else {
+            // if don't equals 0 will push to the latest registered page
+            this.$Modal.confirm({
+              title: '注册',
+              content: '<p>我们检测到您有一些信息没有填完，点击下一步我们将继续填写</p>',
+              okText: '下一步',
+              cancelText: '返回',
+              onOk: () => {
+                this.$router.push({name: res.data.registItem});
+              },
+              onCancel: () => {
+                this.$router.push({name: 'login'});
+              }
+            });
           }
-        }).catch( (err) =>{
-          console.log(err)
-          this.$Message.error('登陆失败，请检查用户名，密码');
         })
-
       },
-
+      // casual user need re-input their password
+      casualUserEdit(userName){
+        this.$Message.info('检测到你为临时用户需要修改密码');
+        this.userEditPassword = true;
+      },
+      submitEditPassword(name){
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.$ajax({
+              method: 'POST',
+              url: userLogin(),
+              data: this.editPassword
+            }).then((res)=>{
+              if (res.data.msg == '1') {
+                this.userEditPassword = false;
+                this.$Notice.success({
+                    title: '修改成功',
+                    desc: '您已经修改临时密码成功，请重新登录'
+                });
+                this.editPassword.userName ='';
+                this.editPassword.password ='';
+                this.editPassword.passwordRepeat ='';
+                this.userName = '';
+                this.password = '';
+              } else {
+                this.$Notice.error({
+                    title: '修改失败',
+                    desc: '请稍后再次尝试'
+                });
+                his.userEditPassword = false;
+                this.editPassword.userName ='';
+                this.editPassword.password ='';
+                this.editPassword.passwordRepeat ='';
+                this.userName = '';
+                this.password = '';
+              }
+            })
+          }
+        })
+      }
     }
   }
 
@@ -128,7 +313,7 @@
     font-size: 20px;
     padding: 22px 0;
     color: #fff;
-    //background-color: #66368C;
+    /*background-color: #66368C;*/
     text-align: center;
   }
   .notice{
@@ -139,6 +324,13 @@
     line-height: 30px;
     height: 30px;
     margin: 10px 0;
+  }
+  .formItemStyle {
+    width: 350px;
+    margin: 0 auto 20px auto;
+  }
+  .ivu-modal-footer {
+    display: none
   }
   a:link {color: #999999}		/* 未访问的链接 */
   a:visited {color: #999999}	/* 已访问的链接 */

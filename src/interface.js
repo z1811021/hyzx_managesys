@@ -177,6 +177,11 @@ export const editPassword  = function () {
   const API = host + URL;
   return API;
 };
+export const edit  = function () {
+  const URL = '/app/api/user/edit';
+  const API = host + URL;
+  return API;
+};
 export const getVerification  = function () {
   const URL = '/app/api/store/getVerification';
   const API = host + URL;
