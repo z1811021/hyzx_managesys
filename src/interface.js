@@ -67,6 +67,12 @@ export const userLogin = function () {
   const API = host + URL;
   return API;
 };
+export const changeIp = function () {
+  const URL = 'customer/valid/ip';
+  const API = host + URL;
+  return API;
+};
+
 export const customer = function () {
   const URL = '/store/customer/';
   const API = host + URL;
@@ -178,7 +184,7 @@ export const editPassword  = function () {
   return API;
 };
 export const edit  = function () {
-  const URL = '/app/api/user/edit';
+  const URL = '/customer/edit';
   const API = host + URL;
   return API;
 };

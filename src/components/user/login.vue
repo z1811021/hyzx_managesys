@@ -10,6 +10,10 @@
         <span class="txt">用户名：</span><Input v-model="userName" placeholder="用户名" style="width: 70%;" />
         <br><br>
         <span class="txt">密码：</span><Input v-model="password" type="password" placeholder="密码"  style="width: 70%;" />
+        <br><br>
+        <div v-if="showValid">
+        <span class="txt">验证码 ：</span><Input v-model="validCode"  placeholder="请输入验证码"  style="width: 70%;" />
+        </div>
         <br>
         <div class="notice"><span style="float: left;"><!-- <a href="#/register">注册门店</a> --></span><span style="float: right;"><a href="#/forget">忘记密码</a></span></div>
         <div style="margin: 0 auto;text-align: center;"><Button class="hy_btn" size="large" @click="checkLogin">登录</Button></div>
@@ -41,7 +45,7 @@
 </template>
 
 <script>
-  import {userLogin, checkRegisterStatus, checkStoreUserName, edit} from '../../interface'
+  import {userLogin, checkRegisterStatus, checkStoreUserName, edit, verifyCode, validatePhone, changeIp} from '../../interface'
   export default{
     name: 'login',
     data(){
@@ -119,6 +123,10 @@
           password: '',
           passwordRepeat: ''
         },
+        showValid: false,
+        validCode: '',
+        phoneNum: '',
+        customerId: '',
         ruleValidate: {
           userName: [
              { validator: validateUserName, trigger: 'blur', required: true }
@@ -135,15 +143,23 @@
     created(){},
     methods:{
       checkLogin(){
-        this.validateUser()
-        .then(([result1, result2])=>{
-          console.log(result2)
-          if (result2 === 'pass'){
-            return this.validateRegistered(result1);
-          } else if (result2 === 4) {
-            return this.casualUserEdit(this.userName)
-          }
-        })
+        // if no need input valid code
+        if (!this.showValid){
+          this.validateUser()
+          .then(([result1, result2])=>{
+            if (result2 === 'pass'){
+              return this.validateRegistered(result1);
+            } else if (result2 === 4) {
+              return this.casualUserEdit(this.userName)
+            }
+          }) 
+        } else {
+          this.verifyCode()
+          .then(([msg, id])=>{
+            console.log(msg, id)
+            return this.changeIp(msg, id)
+          })
+        }
       },
       // validate username and password
       validateUser(){
@@ -161,7 +177,6 @@
             url: userLogin(),
             data: data
           }).then( (res) =>{
-            console.log(res.data)
             if(res.data.msg == '1'){
               this.$Message.error('该用户不存在!');
             }else if(res.data.msg == '2'){
@@ -171,7 +186,10 @@
             }else if(res.data.msg == '4'){
               resolve([null, 4])
             }else if(res.data.msg == '5'){
-              this.$Message.error('检测到跟上次登陆的ip地址不同需要进行安全验证');
+              this.showValid = true;
+              this.$Message.info('检测到跟上次登陆的ip地址不同需要进行安全验证');
+              this.$Message.info('已发送验证码到您手机请查看, 并再次登录');
+              this.validateCode(res.data.customer.account, res.data.customer.id)
             }else{
               resolve([res.data.customer.id, 'pass'])
             }
@@ -189,7 +207,6 @@
           url: checkRegisterStatus()+id,
           withCredentials: true,
         }).then((res)=>{
-          console.log(res.data)
           if(res.data.registItem === 0) {
             this.$Message.success('登陆成功');
             sessionStorage.setItem('authToken',res.data.authToken);
@@ -225,10 +242,15 @@
           if (valid) {
             this.$ajax({
               method: 'POST',
-              url: userLogin(),
-              data: this.editPassword
+              url: edit(),
+              data: {
+                account: this.userName,
+                userName: this.editPassword.userName,
+                password: this.editPassword.password
+              }
             }).then((res)=>{
-              if (res.data.msg == '1') {
+              console.log(res.data)
+              if (res.data.msg == '0') {
                 this.userEditPassword = false;
                 this.$Notice.success({
                     title: '修改成功',
@@ -254,10 +276,94 @@
             })
           }
         })
-      }
-    }
+      },
+      // get validate code number
+      validateCode(phone, id){
+        this.$ajax({
+          method: 'GET',
+          url: verifyCode()+phone,
+          withCredentials: true,
+        }).then((res) => {
+          console.log(res)
+          if(res.data.msg === 0){
+            this.phoneNum = phone,
+            this.customerId = id;
+          } else {
+            this.$Message.error({content: '我们检测到短信发送有问题，我们研发人员正在加速处理，请稍后', duration: 3});
+          }
+        }).catch((error) =>{
+          this.$Message.error({content: '注册失败！', duration: 3});
+        })
+      },
+      // verify validate code
+      verifyCode(){
+        return new Promise((resolve, reject) => {
+          this.$ajax({
+            method: 'post',
+            url: validatePhone(),
+            withCredentials: true,
+            data: {
+              account: this.phoneNum,
+              code: this.validCode,
+            }
+          }).then((res)=>{
+            console.log(res)
+            if(res.data.msg === 0){
+              console.log(1)
+              resolve(['pass', this.customerId])
+            }
+            else if (res.data.msg === 1) {
+              this.$Message.error({content :'验证码不正确', duration: 3});
+              return;
+            }
+          })
+        })    
+      },
+      // change ip
+      changeIp(msg, id){
+        return new Promise((resolve, reject) => {
+          if(msg === 'pass'){
+            this.$ajax({
+              method: 'post',
+              url: changeIp(),
+              withCredentials: true,
+              data: {
+                customerId: id,
+                validResult: 0,
+              }
+            }).then((res)=>{
+              if(res.data.msg === 0){
+                this.$Notice.success({
+                  title: '验证成功',
+                  desc: '您已经验证成功，请重新登录'
+                });
+                this.editPassword.userName ='';
+                this.editPassword.password ='';
+                this.editPassword.passwordRepeat ='';
+                this.userName = '';
+                this.password = '';
+                this.userEditPassword = true;
+                this.validCode = '';
+                resolve('suc')
+              } else {
+                this.$Notice.error({
+                  title: '验证失败',
+                  desc: '请稍后再次尝试'
+                });
+                this.editPassword.userName ='';
+                this.editPassword.password ='';
+                this.editPassword.passwordRepeat ='';
+                this.userName = '';
+                this.password = '';
+                this.userEditPassword = true;
+                this.validCode = '';
+              }
+            })
+          }
+      })  
+    },
   }
-
+}
 </script>
 
 <style scoped>

@@ -239,7 +239,7 @@ import { findStoreList,getProvinces,getCities,auditStoreCustomer,review,customer
             status: this.storeStatus,
             desc: this.causeOfFailure
           }
-        }).then( (res)=>{
+        }).then((res)=>{
           this.$Message.success('操作成功');
           this.getList();
         })
