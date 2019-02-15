@@ -19,6 +19,12 @@
         工作流程：<Input v-model="job.workflow" placeholder="第一步：  ，第二步：  " style="width: 300px"/>
       </div>
       <div class="com">
+        <div class="com">工作类型：
+          <Select v-model="job.levelType" :transfer=true style="width:300px" @on-change="changeLevelType">
+            <Option value="1" >管理</Option>
+            <Option value="2" >技师</Option>
+          </Select>
+        </div>
         <div style="float: left;margin-left: 13%;">是否设置岗位等级：</div>
         <RadioGroup v-model="job.postGrade" @on-change="changeGrade">
           <Radio label="是" style="float:left;">
@@ -28,18 +34,9 @@
               <span>否</span>
           </Radio>
         </RadioGroup>
-        <div class="com">级别类型：<Select v-show="!showStyle" style="width:300px" disabled>
-            <Option value="1" >数字</Option>
-            <Option value="2" >字母</Option>
-          </Select>
-          <Select v-show="showStyle" v-model="job.levelType" :transfer=true style="width:300px">
-            <Option value="1" >数字</Option>
-            <Option value="2" >字母</Option>
-          </Select>
-       </div>
         <div class="com">
-        级别数量：<Input v-show="!showNumber" placeholder="级别数量" style="width: 300px" disabled/>
-        <Input v-model="job.levelNum" v-show="showNumber" placeholder="级别数量" style="width: 300px" />
+        级别数量：<InputNumber :max="20" :min="2" v-model="job.levelNum" v-show="!showNumber" placeholder="级别数量" style="width: 300px" disabled/></InputNumber>
+        <InputNumber :max="20" :min="2" v-model="job.levelNum" v-show="showNumber" placeholder="级别数量" style="width: 300px" /></InputNumber>
         </div>
       </div>
       <div class="com">
@@ -176,6 +173,10 @@
             key: 'jobTitle',
           },
           {
+            title: '工作类别',
+            key: 'levelTyleLabel',
+          },
+          {
             title: '职责',
             key: 'respCont',
           },
@@ -242,6 +243,13 @@
           url: findPostList()+"/"+this.$route.params.id,
         }).then((res) => {
           this.data = res.data.memMangeInfo;
+          for (var i = 0; i < this.data.length; i++) {
+            if(this.data[i].levelType == "1"){
+              this.data[i].levelTyleLabel = "管理";
+            }else if(this.data[i].levelType == "2"){
+              this.data[i].levelTyleLabel = "技师";
+            }
+          }
         }).catch((error) => {
         });
       },
@@ -257,6 +265,9 @@
           this.job.bonStock = this.transfer(this.job.bonStock);
           this.job.primStock = this.transfer(this.job.primStock);
           this.job.postGrade = this.transferGrade(this.job.postGrade);
+          if(this.job.levelType == ''){
+            validateMessage = validateMessage + "请选择工作类型！<br/>";
+          }
           if(this.job.jobTitle == ''){
             validateMessage = validateMessage + "请输入岗位名称！<br/>";
           }
@@ -298,6 +309,14 @@
               this.$Message.error('操作失败');
             });
           }
+      },
+      changeLevelType(){
+        if(this.job.levelType == "1"){
+          this.job.postGrade = "否";
+          this.showNumber = false;
+        }else if(this.job.levelType == "2"){
+          this.job.postGrade = "";
+        }
       },
       transferBack(c){
         if(c == 1){

@@ -216,6 +216,7 @@
               this.data[i].basicPrice = this.data[i].basicPrice + '元';
               this.data[i].bestPrice = this.data[i].bestPrice + '元';
               this.data[i].basicLabel = this.data[i].basicLabel.substring(0,this.data[i].basicLabel.length-1);
+              this.data[i].bestLable = this.data[i].bestLable.substring(0,this.data[i].bestLable.length-1);
             }
         }).catch((error) => {
           this.$Message.error('获取失败');
