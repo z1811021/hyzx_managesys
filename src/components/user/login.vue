@@ -53,7 +53,7 @@
         // check the user name validation first
         const f1 = () => {
           return new Promise((resolve, reject)=> {
-            for(i=0;i<value.length;i++){
+            for(let i=0;i<value.length;i++){
               let c = value.substr(i,1);
               let ts = escape(c);
               if(ts.substring(0,2) == "%u"){
