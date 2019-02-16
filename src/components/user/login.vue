@@ -156,7 +156,6 @@
         } else {
           this.verifyCode()
           .then(([msg, id])=>{
-            console.log(msg, id)
             return this.changeIp(msg, id)
           })
         }
@@ -249,7 +248,6 @@
                 password: this.editPassword.password
               }
             }).then((res)=>{
-              console.log(res.data)
               if (res.data.msg == '0') {
                 this.userEditPassword = false;
                 this.$Notice.success({
@@ -284,7 +282,6 @@
           url: verifyCode()+phone,
           withCredentials: true,
         }).then((res) => {
-          console.log(res)
           if(res.data.msg === 0){
             this.phoneNum = phone,
             this.customerId = id;
@@ -307,9 +304,7 @@
               code: this.validCode,
             }
           }).then((res)=>{
-            console.log(res)
             if(res.data.msg === 0){
-              console.log(1)
               resolve(['pass', this.customerId])
             }
             else if (res.data.msg === 1) {
@@ -342,7 +337,7 @@
                 this.editPassword.passwordRepeat ='';
                 this.userName = '';
                 this.password = '';
-                this.userEditPassword = true;
+                this.showValid = false;
                 this.validCode = '';
                 resolve('suc')
               } else {
@@ -355,9 +350,12 @@
                 this.editPassword.passwordRepeat ='';
                 this.userName = '';
                 this.password = '';
-                this.userEditPassword = true;
+                this.showValid = false;
                 this.validCode = '';
               }
+            })
+            .catch((err)=>{
+              console.log(err)
             })
           }
       })  

@@ -68,7 +68,7 @@ export const userLogin = function () {
   return API;
 };
 export const changeIp = function () {
-  const URL = 'customer/valid/ip';
+  const URL = '/customer/valid/ip';
   const API = host + URL;
   return API;
 };
