@@ -7,6 +7,7 @@ import moment from 'moment';
 import VueResource from 'vue-resource';
 import axios from 'axios';
 import htmlToPdf from '@/components/user/htmlToPdf.js';
+import "babel-polyfill";
 Vue.config.productionTip = false
 Vue.use(VueResource);
 Vue.use(iView);

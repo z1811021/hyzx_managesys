@@ -41,7 +41,7 @@
             <Option v-for="project in mealList" :value="project.programName" :key="project.programName">{{project.programName}} 元</Option>
             <!-- <Option>abc</Option> -->
         </OptionGroup>
-        <OptionGroup v-for="item in projectCategoryList" :value="item.projectCategory" :label="item.projectCategory" key="item.projectCategory">
+        <OptionGroup v-for="item in projectCategoryList" :value="item.projectCategory" :label="item.projectCategory" :key="item.projectCategory">
             <Option v-for="project in item.curProjectList" :value="project.itemName" :key="project.itemName">{{ project.itemName }} 元/次</Option>
             <!-- <Option>abc</Option> -->
         </OptionGroup>

@@ -30,7 +30,6 @@
     <Button class="hy_return" size="large" @click="returnLogin">返回</Button>
   </div>
   </div>
-  </div>
 </template>
 
 <script>

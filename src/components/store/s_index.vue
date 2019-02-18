@@ -30,7 +30,7 @@
         门店品牌：<Input v-model="storeVal.storeName" placeholder="门店品牌" style="width: 300px"/>
         <br/>
         <br/>
-        门店省市：<Select id="s_province" name="province" class="sus" v-model="storeVal.provinceName" placeholder="门店所在省" disabled :placeholder="storeVal.provinceName"></Select>&nbsp;&nbsp;
+        门店省市：<Select id="s_province" name="province" class="sus" v-model="storeVal.provinceName" disabled :placeholder="storeVal.provinceName"></Select>&nbsp;&nbsp;
         <Select id="s_city" name="city" v-model="storeVal.cityName" class="sus" disabled :placeholder="storeVal.cityName"></Select>&nbsp;&nbsp;
         <Select id="s_county" name="area"  v-model="storeVal.area" class="sus" disabled :placeholder="storeVal.area"></Select>
         <br/>
@@ -186,7 +186,7 @@
      <Modal footer-hide v-model="yearLsFlag" height="20%" width="48%">&nbsp;&nbsp;&nbsp;&nbsp;连续十二个月店内现金流水 &nbsp;&nbsp;&nbsp;&nbsp; 总计{{question.register3MonthCount.type1}}元
        <br/>
        <br/>
-       <div style="margin-left: 30px;" v-for="value in question.register3Month.type1">
+       <div style="margin-left: 30px;" v-for="(value,index) in question.register3Month.type1" :key="index">
           {{Object.keys(value)[0]}}: &nbsp;&nbsp; <Input v-model="Object.values(value)[0]" class="modalMonthInput" disabled/>
           
         </div>
@@ -194,7 +194,7 @@
      <Modal footer-hide v-model="yearScFlag" height="20%" width="48%" >&nbsp;&nbsp;&nbsp;&nbsp;连续十二个月店内实操 &nbsp;&nbsp;&nbsp;&nbsp; 总计{{question.register3MonthCount.type2}}元
        <br/>
        <br/>
-        <div style="margin-left: 30px;" v-for="value in question.register3Month.type2">
+        <div style="margin-left: 30px;" v-for="(value,index) in question.register3Month.type2" :key="index">
           {{Object.keys(value)[0]}}: &nbsp;&nbsp; <Input v-model="Object.values(value)[0]" class="modalMonthInput" disabled/>
           
         </div>
@@ -202,7 +202,7 @@
      <Modal footer-hide v-model="yearKlFlag" height="20%" width="48%" >&nbsp;&nbsp;&nbsp;&nbsp;连续十二个月店内客流 &nbsp;&nbsp;&nbsp;&nbsp; 总计{{question.register3MonthCount.type3}}人
        <br/>
        <br/>
-      <div style="margin-left: 30px;" v-for="value in question.register3Month.type3">
+      <div style="margin-left: 30px;" v-for="(value,index) in question.register3Month.type3" :key="index">
           {{Object.keys(value)[0]}}: &nbsp;&nbsp; <Input v-model="Object.values(value)[0]" class="modalMonthInput" disabled/>
           
         </div>
@@ -210,7 +210,7 @@
      <Modal footer-hide v-model="yearYjFlag" height="20%" width="48%" >&nbsp;&nbsp;&nbsp;&nbsp;连续十二个月店内产品业绩&nbsp;&nbsp;&nbsp;&nbsp; 总计{{question.register3MonthCount.type4}}元
        <br/>
        <br/>
-        <div style="margin-left: 30px;" v-for="value in question.register3Month.type4">
+        <div style="margin-left: 30px;" v-for="(value,index) in question.register3Month.type4" :key="index">
           {{Object.keys(value)[0]}}: &nbsp;&nbsp; <Input v-model="Object.values(value)[0]" class="modalMonthInput" disabled/>
           
         </div>
@@ -218,7 +218,7 @@
     <Modal footer-hide v-model="yearYgxsFlag" height="20%" width="48%" class-name="my-modal" >员工12个月薪资 &nbsp;&nbsp;&nbsp;&nbsp; 总计{{question.register5MonthCount}}元
        <br/>
        <br/>
-       <div style="margin-left: 30px;" v-for="value in question.register5Month">
+       <div style="margin-left: 30px;" v-for="(value,index) in question.register5Month" :key="index">
           {{Object.keys(value)[0]}}: &nbsp;&nbsp; <Input v-model="Object.values(value)[0]" class="modalMonthInput" disabled/>
           
         </div>
@@ -553,9 +553,9 @@
       this.getData();
       // this.getProvinces();
     },
-    mounted() {
+    /*mounted() {
       new PCAS("province","city","area");
-    },
+    },*/
     methods: {
       getData(){
         this.tag = 1;

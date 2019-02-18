@@ -110,13 +110,13 @@
       </RadioGroup>
           <div v-show="!showAgenda">
           <br/>
-          <div class="leftRadio">疗程次数：</div><Input placeholder="疗程次数" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;"disabled/>
+          <div class="leftRadio">疗程次数：</div><Input placeholder="疗程次数" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" disabled/>
           <br/>
           <br/>
-          <div class="leftRadio">疗程价：</div><Input placeholder="疗程价" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;"disabled/>
+          <div class="leftRadio">疗程价：</div><Input placeholder="疗程价" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" disabled/>
           <br/>
           <br/>
-          <div class="leftRadio">疗程卡扣价：</div><Input placeholder="疗程卡扣价：" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;"disabled/>
+          <div class="leftRadio">疗程卡扣价：</div><Input placeholder="疗程卡扣价：" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" disabled/>
           <br/>
           <br/>
           </div>

@@ -19,7 +19,7 @@
       </div>
       <div class="project">
         <h3>项目组合 <Button class="hy_btn" size="small" @click="Addproject">添加</Button></h3>
-        <div v-for="item in addData.project" class="projectone">
+        <div v-for="item in addData.project" class="projectone" :key="item">
           <div class='com'>项目：
             <Select v-model="item.projectId" :on-change="changeProject(item.projectId)" style="width:150px"  :transfer=true>
               <Option :value="items.id" :key="items.id"  v-for="items in projectList">{{items.projectName}}</Option>

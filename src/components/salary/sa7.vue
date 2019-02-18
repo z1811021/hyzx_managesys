@@ -16,7 +16,7 @@
         <span v-if="data.forfeitLate==true"><Button class="hy_btn btn" style="margin-left: 10px;" size="small" @click="AddleaveEarlyFines">新增</Button></span>
       </h3>
       <div v-if="data.forfeitLate==true">
-        <div v-for="item in leaveEarlyFiness" style="margin: 10px 0;">
+        <div v-for="(item,index) in leaveEarlyFiness" style="margin: 10px 0;" :key="index">
           时间(min)：<Input v-model="item.lateTime" placeholder="迟到早退时间 min" size="small"  class="Input"/>
           金额：<Input v-model="item.lateMoney" placeholder="迟到早退罚金" size="small"  class="Input"/>
           <Button class="btn" size="small" type="success" @click="editlateforfeit(item.id,item.lateTime,item.lateMoney)">保存</Button>

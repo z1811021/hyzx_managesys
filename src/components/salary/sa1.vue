@@ -34,7 +34,7 @@
       <Table  :columns="columns" :data="salarydata" ></Table>
       <Modal  class="modalProjects" v-model="salaryFlag2" :mask-closable="false" :title="title1">
         员工类型：<Select v-model="add.empType" style="width:300px;" @on-change="changeEmp">
-        <Option v-for="(item,index) in employeeList" :value="item.jobTitle" :key="item.id">{{ item.jobTitle}}</Option>
+        <Option v-for="item in employeeList" :value="item.jobTitle" :key="item.id">{{ item.jobTitle}}</Option>
       </Select>
         <br/>
         <br/>

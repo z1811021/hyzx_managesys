@@ -73,7 +73,7 @@
               <th style="width:10%;"></th>
             </tr>
           </thead> 
-          <tbody v-for="(item,index) in instrumentsForm">
+          <tbody v-for="(item,index) in instrumentsForm" :key="index">
             <tr >
               <td >{{item.effect}}</td>
               <td >{{item.name}}</td>

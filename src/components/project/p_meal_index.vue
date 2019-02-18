@@ -25,7 +25,7 @@
         <div style="float:left;margin-left: 63px;">选择项目：</div>
         <br/>
         <Select v-model="selectedProject" ref="setHouseQuery" clearable placeholder="请选择套餐项目" style="width:360px;margin-bottom:5%;margin-top:2%;" :transfer=true @on-change="changeProjects()" filterable>
-          <OptionGroup v-for="item in projectCategoryList" :value="item.projectCategory" :label="item.projectCategory" key="item.projectCategory">
+          <OptionGroup v-for="item in projectCategoryList" :value="item.projectCategory" :label="item.projectCategory" :key="item.projectCategory">
             <Option v-for="project in item.curProjectList" :value="project.id" :key="project.id">{{ project.itemName }} {{project.itemPrice}}</Option>
             <!-- <Option>abc</Option> -->
           </OptionGroup>
@@ -34,14 +34,14 @@
         <div v-show="showDataTable" class="dataTableDiv">
           <li class="specialLiTitle"><div class="liOrderLeft">序列</div><div class="liLeft">项目名称</div><div class="liCenter">项目价格</div><div class="liRightTitle">项目间隔</div><div class="liMostRight">修改间隔</div><br/></li>
           <draggable element="ul" v-model="planData">
-            <li v-for="(item,index) in planData" class="specialLi"><div class="liOrderLeft">{{index+1}}</div><div class="liLeft">{{item.itemName}}</div><div class="liCenter">{{item.itemPrice}}</div><Input v-show="!item.showBlank" v-model="item.itemInterval" class="liRight" disabled/><Input v-show="item.showBlank" v-model="item.itemInterval" class="liRight" @on-blur="disableModify(item,index)"/><div class="liMostRight"><Button :size="buttonSize" type="primary" @click="mannger(item)">修改</Button><Button :size="buttonSize" type="warning" @click="Delete(item.itemOrder)">删除</Button></div><br/></li>
+            <li v-for="(item,index) in planData" class="specialLi" :key="index"><div class="liOrderLeft">{{index+1}}</div><div class="liLeft">{{item.itemName}}</div><div class="liCenter">{{item.itemPrice}}</div><Input v-show="!item.showBlank" v-model="item.itemInterval" class="liRight" disabled/><Input v-show="item.showBlank" v-model="item.itemInterval" class="liRight" @on-blur="disableModify(item,index)"/><div class="liMostRight"><Button :size="buttonSize" type="primary" @click="mannger(item)">修改</Button><Button :size="buttonSize" type="warning" @click="Delete(item.itemOrder)">删除</Button></div><br/></li>
           </draggable>
         </div>
         <br/>
         <br/>
         <div class="timeLineDiv">
           <draggable element="Timeline" v-model="planData">
-            <TimelineItem style="cursor:pointer;" v-for="item in planData" :key="key">
+            <TimelineItem style="cursor:pointer;" v-for="(item,index) in planData" :key="index">
                 <p class="time">{{item.itemName}}</p>
                 <br/>
                 <p class="content">{{item.itemInterval}}</p>

@@ -18,7 +18,7 @@
               <th style="width:10%;"></th>
             </tr>
           </thead> 
-          <tbody v-for="(item,index) in cardsForm">
+          <tbody v-for="(item,index) in cardsForm" :key="index">
             <tr >
               <td >{{item.name}}</td>
               <td >{{item.price}}</td>
@@ -72,7 +72,7 @@
               <th style="width:10%;"></th>
             </tr>
           </thead> 
-          <tbody v-for="(item,index) in customerCardsForm">
+          <tbody v-for="(item,index) in customerCardsForm" :key="index">
             <tr >
               <td >{{item.type}}</td>
               <td >{{item.exCount}}</td>

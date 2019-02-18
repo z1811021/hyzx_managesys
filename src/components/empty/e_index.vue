@@ -35,8 +35,8 @@
           </Radio>
         </RadioGroup>
         <div class="com">
-        级别数量：<InputNumber :max="20" :min="2" v-model="job.levelNum" v-show="!showNumber" placeholder="级别数量" style="width: 300px" disabled/></InputNumber>
-        <InputNumber :max="20" :min="2" v-model="job.levelNum" v-show="showNumber" placeholder="级别数量" style="width: 300px" /></InputNumber>
+        级别数量：<InputNumber :max="20" :min="2" v-model="job.levelNum" v-show="!showNumber" placeholder="级别数量" style="width: 300px" disabled/>
+        <InputNumber :max="20" :min="2" v-model="job.levelNum" v-show="showNumber" placeholder="级别数量" style="width: 300px" />
         </div>
       </div>
       <div class="com">

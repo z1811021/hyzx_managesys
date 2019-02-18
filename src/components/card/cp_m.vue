@@ -7,11 +7,11 @@
     <Table :columns="columns" :data="data"></Table>
 
     <Modal v-model="addF" title="添加" :mask-closable="false" @on-ok="ok" class="mod">
-      <div class='com'>名称：<Input v-model="addData.productCardName" style="width: 300px"></Input></div>
+      <!-- <div class='com'>名称：<Input v-model="addData.productCardName" style="width: 300px"></Input></div>
       <div class='com'>卡扣价格：<Input v-model="addData.bucklePrice" @on-keyup="addData.bucklePrice=check2(addData.bucklePrice)" style="width: 300px"></Input></div>
       <div class='com'>现金价格：<Input v-model="addData.cashPrice" @on-keyup="addData.cashPrice=check2(addData.cashPrice)" style="width: 300px"></Input></div>
       <div class='com'>金额：<Input v-model="addData.productCardMoney" @on-keyup="addData.productCardMoney=check2(addData.productCardMoney)" style="width: 300px"></Input></div>
-           <div class='com'>有效期：<Input v-model="addData.productCardValidity" @on-keyup="addData.productCardValidity=check(addData.productCardValidity)"  placeholder="单位月" style="width: 288px"></Input></div>
+           <div class='com'>有效期：<Input v-model="addData.productCardValidity" @on-keyup="addData.productCardValidity=check(addData.productCardValidity)"  placeholder="单位月" style="width: 288px"></Input></div> -->
       <!--<div class='com'>产品折扣：<Select v-model="discont" style="width:275px"  placeholder="" :transfer=true>
         <Option value="配赠金额"  >配赠金额</Option>
         <Option value="打折" >打折</Option>

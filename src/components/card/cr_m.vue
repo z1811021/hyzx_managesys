@@ -11,9 +11,7 @@
         <div class='com' style="margin-top:20px;">
         会员价格：<InputNumber
             :min="0"
-            v-model="addData.memPrice"
-            :formatter="value => `${value}元`"
-            :parser="value => value.replace('元', '')" placeholder="元" style="width:275px" @on-change="changeThisPrice"></InputNumber>
+            v-model="addData.memPrice" placeholder="元" style="width:270px" @on-change="changeThisPrice"></InputNumber>元
         </div>
         <div class='com' style="margin-top:20px;"><div class="disLeft">单次折扣：
             <Select size="small" v-model="addData.singleDiscount" style="width:90px" placeholder="单次折扣" filterable>
@@ -37,11 +35,14 @@
           <Select v-model="selectedRisCardRule" :multiple=true :transfer=true @on-change="changeStyle" style="width:275px">
             <Option value="累计现金">累计现金</Option>
             <Option value="累计充值">累计充值</Option>
-            <Option value="增量充值">增量充值</Option>
+            <Option value="增量充值" v-if="data.length">补差充值</Option>
             <Option value="单次充值">单次充值</Option>
           </Select>
         </div>
         <div v-show="addData.allowRecharge" style="margin-top:15px;">
+          
+        </div>
+        <!-- <div v-show="addData.allowRecharge" style="margin-top:15px;">
          <div style="float:left;margin-left: 63px;padding-top:4px;">增量充值细节：</div>
          <div style="margin-right:280px;"><Button type="success" size="small" @click="addUpgrade"><Icon type="plus-round"></Icon>项目</Button></div>
            <div v-for="(item,index) in upgradeList">
@@ -53,15 +54,15 @@
             <Button style="float:left;margin-left:8px;margin-top:5px;" type="warning" @click="deleteUpgrade(index)">删除</Button>
             <div v-show="showMoney && item.showChoose" style="float:right;margin-top:12px;margin-right:23px;">{{item.min}}元~{{item.max}}元</div>
           </div>
-        </div>
+        </div> -->
         <br/>
         <div class='group' style="display:inline-block;margin-top:30px;">
           <h3>会员尊享</h3> 
           <div style="margin-left:-320px;"><Button type="success" size="small" @click="addHonor"><Icon type="plus-round"></Icon>项目</Button></div>
-            <div style="display:block;margin-bottom:20px;" v-for="(item,index) in honorList" > 
+            <div style="display:block;margin-bottom:20px;" v-for="(item,index) in honorList" :key="index"> 
                   <Input type="number" v-model="item.itemTimes" class="enjoyInput" placeholder="次数：" style="width:300px;">
                   <Select v-model="item.itemName" ref="setHouseQuery" clearable placeholder="请选择尊享项目" slot="prepend" style="width: 232px" @on-change="changeHonor(index)">
-                      <OptionGroup v-for="item in projectCategoryList" :value="item.projectCategory" :label="item.projectCategory" key="item.projectCategory">
+                      <OptionGroup v-for="item in projectCategoryList" :value="item.projectCategory" :label="item.projectCategory" :key="item.projectCategory">
                         <Option v-for="project in item.curProjectList" :value="project.itemName" :key="project.id">{{ project.itemName }} {{project.itemPrice}}</Option>
                       </OptionGroup>
                   </Select>

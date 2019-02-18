@@ -43,8 +43,8 @@
       <div class='group' v-show="showHK" style="display:inline-block;margin-top:20px;">
         <h3>耗卡活动</h3>
         <br/>
-        <div style="margin-bottom:20px;"><InputNumber :max="100" :min="0" v-model="hkAct.weeks" @on-change="changeFromProjects" size="small" style="width: 48px;margin-top: -1px;" ></InputNumber :max="100" :min="0">周内做完<InputNumber :max="100" :min="0" @on-change="changeFromProjects" v-model="hkAct.projects" size="small" style="width: 48px;margin-top: -1px;" ></InputNumber>个项目，从第<InputNumber :max="100" :min="0" v-model="hkAct.fromProjects" @on-change="changeFromProjects" size="small" style="width: 48px;margin-top: -1px;" ></InputNumber>次开始赠送相应项目或者产品</div>
-        <div v-for="project in hkProjects" style="margin-top:10px;">
+        <div style="margin-bottom:20px;"><InputNumber :max="100" :min="0" v-model="hkAct.weeks" @on-change="changeFromProjects" size="small" style="width: 48px;margin-top: -1px;" ></InputNumber>周内做完<InputNumber :max="100" :min="0" @on-change="changeFromProjects" v-model="hkAct.projects" size="small" style="width: 48px;margin-top: -1px;" ></InputNumber>个项目，从第<InputNumber :max="100" :min="0" v-model="hkAct.fromProjects" @on-change="changeFromProjects" size="small" style="width: 48px;margin-top: -1px;" ></InputNumber>次开始赠送相应项目或者产品</div>
+        <div v-for="project in hkProjects" style="margin-top:10px;" :key="project">
           <span >第{{project.hkNumber}}次</span>
           <Select v-model="project.hkProject" placeholder="请选择耗卡活动项目" style="width:260px;margin-left:50px;" :transfer=true>
               <Option v-for="item in projectList" :value="item.id" :key="item.id">
@@ -64,7 +64,7 @@
           </Select>
           <div v-show="showGiveProject">
           <div style="margin-top:30px;margin-left:-220px;">充值赠送项目：<Button style="margin-left:50px;" size="small" type="primary" @click="addGiveProject">增加</Button></div>
-            <div v-for="(project,index) in czGiveProjectList" style="margin-top:4px;">
+            <div v-for="(project,index) in czGiveProjectList" style="margin-top:4px;" :key="project">
               <span >充值 <InputNumber :max="100000" :min="0" v-model="project.presentMoney" size="small" style="width:64px"></InputNumber>元</span>
               <Select v-model="project.presentItem" placeholder="请选择活动充值赠送项目" style="width:240px;margin-left:20px;" :transfer=true>
                   <Option v-for="item in projectList" :value="item.id" :key="item.id">
@@ -76,7 +76,7 @@
           </div>
           <div v-show="showGiveProduct">
             <div style="margin-top:30px;margin-left:-220px;">充值赠送产品：<Button style="margin-left:50px;" size="small" type="primary" @click="addGiveProduct">增加</Button></div>
-              <div v-for="item in czGiveProductList" style="margin-top:4px;">
+              <div v-for="item in czGiveProductList" style="margin-top:4px;" :key="item">
                 <Select v-model="item.presentGift" style="width:200px">
                     <Option value="产品一">产品一</Option>
                     <Option value="产品二">产品二</Option>
@@ -89,7 +89,7 @@
           </div>
           <div v-show="showczYj">
             <div style="margin-top:30px;margin-left:-220px;">充值摇奖活动：<Button style="margin-left:50px;" size="small" type="primary" @click="addCZYJ">增加</Button></div>
-              <div v-for="(item,index) in yjTimeList" style="margin-top:4px;">充值 <InputNumber :max="100000" :min="0" v-model="item.rechargeMoney" size="small" style="width:64px;"></InputNumber> 元可转盘摇奖{{item.rechargeTimes}}次  <Button class="hy_btn" @click="deleteCZYJ(index)">删除</Button></div>
+              <div v-for="(item,index) in yjTimeList" style="margin-top:4px;" :key="index">充值 <InputNumber :max="100000" :min="0" v-model="item.rechargeMoney" size="small" style="width:64px;"></InputNumber> 元可转盘摇奖{{item.rechargeTimes}}次  <Button class="hy_btn" @click="deleteCZYJ(index)">删除</Button></div>
           </div>
       </div>
       <br/>

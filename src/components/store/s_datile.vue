@@ -76,6 +76,7 @@
       const m_id = this.$route.params.id;
       this.getUrl();
       this.name = this.$route.query.storeName;
+      console.log(sessionStorage);
     },
     methods: {
       got(path) {
