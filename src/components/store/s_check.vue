@@ -43,7 +43,7 @@
         <Option value="1">通过</Option>
         <Option value="2">拒绝</Option>
         </Select>
-        <div v-if="storeStatus=='3'" style="margin-top: 10px;">
+        <div v-if="storeStatus=='2'" style="margin-top: 10px;">
           拒绝通过原因：<Input v-model="causeOfFailure" type="textarea" :autosize="true" placeholder="拒绝通过原因" style="width: 275px"/>
         </div>
         <!--<div v-show="isShow" style="color: red;">*请填写拒绝通过原因*</div>-->
@@ -162,7 +162,6 @@ import { findStoreList,getProvinces,getCities,auditStoreCustomer,review,customer
     },
     methods:{
       serc() {
-        console.log(this.serch)
         if(this.serch == '') {
           this.data1 = this.orData;
         }else{
@@ -189,19 +188,22 @@ import { findStoreList,getProvinces,getCities,auditStoreCustomer,review,customer
         })
       },
       check(data){
+        console.log(data)
         this.$ajax({
           method:'GET',
           url:customer()+data.id,
         }).then( (res)=>{
+          console.log(res.data)
           this.storeFlag = true;
           this.storeVal = data;
-          this.storeVal.staffName = res.data.customer.name;
+          this.storeVal.staffName = res.data.customer.staffName;
           this.storeVal.phoneNumber = res.data.customer.account;
           //this.storeVal.storeType = this.getStoreType(data.storeType)
-          this.storeStatus =data.storeStatus == 2 ? data.storeStatus : null;
+          this.storeStatus =data.storeStatus == 2 ? data.storeStatus : '';
           this.causeOfFailure =data.storeDesc;  
+          console.log(this.storeStatus)
         }).catch((error)=>{
-
+          console.log(error)
         })
       },
       check1(value){
@@ -221,7 +223,7 @@ import { findStoreList,getProvinces,getCities,auditStoreCustomer,review,customer
         return storeType;
       },
       ok(){
-        if(this.storeStatus==''){
+        if( this.storeStatus === ''){
           this.$Message.error('请选择审核！');
           return;
         }
@@ -230,7 +232,6 @@ import { findStoreList,getProvinces,getCities,auditStoreCustomer,review,customer
           this.$Message.error('请填写拒绝通过原因!');
           return;
         }
-        console.log(this.causeOfFailure)
         this.$ajax({
           method:'POST',
           url: audit(),
