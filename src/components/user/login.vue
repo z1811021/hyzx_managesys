@@ -15,7 +15,7 @@
         <span class="txt">验证码 ：</span><Input v-model="validCode"  placeholder="请输入验证码"  style="width: 70%;" />
         </div>
         <br>
-        <div class="notice"><span style="float: left;"><!-- <a href="#/register">注册门店</a> --></span><span style="float: right;"><a href="#/forget">忘记密码</a></span></div>
+        <div class="notice"><span style="float: left;"><a href="#/register">注册门店</a></span><span style="float: right;"><a href="#/forget">忘记密码</a></span></div>
         <div style="margin: 0 auto;text-align: center;"><Button class="hy_btn" size="large" @click="checkLogin">登录</Button></div>
       </div>
     </div>
