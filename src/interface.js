@@ -16,6 +16,11 @@ export const findStoreList = function () {
   const API = host + URL;
   return API;
 };
+export const findStoreListByCustomerId = function () {
+  const URL = '/store/owner/';
+  const API = host + URL;
+  return API;
+};
 export const findStoreListById = function () {
   const URL = '/app/api/store/findStoreById';
   const API = host + URL;

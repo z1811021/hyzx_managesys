@@ -5,7 +5,7 @@
         <Menu :active-name="activename" theme="light" width="auto" :open-names="['1']" @on-select="go">
           <div class="layout-logo-left" style="width:auto;">华杨汇美</div>
           <MenuItem name="s_index"><i class="iconfont icon-homepage"></i>门店信息</MenuItem>
-          <MenuItem name="s_check" v-if="isSystem == 'true'">
+          <MenuItem name="s_check" v-if="admin == 'true'">
             <Icon type="clipboard"></Icon>审核门店
           </MenuItem>
         </Menu>
@@ -53,7 +53,7 @@
     data () {
       return {
         msg: 'Welcome to Your Vue.js App',
-        isSystem: sessionStorage.getItem('isSystem'),
+        admin: sessionStorage.getItem('admin'),
         activename: 's_index',
         storeFlag: false,
         password1: '',

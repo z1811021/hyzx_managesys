@@ -40,6 +40,18 @@
       <Button size="large"  @click="userEditPassword=false">取消</Button>
       <Button type="primary" style="margin-left:20px;" size="large" @click="submitEditPassword('formValidate1')" >确认</Button>
     </div>
+    </Modal>
+     <Modal v-model="modalStatusInfo" width="360" :mask-closable="false" :closable="false">
+      <p slot="header" style="color:#66368C;text-align:center">
+          <Icon type="information-circled"></Icon>
+          <span>详细信息</span>
+      </p>
+      <div style="text-align:center">
+          <p>普通员工没有权限登录此系统</p>
+      </div>
+      <div slot="footer">
+          <Button type="info" class="modalButtonLong" size="large" long @click="this.backToLogin">确认</Button>
+      </div>
     </Modal> 
   </div>
 </template>
@@ -123,6 +135,7 @@
           password: '',
           passwordRepeat: ''
         },
+        modalStatusInfo: false,
         showValid: false,
         validCode: '',
         phoneNum: '',
@@ -146,9 +159,9 @@
         // if no need input valid code
         if (!this.showValid){
           this.validateUser()
-          .then(([result1, result2])=>{
+          .then(([result1, result2, result3, result4])=>{
             if (result2 === 'pass'){
-              return this.validateRegistered(result1);
+              return this.validateRegistered(result1, result3, result4);
             } else if (result2 === 4) {
               return this.casualUserEdit(this.userName)
             }
@@ -176,6 +189,7 @@
             url: userLogin(),
             data: data
           }).then( (res) =>{
+            console.log(res.data)
             if(res.data.msg == '1'){
               this.$Message.error('该用户不存在!');
             }else if(res.data.msg == '2'){
@@ -190,7 +204,7 @@
               this.$Message.info('已发送验证码到您手机请查看, 并再次登录');
               this.validateCode(res.data.customer.account, res.data.customer.id)
             }else{
-              resolve([res.data.customer.id, 'pass'])
+              resolve([res.data.customer.id, 'pass', res.data.customer.role, res.data.customer.id])
             }
           }).catch( (err) =>{
             console.log(err)
@@ -199,19 +213,32 @@
         })  
       },
       // check the user registered done or not
-      validateRegistered(id){
+      validateRegistered(id, role, customerId){
         // if id equals 0 means registered done then push to main page
         this.$ajax({
           method: 'GET',
           url: checkRegisterStatus()+id,
           withCredentials: true,
         }).then((res)=>{
+          // if user is normal user then rediert to login
+          if (role != 2 || role != 1 ) {
+              this.modalStatusInfo = true;
+              return;
+          }
           if(res.data.registItem === 0) {
             this.$Message.success('登陆成功');
             sessionStorage.setItem('authToken',res.data.authToken);
             sessionStorage.setItem('isLogin','1');
+            sessionStorage.setItem('role', role);
             sessionStorage.setItem('isSystem',true);
+            if (role == 1) {
+              sessionStorage.setItem('admin',true); 
+            } 
+            else if (role == 2 ){
+              sessionStorage.setItem('admin',false); 
+            }
             sessionStorage.setItem('storeId','');
+            sessionStorage.setItem('customerId', customerId);
             sessionStorage.setItem('reData',JSON.stringify(res.data));
             this.$router.push({name: 'main'});
           } else {
@@ -360,6 +387,9 @@
           }
       })  
     },
+    backToLogin(){
+      window.location.reload()
+    }
   }
 }
 </script>
@@ -440,4 +470,7 @@
   a:visited {color: #999999}	/* 已访问的链接 */
   a:hover {color: #999999}	/* 鼠标移动到链接上 */
   a:active {color: #999999}
+  .modalButtonLong{
+  background-color:#66368C
+}
 </style>

@@ -5,7 +5,7 @@
     <Form :model="currentSalary" :label-width="100">  
     <div class="layout-logo-left">员工连续十二个月薪资(元)</div>
       <div class="container1">
-        <FormItem :label="key.split('_')[1].slice(2,4)+'年'+key.split('_')[2]+'月薪资'" v-for='(value, index) in currentSalary' class="formItemStyle" :key="index">
+          <FormItem :label="key.split('_')[1].slice(2,4)+'年'+key.split('_')[2]+'月薪资'" v-for='(value, key, index) in currentSalary' class="formItemStyle" :key="key">
           <Input v-model="currentSalary[key]" :placeholder="key.split('_')[1]+'年'+key.split('_')[2]+'月'"></Input>
         </FormItem>
       </div>

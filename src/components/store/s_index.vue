@@ -14,7 +14,7 @@
       </Col> -->
     </Row>
     <Table :row-class-name="rowClassName" :columns="columns1" :data="data1"></Table>
-    <div class="page" v-if="isSystem == 'true'">
+    <div class="page" v-if="admin == 'true'">
       <Page :total="pages*10" @on-change="getPage" style="float: right;"></Page>
     </div>
 
@@ -223,11 +223,23 @@
           
         </div>
   </Modal>
+   <Modal v-model="modalStatusInfo" width="360" :mask-closable="false" :closable="false">
+        <p slot="header" style="color:#66368C;text-align:center">
+            <Icon type="information-circled"></Icon>
+            <span>详细信息</span>
+        </p>
+        <div style="text-align:center">
+            <p v-text="modalStatusInfoText"></p>
+        </div>
+        <div slot="footer">
+            <Button type="info" class="modalButtonLong" size="large" long @click="this.backToLogin">确认</Button>
+        </div>
+    </Modal>
   </div>
 </template>
 
 <script>
-  import { findStoreList,findStoreListById, newStore, editStore,deleteStore,getProvinces,getCities,checkStorePhone, infos, infoUpdate} from '../../interface';
+  import { findStoreList,findStoreListById, newStore, editStore,deleteStore,getProvinces,getCities,checkStorePhone, infos, infoUpdate, findStoreListByCustomerId} from '../../interface';
 
   export default {
     name: 's_index',
@@ -547,30 +559,38 @@
         tempPhone: '',
         isSystem: sessionStorage.getItem('isSystem'),
         storeId: sessionStorage.getItem('storeId'),
+        role: sessionStorage.getItem('role'),
+        admin: sessionStorage.getItem('admin'),
+        modalStatusInfo : false,
+        modalStatusInfoText: ''
       }
     },
     created() {
-      this.getData();
+      // if role == 2 then only can see their own access
+      if (this.role == 2) {
+        this.getData(sessionStorage.getItem('customerId'));
+      } else {
+        this.getData();
+      }
       // this.getProvinces();
     },
     /*mounted() {
       new PCAS("province","city","area");
     },*/
     methods: {
-      getData(){
+      getData(customerId){
         this.tag = 1;
-        console.log(this.isSystem)
-        if(this.isSystem == 'true'){
+        if(!customerId){
           this.getList('',this.page,this.pagesize);
         }else{
-          this.getList(this.storeId,this.page,this.pagesize);
+          this.getList(customerId,this.page,this.pagesize);
         }
       },
       getList(name,page,pagesize) {
-        if(name==''||name==null){
+        if(name=='' || name==null){
           var URL = findStoreList()+page+'?status=1';
         }else{
-          URL = findStoreList()+page+'?status=1&storeName='+name;
+          URL = findStoreListByCustomerId()+name+'?status=1';
         }
         this.$ajax({
           method: 'GET',
@@ -581,6 +601,7 @@
           },
           url:URL,
         }).then((res) => {
+          this.checkStatus(name)
           res.data.content.map((item,index)=>{
             res.data.content[index].storeType = this.storeTypeTransfer(item.storeType)
             res.data.content[index].operationMode = this.operationModeTransfer(item.operationMode)
@@ -641,6 +662,32 @@
           url: getCities()+id,
         }).then( (res) =>{
           this.citiesData = res.data;
+        })
+      },
+      checkStatus(name){
+        this.$ajax({
+          method: 'GET',
+          dataType: 'JSON',
+          contentType: 'application/json;charset=UTF-8',
+          headers: {
+            "authToken": sessionStorage.getItem('authToken')
+          },
+          url:findStoreListByCustomerId()+name,
+        }).then((res)=>{
+          console.log(res.data)
+          const status = res.data.content[0].manageStatus
+          // if store status equals empty then means it pending admin approve 
+          if (status == 0){
+            this.modalStatusInfo = true
+            this.modalStatusInfoText = '您的门店正在审批，请等待审批完成后再进入界面'
+            return;
+          }
+          // if store status equals empty then means admin reject 
+          if (status == 2){
+            this.modalStatusInfo = true
+            this.modalStatusInfoText = '您的门店审批已被拒绝'
+            return;
+          }
         })
       },
       rowClassName (row, index) {
@@ -895,7 +942,6 @@
         });
       },
       check(data, rowData) {
-        console.log(rowData)
         this.questionFlag = true;
         this.register2(rowData.register_2)
         this.register3(rowData.register_3)
@@ -1073,6 +1119,9 @@
         this.question.member = []
         this.question.roomTypesColumns = []
         this.question.roomTypes = []
+      },
+      backToLogin(){
+        this.$router.push({name: 'login'});
       }
     },
   };
@@ -1154,5 +1203,8 @@ table tr:nth-child(even)
   flex-basis: 100%;
   display: flex;
   justify-content: space-between;
+}
+.modalButtonLong{
+  background-color:#66368C
 }
 </style>
