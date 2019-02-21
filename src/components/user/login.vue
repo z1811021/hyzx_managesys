@@ -221,7 +221,7 @@
           withCredentials: true,
         }).then((res)=>{
           // if user is normal user then rediert to login
-          if (role != 2 || role != 1 ) {
+          if (role != 2 && role != 1 ) {
               this.modalStatusInfo = true;
               return;
           }

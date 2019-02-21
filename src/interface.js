@@ -878,3 +878,27 @@ export const findAllProject = function () {
   const API = host + URL;
   return API;
 };
+//保存项目类别
+export const saveProjectCategory = function () {
+  const URL = '/item/type/manage/add';
+  const API = host + URL;
+  return API;
+};
+//获取项目类别
+export const getProjectCategory = function () {
+  const URL = '/item/type/manage/store';
+  const API = host + URL;
+  return API;
+};
+//删除项目类别
+export const deleteProjectCategory = function () {
+  const URL = '/item/type/manage/delete';
+  const API = host + URL;
+  return API;
+};
+//修改项目类别
+export const editProjectCategory = function () {
+  const URL = '/item/type/manage/edit';
+  const API = host + URL;
+  return API;
+};
