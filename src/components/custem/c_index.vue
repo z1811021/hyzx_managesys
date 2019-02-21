@@ -8,16 +8,16 @@
           <Col span="12">
             <h4 class="titleB">指定条件</h4>
              <Checkbox label="1" v-model="data.clientManage.exclusiveness">排他性点单</Checkbox>
-             <Checkbox label="2" v-model="data.clientManage.technicianServe" @on-change="changeTechnicianServe">某技师连续服务<InputNumber :max="1000" :min="0" size="small" v-model.number="data.clientManage.technicianServeTimes" v-show="!data.clientManage.technicianServe" type="text" class="inputext" placeholder="填写" disabled/><InputNumber :max="1000" :min="0" v-show="data.clientManage.technicianServe" size="small" class="inputext" placeholder="填写" v-model.number="data.clientManage.technicianServeTimes"/> 次</Checkbox>
+             <Checkbox label="2" v-model="data.clientManage.technicianServe" @on-change="changeTechnicianServe">某技师连续服务</Checkbox><InputNumber :max="1000" :min="0" size="small" v-model.number="data.clientManage.technicianServeTimes" v-show="!data.clientManage.technicianServe" type="text" class="inputext" placeholder="填写" disabled/><InputNumber :max="1000" :min="0" v-show="data.clientManage.technicianServe" size="small" class="inputext" placeholder="填写" v-model.number="data.clientManage.technicianServeTimes"/> 次
              <Checkbox label="3" v-model="data.clientManage.designatedCliIntro">有指定的顾客介绍</Checkbox>
              <Checkbox label="4" v-model="data.clientManage.technicianDirExten">技师直接拓客</Checkbox>
           </Col>
           <Col span="12">
             <h4 class="titleB">非指定条件</h4>
              <Checkbox label="5" v-model="data.clientManage.clientComplaint">顾客投诉</Checkbox>
-             <Checkbox label="6" v-model="data.clientManage.continuousServe" @on-change="changeContinuousServe">连续被他人服务<InputNumber :max="1000" :min="0" size="small" v-model.number="data.clientManage.continuousServeTimes" v-show="!data.clientManage.continuousServe" type="text" class="inputext" placeholder="填写" disabled/><InputNumber :max="1000" :min="0" size="small" v-show="data.clientManage.continuousServe" type="number" class="inputext" placeholder="填写" v-model.number="data.clientManage.continuousServeTimes"/> 次</Checkbox>
-             <Checkbox label="7" v-model="data.clientManage.clientConNostore" @on-change="changeClientConNostore">顾客连续 <InputNumber :max="1000" :min="0" size="small" v-model.number="data.clientManage.clientConNostoreMoth" v-show="!data.clientManage.clientConNostore" type="text" class="inputext" placeholder="填写" disabled/><InputNumber :max="1000" :min="0" size="small" v-show="data.clientManage.clientConNostore" type="number" class="inputext" placeholder="填写" v-model.number="data.clientManage.clientConNostoreMoth"/> 个月不到店</Checkbox>
-             <Checkbox label="8" v-model="data.clientManage.clientConNocash" @on-change="changeClientConNocash">顾客连续 <InputNumber :max="1000" :min="0" size="small" v-model.number="data.clientManage.clientConNocashMoth" v-show="!data.clientManage.clientConNocash" type="text" class="inputext" placeholder="填写" disabled/><InputNumber :max="1000" :min="0" size="small" v-show="data.clientManage.clientConNocash" type="number" class="inputext" placeholder="填写" v-model.number="data.clientManage.clientConNocashMoth"/> 个月无现金</Checkbox>
+             <Checkbox label="6" v-model="data.clientManage.continuousServe" @on-change="changeContinuousServe">连续被他人服务</Checkbox><InputNumber :max="1000" :min="0" size="small" v-model.number="data.clientManage.continuousServeTimes" v-show="!data.clientManage.continuousServe" type="text" class="inputext" placeholder="填写" disabled/><InputNumber :max="1000" :min="0" size="small" v-show="data.clientManage.continuousServe" type="number" class="inputext" placeholder="填写" v-model.number="data.clientManage.continuousServeTimes"/> 次
+             <Checkbox label="7" v-model="data.clientManage.clientConNostore" @on-change="changeClientConNostore">顾客连续 </Checkbox><InputNumber :max="1000" :min="0" size="small" v-model.number="data.clientManage.clientConNostoreMoth" v-show="!data.clientManage.clientConNostore" type="text" class="inputext" placeholder="填写" disabled/><InputNumber :max="1000" :min="0" size="small" v-show="data.clientManage.clientConNostore" type="number" class="inputext" placeholder="填写" v-model.number="data.clientManage.clientConNostoreMoth"/> 个月不到店
+             <Checkbox label="8" v-model="data.clientManage.clientConNocash" @on-change="changeClientConNocash">顾客连续 </Checkbox><InputNumber :max="1000" :min="0" size="small" v-model.number="data.clientManage.clientConNocashMoth" v-show="!data.clientManage.clientConNocash" type="text" class="inputext" placeholder="填写" disabled/><InputNumber :max="1000" :min="0" size="small" v-show="data.clientManage.clientConNocash" type="number" class="inputext" placeholder="填写" v-model.number="data.clientManage.clientConNocashMoth"/> 个月无现金
           </Col>
       </Row>
     </div>
@@ -26,27 +26,38 @@
         <h3 class="title">直接到店顾客员工护理顺序</h3>
         <Col span="24">
           <span>第一规则：</span>
-          <Select style="width:100px" v-model="RA" @on-change="selectFirst">
-              <Option v-for="item in firstRule" :value="item.value" :key="item.value">{{item.label}}</Option>
+          <Select v-show="showFromIn" style="width:100px;" v-model="RA" disabled>
+            <Option v-for="item in ruleList" :value="item.value" :key="item.value">{{item.label}}</Option>
+          </Select>
+          <Select v-show="!showFromIn" @click="showAgain" ref="setFirstRule" style="width:100px" v-model="RA" @on-change="selectFirst">
+              <Option v-for="item in ruleList" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
           <span style="margin-left:2%">第二规则：</span>
-          <Select v-show="!enableSec" style="width:100px;" disabled>
+          <Select v-show="showFromIn" style="width:100px;" v-model="RB" disabled>
+            <Option v-for="item in ruleList" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
-          <Select v-show="enableSec" style="width:100px" v-model="RB" @on-change="selectSecond">
-              <Option v-for="item in secondRule" :value="item.value" :key="item.value">{{item.label}}</Option>
+          <Select v-show="!showFromIn" ref="setSecondRule" style="width:100px" v-model="RB" @on-change="selectSecond" :disabled="!RA" >
+              <Option v-for="item in ruleList" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
           <span style="margin-left:2%">第三规则：</span>
-          <Select v-show="!enableThi" style="width:100px" disabled>
+          <!-- <Select v-show="!enableThi" style="width:100px" disabled>
+          </Select> -->
+          <Select v-show="showFromIn" style="width:100px;" v-model="RC" disabled>
+            <Option v-for="item in ruleList" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
-          <Select v-show="enableThi" style="width:100px" v-model="RC" @on-change="selectThird">
-              <Option v-for="item in thirdRule" :value="item.value" :key="item.value">{{item.label}}</Option>
+          <Select v-show="!showFromIn" ref="setThirdRule" :disabled="!RB" style="width:100px" v-model="RC" @on-change="selectThird">
+              <Option v-for="item in ruleList" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
           <span style="margin-left:2%">第四规则：</span>
-          <Select v-show="!enableFou" style="width:100px" disabled>
+          <!-- <Select v-show="!enableFou" style="width:100px" disabled>
+          </Select> -->
+          <Select v-show="showFromIn" style="width:100px;" v-model="RD" disabled>
+            <Option v-for="item in ruleList" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
-          <Select v-show="enableFou" style="width:100px" v-model="RD" @on-change="selectFourth">
-              <Option v-for="item in fourthRule" :value="item.value" :key="item.value">{{item.label}}</Option>
+          <Select v-show="!showFromIn" ref="setFourthRule" :disabled="!RC" style="width:100px" v-model="RD" @on-change="selectFourth">
+              <Option v-for="item in ruleList" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
+          <Button style="margin-left:10px;" class="hy_btn" @click="clearRule">重新排序</Button>
         </Col>
       </Row>
     </div>
@@ -64,18 +75,17 @@
         <Col span="8">
           <h4 class="titleB">消费实力</h4>
            <Checkbox label="13" v-show="!data.clientClassify.active" disabled>大客户（连续<InputNumber :max="1000" :min="0" size="small" type="text" class="inputext" placeholder="填写" v-model.number="data.clientClassify.clientBigMoth" disabled/>个月，消费达 <InputNumber :max="1000" :min="0" size="small" type="text" v-model.number="data.clientClassify.clientBigMoth" class="inputext" placeholder="填写" disabled/> 元）</Checkbox>
-           <Checkbox label="13" v-show="data.clientClassify.active" v-model="data.clientClassify.clientBig"@on-change="changeClientBig">大客户（连续<InputNumber :max="1000" :min="0" size="small" v-model.number="data.clientClassify.clientBigMoth" v-show="!data.clientClassify.clientBig" type="text" class="inputext" placeholder="填写" disabled/><InputNumber :max="1000" :min="0" size="small" v-show="data. clientClassify.clientBig" type="number" class="inputext" placeholder="填写" v-model.number="data.clientClassify.clientBigMoth"/>个月，消费达 <InputNumber :max="1000" :min="0" size="small" v-model.number="data.clientClassify.clientBigConsume" v-show="!data. clientClassify.clientBig" type="text" class="inputext" placeholder="填写" disabled/><InputNumber :max="1000" :min="0" size="small" v-show="data. clientClassify.clientBig" type="number" class="inputext" placeholder="填写" v-model.number="data.clientClassify.clientBigConsume"/> 元）</Checkbox>
+           <Checkbox label="13" v-show="data.clientClassify.active" v-model="data.clientClassify.clientBig"@on-change="changeClientBig">大客户（连续</Checkbox><InputNumber :max="1000" :min="0" size="small" v-model.number="data.clientClassify.clientBigMoth" v-show="!data.clientClassify.clientBig" type="text" class="inputext" placeholder="填写" disabled/><InputNumber :max="1000" :min="0" size="small" v-show="data. clientClassify.clientBig" type="number" class="inputext" placeholder="填写" v-model.number="data.clientClassify.clientBigMoth"/>个月，消费达 <InputNumber :max="1000" :min="0" size="small" v-model.number="data.clientClassify.clientBigConsume" v-show="!data. clientClassify.clientBig" type="text" class="inputext" placeholder="填写" disabled/><InputNumber :max="1000" :min="0" size="small" v-show="data. clientClassify.clientBig" type="number" class="inputext" placeholder="填写" v-model.number="data.clientClassify.clientBigConsume"/> 元）
            <!--<Checkbox label="14" v-model="data.ordinaryCustomer">普通客户（消费不足 <input type="text" class="inputext" placeholder="填写" v-model="data.ordinaryCustomerN"/> 元）</Checkbox>-->
         </Col>
         <Col span="8">
           <h4 class="titleB">客户活跃度</h4>
            <Checkbox v-show="!data.clientClassify.active" label="15" v-model="data.clientClassify.clientFrequent" disabled>常到店客户 （连续 <InputNumber :max="1000" :min="0" size="small" type="text" v-model.number="data.clientClassify.clientFrequentMoth" class="inputext" placeholder="填写" disabled/> 月至少到店<InputNumber :max="1000" :min="0" size="small" type="text" class="inputext" v-model.number="data.clientClassify.clientFrequentMoth" placeholder="填写" disabled/>次）</Checkbox>
-           <Checkbox v-show="data.clientClassify.active" label="15" v-model="data.clientClassify.clientFrequent" @on-change="changeClientFrequent">常到店客户 （连续 <InputNumber :max="1000" :min="0" size="small" v-model.number="data.clientClassify.clientFrequentMoth" v-show="!data.clientClassify.clientFrequent" type="text" class="inputext" placeholder="填写" disabled/><InputNumber :max="1000" :min="0" size="small" v-show="data.clientClassify.clientFrequent" type="number" class="inputext" placeholder="填写" v-model.number="data.clientClassify.clientFrequentMoth"/> 月至少到店<InputNumber :max="1000" :min="0" size="small" v-model.number="data.clientClassify.clientFrequentTimes" v-show="!data.clientClassify.clientFrequent" type="text" class="inputext" placeholder="填写" disabled/><InputNumber :max="1000" :min="0" size="small" v-show="data.clientClassify.clientFrequent" type="number" class="inputext" placeholder="填写" v-model.number="data.clientClassify.clientFrequentTimes"/>次）</Checkbox>
-           <Checkbox style="margin-top:1%;" v-show="!data.clientClassify.active" label="15" disabled>睡眠客户 （连续 <InputNumber v-model.number="data.clientClassify.clientFrequentMoth" :max="1000" :min="0" size="small" type="text" class="inputext" placeholder="填写" disabled/> 月以上未到店）</Checkbox>
-           <Checkbox style="margin-top:1%;" v-show="data.clientClassify.active" label="15" v-model="data.clientClassify.clientDormancy" @on-change="changeClientDormancy">睡眠客户 （连续 <InputNumber :max="1000" :min="0" size="small" v-model.number="data.clientClassify.clientDormancyMoth" v-show="!data.clientClassify.clientDormancy" type="text" class="inputext" placeholder="填写" disabled/>
-           <InputNumber :max="1000" :min="0" size="small" v-show="data.clientClassify.clientDormancy" type="number" class="inputext" placeholder="填写" v-model.number="data.clientClassify.clientDormancyMoth"/> 月以上未到店）</Checkbox><br/>
+           <Checkbox v-show="data.clientClassify.active" label="15" v-model="data.clientClassify.clientFrequent" @on-change="changeClientFrequent">常到店客户 （连续 </Checkbox><InputNumber :max="1000" :min="0" size="small" v-model.number="data.clientClassify.clientFrequentMoth" v-show="!data.clientClassify.clientFrequent" type="text" class="inputext" placeholder="填写" disabled/><InputNumber :max="1000" :min="0" size="small" v-show="data.clientClassify.clientFrequent" type="number" class="inputext" placeholder="填写" v-model.number="data.clientClassify.clientFrequentMoth"/> 月至少到店<InputNumber :max="1000" :min="0" size="small" v-model.number="data.clientClassify.clientFrequentTimes" v-show="!data.clientClassify.clientFrequent" type="text" class="inputext" placeholder="填写" disabled/><InputNumber :max="1000" :min="0" size="small" v-show="data.clientClassify.clientFrequent" type="number" class="inputext" placeholder="填写" v-model.number="data.clientClassify.clientFrequentTimes"/>次）
+           <Checkbox style="margin-top:1%;" v-show="!data.clientClassify.active" label="15" disabled>睡眠客户 （连续 <InputNumber v-model.number="data.clientClassify.clientFrequentMoth" :max="1000" :min="0" size="small" type="text" class="inputext" placeholder="填写" disabled/> 月以上未到店）</Checkbox><br/>
+           <Checkbox style="margin-top:1%;" v-show="data.clientClassify.active" label="15" v-model="data.clientClassify.clientDormancy" @on-change="changeClientDormancy">睡眠客户 （连续 </Checkbox><InputNumber :max="1000" :min="0" size="small" v-model.number="data.clientClassify.clientDormancyMoth" v-show="!data.clientClassify.clientDormancy" type="text" class="inputext" placeholder="填写" disabled/><InputNumber :max="1000" :min="0" size="small" v-show="data.clientClassify.clientDormancy" type="number" class="inputext" placeholder="填写" v-model.number="data.clientClassify.clientDormancyMoth"/> 月以上未到店）<br/>
            <Checkbox style="margin-top:1%;" v-show="!data.clientClassify.active" label="15" disabled>冻结客户 （连续 <InputNumber v-model.number="data.clientClassify.clientFrequentMoth" :max="1000" :min="0" size="small" type="text" class="inputext" placeholder="填写" disabled/> 月以上未到店）</Checkbox>
-           <Checkbox style="margin-top:1%;" v-show="data.clientClassify.active" label="15" v-model="data.clientClassify.clientFrozen" @on-change="changeClientFrozen">冻结客户 （连续 <InputNumber :max="1000" :min="0" size="small" v-model.number="data.clientClassify.clientFrozenTimes" v-show="!data.clientClassify.clientFrozen" type="text" class="inputext" placeholder="填写" disabled/><InputNumber :max="1000" :min="0" size="small" v-show="data.clientClassify.clientFrozen" type="number" class="inputext" placeholder="填写" v-model.number="data.clientClassify.clientFrozenTimes"/> 月以上未到店）</Checkbox>
+           <Checkbox style="margin-top:1%;" v-show="data.clientClassify.active" label="15" v-model="data.clientClassify.clientFrozen" @on-change="changeClientFrozen">冻结客户 （连续 </Checkbox><InputNumber :max="1000" :min="0" size="small" v-model.number="data.clientClassify.clientFrozenTimes" v-show="!data.clientClassify.clientFrozen" type="text" class="inputext" placeholder="填写" disabled/><InputNumber :max="1000" :min="0" size="small" v-show="data.clientClassify.clientFrozen" type="number" class="inputext" placeholder="填写" v-model.number="data.clientClassify.clientFrozenTimes"/> 月以上未到店）
         </Col>
       </Row>
     </div>
@@ -133,9 +143,10 @@
   export default {
     name: 'c_index',
     components: {m_index_info_gl},
+    inject: ['reload'],
     data(){
       return {
-        firstRule: [
+        ruleList: [
             {
                 value: '1',
                 label: '指定技师',
@@ -153,63 +164,12 @@
                 label: '店长指定',
             }
         ],
-        secondRule:[
-            {
-                value: '1',
-                label: '指定技师',
-            },
-            {
-                value: '2',
-                label: '上次服务者',
-            },
-            {
-                value: '3',
-                label: '服务最多者',
-            },
-            {
-                value: '4',
-                label: '店长指定',
-            }
-            ],
-        thirdRule:[
-            {
-                value: '1',
-                label: '指定技师',
-            },
-            {
-                value: '2',
-                label: '上次服务者',
-            },
-            {
-                value: '3',
-                label: '服务最多者',
-            },
-            {
-                value: '4',
-                label: '店长指定',
-            }
-            ],
-        fourthRule:[
-            {
-                value: '1',
-                label: '指定技师',
-            },
-            {
-                value: '2',
-                label: '上次服务者',
-            },
-            {
-                value: '3',
-                label: '服务最多者',
-            },
-            {
-                value: '4',
-                label: '店长指定',
-            }],
         RA: '',
         RB: '',
         RC: '',
         RD: '',
+        showFromIn: false,
+        setFistRule: '',
         currentFirst : '',
         currentSecond : '',
         currentThird : '',
@@ -226,7 +186,7 @@
               // 某技师连续服务, 1 为选中, 0 为不选中
               technicianServe: 0,
               // 某技师连续服务次数
-              technicianServeTimes: '',
+              technicianServeTimes: 0,
               // 有指定的顾客介绍, 1 为选中, 0 为不选中
               designatedCliIntro: 0,
               // 技师直接拓客, 1 为选中, 0 为不选中
@@ -236,15 +196,15 @@
               // 连续被他人服务, 1 为选中, 0 为不选中
               continuousServe: 0,
               // 连续被他人服务次数
-              continuousServeTimes: '',
+              continuousServeTimes: 0,
               // 顾客连续不到店, 1 为选中, 0 为不选中
               clientConNostore: 0,
               // 顾客连续几个月不到店
-              clientConNostoreMoth: '',
+              clientConNostoreMoth: 0,
               // 顾客连续无现金, 1 为选中, 0 为不选中
               clientConNocash: 0,
               // 顾客连续几个月无现金
-              clientConNocashMoth: ''
+              clientConNocashMoth: 0
           },
           clientRule: {
               // 门店 id, 本地测试可以使用 24, 服务器可使用 22
@@ -289,76 +249,73 @@
       this.findStore();
     },
     methods: {
-      selectFirst(item){
-          if(item == this.RB){
-            this.RB = this.currentFirst;
-            this.currentSecond = this.currentFirst;
-            this.currentFirst = item;
-          }else if(item == this.RC){
-            this.RC = this.currentFirst;
-            this.currentThird = this.currentFirst;
-            this.currentFirst = item;
-          }else if(item == this.RD){
-            this.RD = this.currentFirst;
-            this.currentFourth = this.currentFirst;
-            this.currentFirst = item;
-          }else{
-            this.currentFirst = item;
+      selectFirst(){
+          for (var i = 0; i < this.ruleList.length; i++) {
+            if(this.ruleList[i].value == this.RA){
+              this.ruleList.splice(i,1);
+            }
           }
-          this.enableSec = true;
       },
-      selectSecond(item){
-          if(item == this.RA){
-            this.RA = this.currentSecond;
-            this.currentFirst = this.currentSecond;
-            this.currentSecond = item;
-          }else if(item == this.RC){
-            this.RC = this.currentSecond;
-            this.currentThird = this.currentSecond;
-            this.currentSecond = item;
-          }else if(item == this.RD){
-            this.RD = this.currentSecond;
-            this.currentFourth = this.currentSecond;
-            this.currentSecond = item;
-          }else{
-            this.currentSecond = item;
+      selectSecond(){
+          for (var i = 0; i < this.ruleList.length; i++) {
+            if(this.ruleList[i].value == this.RA){
+              this.ruleList.splice(i,1);
+            }
+            if(this.ruleList[i].value == this.RB){
+              this.ruleList.splice(i,1);
+            }
           }
-          this.enableThi = true;
       },
-      selectThird(item){
-          if(item == this.RA){
-            this.RA = this.currentThird;
-            this.currentSecond = this.currentThird;
-            this.currentThird = item;
-          }else if(item == this.RB){
-            this.RB = this.currentThird;
-            this.currentSecond = this.currentThird;
-            this.currentThird = item;
-          }else if(item == this.RD){
-            this.RD = this.currentThird;
-            this.currentFourth = this.currentThird;
-            this.currentThird = item;
-          }else{
-            this.currentThird = item;
+      selectThird(){
+          for (var i = 0; i < this.ruleList.length; i++) {
+            if(this.ruleList[i].value == this.RA){
+              this.ruleList.splice(i,1);
+            }
+            if(this.ruleList[i].value == this.RB){
+              this.ruleList.splice(i,1);
+            }
+            if(this.ruleList[i].value == this.RC){
+              this.ruleList.splice(i,1);
+            }
           }
-          this.enableFou = true;
       },
-      selectFourth(item){
-          if(item == this.RA){
-            this.RA = this.currentFourth;
-            this.currentFirst = this.currentFourth;
-            this.currentFourth = item;
-          }else if(item == this.RB){
-            this.RB = this.currentFourth;
-            this.currentSecond = this.currentFourth;
-            this.currentFourth = item;
-          }else if(item == this.RC){
-            this.RC = this.currentFourth;
-            this.currentThird = this.currentFourth;
-            this.currentFourth = item;
-          }else{
-            this.currentFourth = item;
-          }
+      selectFourth(){
+        //this.ruleList = [];
+      },
+      clearRule(){
+        this.showFromIn = false;
+        this.RA = '';
+        this.RB = '';
+        this.RC = '';
+        this.RD = '';
+        this.$refs.setFirstRule.$data.query = '';
+        this.$refs.setSecondRule.$data.query = '';
+        this.$refs.setThirdRule.$data.query = '';
+        this.$refs.setFourthRule.$data.query = '';
+        this.ruleList = [
+            {
+                value: '1',
+                label: '指定技师',
+            },
+            {
+                value: '2',
+                label: '上次服务者',
+            },
+            {
+                value: '3',
+                label: '服务最多者',
+            },
+            {
+                value: '4',
+                label: '店长指定',
+            }
+        ];
+        console.log(this.ruleList);
+      },
+      clearShow(){
+        this.enableSec = false;
+        this.enableThi = false;
+        this.enableFou = false;
       },
       findStore() {
         this.$ajax({
@@ -391,9 +348,17 @@
             this.data.clientClassify.clientFrequent = this.transferBack(this.data.clientClassify.clientFrequent);
             this.data.clientClassify.clientDormancy = this.transferBack(this.data.clientClassify.clientDormancy);
             this.data.clientClassify.clientFrozen = this.transferBack(this.data.clientClassify.clientFrozen);
-            this.enableSec = true;
-            this.enableThi = true;
-            this.enableFou = true;
+              if(this.RA == ''){
+                this.enableSec = false;
+                this.enableThi = false;
+                this.enableFou = false;
+                this.showFromIn = false;
+              }else{
+                this.enableSec = true;
+                this.enableThi = true;
+                this.enableFou = true;
+                this.showFromIn = true;
+              }
             }
           }).catch((error) => {
         });
@@ -527,6 +492,7 @@
           url: editStoreCustomer(),
           }).then((res) => {
             this.$Message.success('保存成功');
+            this.reload();
           }).catch((error) => {
             this.$Message.error('保存失败');
           });

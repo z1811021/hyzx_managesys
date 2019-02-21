@@ -2,7 +2,7 @@
     <!--会员卡-->
     <div class="list">
       <h2 style="margin: .6rem 0;">会员卡管理</h2>
-      <Button class="hy_btn" @click="Add">添加</Button>
+      <Button class="hy_btn" @click="Add">设计会员</Button>
       <br/>
       <br/>
       <Table :columns="columns" :data="data"></Table>
@@ -151,6 +151,25 @@
             <Button type="ghost" @click="close">取消</Button>
         </div>
       </Modal>
+      <Modal v-model="addCards" title="设计会员等级" :mask-closable="false" class="mod">
+        选择会员等级数量：<Select size="small" v-model="memberSize" style="width:70px" placeholder="会员等级">
+            <Option value="1">1</Option>
+            <Option value="2">2</Option>
+            <Option value="3">3</Option>
+            <Option value="4">4</Option>
+            <Option value="5">5</Option>
+            <Option value="6">6</Option>
+            <Option value="7">7</Option>
+            <Option value="8">8</Option>
+            <Option value="9">9</Option>
+            <Option value="10">10</Option>
+        </Select> 
+        <Table :columns="columns1" :data="data1"></Table>
+        <div slot="footer">
+            <Button type="primary" @click="setMembers">添加</Button>
+            <Button type="ghost" @click="closeMem">取消</Button>
+        </div>
+      </Modal>
     </div>
 </template>
 
@@ -185,6 +204,7 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
           memberList: [],
           removeItem: [],
           showMoney: false,
+          addCards: false,
           honorList: [
             {
               // 门店 id, 写错也没关系
@@ -305,6 +325,20 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               considerations: ''
           },
           type: '',
+          columnsMem: [
+                    {
+                        title: '会员名称',
+                        key: 'cardName'
+                    },
+                    {
+                        title: '会员价格',
+                        key: 'memPrice'
+                    },
+                    {
+                        title: 'Address',
+                        key: 'address'
+                    }
+                ],
           projectList:[],
           notice:[],
           selectedProject: '',
@@ -567,6 +601,9 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
             }
           }
         },
+        closeMem(){
+          this.addCards = false;
+        },
         getData(){
           this.$ajax({
             method:'get',
@@ -749,7 +786,7 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
           }
         },
         Add(){
-          this.addF = true;
+          this.addCards = true;
           this.addData={
               // 门店 id, 写错也没关系
               storeId: this.$route.params.id,

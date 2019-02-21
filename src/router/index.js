@@ -14,6 +14,7 @@ import p_plan_index from '@/components/project/p_plan_index';
 import p_meal_index from '@/components/project/p_meal_index';
 import p_symptom from '@/components/project/p_symptom';
 import p_program from '@/components/project/p_program';
+import p_project_category from '@/components/project/p_project_category';
 import c_index from '@/components/custem/c_index';
 import e_index from '@/components/empty/e_index';
 import t_index from '@/components/table/t_index';
@@ -104,6 +105,11 @@ export default new Router({
               path: 'p_program',
               name: 'p_program',
               component: p_program,
+            },
+            {
+              path: 'p_project_category',
+              name: 'p_project_category',
+              component: p_project_category,
             },
             {
               path: 'c_index',

@@ -30,10 +30,11 @@
             <Icon type="arrow-down-b"></Icon>
           </Button>
           <DropdownMenu slot="list">
+            <DropdownItem name="p_project_category">项目功效类别</DropdownItem>
+            <DropdownItem name="p_symptom">症状管理</DropdownItem>
             <DropdownItem name="p_index">项目列表</DropdownItem>
             <DropdownItem name="p_plan_index">项目方案</DropdownItem>
             <DropdownItem name="p_meal_index">项目套餐</DropdownItem>
-            <DropdownItem name="p_symptom">症状管理</DropdownItem>
             <DropdownItem name="p_program">解决方案管理</DropdownItem>
           </DropdownMenu>
         </Dropdown>

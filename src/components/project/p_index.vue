@@ -24,20 +24,7 @@
           <Select v-show="!showFace" style="float:right;width:300px;margin-top:-6px;" disabled>
           </Select>
           <Select v-model="pis.face" ref="setFaceQuery" v-show="showFace" style="float:right;width:300px;margin-top:-6px;" filterable>
-            <Option value="1" >清洁</Option>
-            <Option value="2" >补水</Option>
-            <Option value="3" >美白</Option>
-            <Option value="4" >修复</Option>
-            <Option value="5" >抗敏</Option>
-            <Option value="6" >痘痘</Option>
-            <Option value="7" >紧致</Option>
-            <Option value="8" >除皱</Option>
-            <Option value="9" >祛斑</Option>
-            <Option value="10" >毛孔管理</Option>
-            <Option value="11" >V脸瘦脸</Option>
-            <Option value="12" >眼部</Option>
-            <Option value="13" >整骨</Option>
-            <Option value="14" >其他</Option>
+            <Option v-for="item in faceData" :value="item.typeName" :key="item.typeName">{{ item.typeName }}</Option>
           </Select>
           <br/>
           <br/>
@@ -47,17 +34,7 @@
           <Select v-show="!showBody" style="float:right;width:300px;margin-top:-6px;" disabled>
           </Select>
           <Select v-model="pis.body" ref="setBodyQuery" v-show="showBody" style="float:right;width:300px;margin-top:-6px;" filterable>
-            <Option value="1" >头部</Option>
-            <Option value="2" >肩颈</Option>
-            <Option value="3" >背部</Option>
-            <Option value="4" >胸部</Option>
-            <Option value="5" >腹部</Option>
-            <Option value="6" >腰部</Option>
-            <Option value="7" >臀部</Option>
-            <Option value="8" >大腿</Option>
-            <Option value="9" >小腿</Option>
-            <Option value="10" >足部</Option>
-            <Option value="11" >其他</Option>
+            <Option v-for="item in bodyData" :value="item.typeName" :key="item.typeName">{{ item.typeName }}</Option>
           </Select>
       </RadioGroup>
       <br/>
@@ -204,11 +181,13 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
-  import {findProjectList, projectedit, projectdelete, projectsave,findproblemList,findAllProject} from '../../interface';
+  import {findProjectList, projectedit, projectdelete, projectsave,findproblemList,findAllProject,getProjectCategory} from '../../interface';
 
   export default {
     name: 'p_index',
     created() {
+      this.getFaceCategory();
+      this.getBodyCategory();
       this.getList();
       this.getProblem();
       //this.getProblem();
@@ -224,6 +203,8 @@
         showTc: false,
         projectChoose: '',
         showStable: false,
+        faceData: [],
+        bodyData: [],
         projectFilterList: [],
         problemData: [],
         pis: {
@@ -706,6 +687,34 @@
             this.$Message.error('操作失败');
           });
         }
+      },
+      getFaceCategory(){
+        this.$ajax({
+          method: 'GET',
+          dataType: 'JSON',
+          contentType: 'application/json;charset=UTF-8',
+          headers: {
+            "authToken": sessionStorage.getItem('authToken')
+          },
+          url: getProjectCategory() + '/'+this.$route.params.id+'?itemType=1',
+        }).then((res) => {
+          this.faceData = res.data.itemTypeManageInfo;
+        }).catch((error) => {
+        });
+      },
+      getBodyCategory(){
+        this.$ajax({
+          method: 'GET',
+          dataType: 'JSON',
+          contentType: 'application/json;charset=UTF-8',
+          headers: {
+            "authToken": sessionStorage.getItem('authToken')
+          },
+          url: getProjectCategory() + '/'+this.$route.params.id+'?itemType=2',
+        }).then((res) => {
+          this.bodyData = res.data.itemTypeManageInfo;
+        }).catch((error) => {
+        });
       },
       mannger(data) {
         this.storeFlag = true;
