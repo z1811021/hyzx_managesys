@@ -675,7 +675,7 @@
           url:findStoreListByCustomerId()+name,
         }).then((res)=>{
           console.log(res.data)
-          const status = res.data.content[0].manageStatus
+          const status = res.data.content[0].storeStatus
           // if store status equals empty then means it pending admin approve 
           if (status == 0){
             this.modalStatusInfo = true
