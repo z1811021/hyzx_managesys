@@ -24,7 +24,7 @@
           <Select v-show="!showFace" style="float:right;width:300px;margin-top:-6px;" disabled>
           </Select>
           <Select v-model="pis.face" ref="setFaceQuery" v-show="showFace" style="float:right;width:300px;margin-top:-6px;" filterable>
-            <Option v-for="item in faceData" :value="item.typeName" :key="item.typeName">{{ item.typeName }}</Option>
+            <Option v-for="item in faceData" :value="item.id" :key="item.id">{{ item.typeName }}</Option>
           </Select>
           <br/>
           <br/>
@@ -181,7 +181,7 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
-  import {findProjectList, projectedit, projectdelete, projectsave,findproblemList,findAllProject,getProjectCategory} from '../../interface';
+  import {findProjectList, projectedit, projectdelete, projectsave,findproblemList,findAllProject,getProjectCategory,findProjectListByGroup} from '../../interface';
 
   export default {
     name: 'p_index',
@@ -260,57 +260,7 @@
             filters: [],
               //filterMultiple: false,
               filterMethod (value, row) {
-                  if (value === 1) {
-                      return row.projectCategory === '面部 - 清洁';
-                  } else if (value === 2) {
-                      return row.projectCategory === '面部 - 补水';
-                  } else if (value === 3) {
-                      return row.projectCategory === '面部 - 美白';
-                  } else if (value === 4) {
-                      return row.projectCategory === '面部 - 修复';
-                  } else if (value === 5) {
-                      return row.projectCategory === '面部 - 抗敏';
-                  } else if (value === 6) {
-                      return row.projectCategory === '面部 - 痘痘';
-                  } else if (value === 7) {
-                      return row.projectCategory === '面部 - 紧致';
-                  } else if (value === 8) {
-                      return row.projectCategory === '面部 - 除皱';
-                  } else if (value === 9) {
-                      return row.projectCategory === '面部 - 祛斑';
-                  } else if (value === 10) {
-                      return row.projectCategory === '面部 - 毛孔管理';
-                  } else if (value === 11) {
-                      return row.projectCategory === '面部 - V脸瘦脸';
-                  } else if (value === 12) {
-                      return row.projectCategory === '面部 - 眼部';
-                  } else if (value === 13) {
-                      return row.projectCategory === '面部 - 整骨';
-                  } else if (value === 14) {
-                      return row.projectCategory === '面部 - 其他';
-                  } else if (value === 1001) {
-                      return row.projectCategory === '身体 - 头部';
-                  } else if (value === 1002) {
-                      return row.projectCategory === '身体 - 肩颈';
-                  } else if (value === 1003) {
-                      return row.projectCategory === '身体 - 背部';
-                  } else if (value === 1004) {
-                      return row.projectCategory === '身体 - 胸部';
-                  } else if (value === 1005) {
-                      return row.projectCategory === '身体 - 腹部';
-                  } else if (value === 1006) {
-                      return row.projectCategory === '身体 - 腰部';
-                  } else if (value === 1007) {
-                      return row.projectCategory === '身体 - 臀部';
-                  } else if (value === 1008) {
-                      return row.projectCategory === '身体 - 大腿';
-                  } else if (value === 1009) {
-                      return row.projectCategory === '身体 - 小腿';
-                  } else if (value === 1010) {
-                      return row.projectCategory === '身体 - 足部';
-                  } else if (value === 1011) {
-                      return row.projectCategory === '身体 - 其他';
-                  }
+                return value === row.projectCategory
               },
               width:120
           },
@@ -515,92 +465,37 @@
           headers: {
             "authToken": sessionStorage.getItem('authToken')
           },
-          url: findProjectList()+'/'+this.$route.params.id,
+          url: findProjectListByGroup()+'/'+this.$route.params.id,
         }).then((res) => {
-          if(res.data.itemManage.length == 0){
-            this.data = [];
-          }else{
-            this.data = res.data.itemManage;
-            for(var i=0;i<this.data.length;i++){
-              if(this.data[i].face != '' && this.data[i].face == 1){
-                this.data[i].projectCategory = "面部 - 清洁";
-              }else if(this.data[i].face != '' && this.data[i].face == 2){
-                    this.data[i].projectCategory = "面部 - 补水";
-              }else if(this.data[i].face != '' && this.data[i].face == 3){
-                    this.data[i].projectCategory = "面部 - 美白";
-              }else if(this.data[i].face != '' && this.data[i].face == 4){
-                    this.data[i].projectCategory = "面部 - 修复";
-              }else if(this.data[i].face != '' && this.data[i].face == 5){
-                    this.data[i].projectCategory = "面部 - 抗敏";
-              }else if(this.data[i].face != '' && this.data[i].face == 6){
-                    this.data[i].projectCategory = "面部 - 痘痘";
-              }else if(this.data[i].face != '' && this.data[i].face == 7){
-                    this.data[i].projectCategory = "面部 - 紧致";
-              }else if(this.data[i].face != '' && this.data[i].face == 8){
-                    this.data[i].projectCategory = "面部 - 除皱";
-              }else if(this.data[i].face != '' && this.data[i].face == 9){
-                    this.data[i].projectCategory = "面部 - 祛斑";
-              }else if(this.data[i].face != '' && this.data[i].face == 10){
-                    this.data[i].projectCategory = "面部 - 毛孔管理";
-              }else if(this.data[i].face != '' && this.data[i].face == 11){
-                    this.data[i].projectCategory = "面部 - V脸瘦脸";
-              }else if(this.data[i].face != '' && this.data[i].face == 12){
-                    this.data[i].projectCategory = "面部 - 眼部";
-              }else if(this.data[i].face != '' && this.data[i].face == 13){
-                    this.data[i].projectCategory = "面部 - 整骨";
-              }else if(this.data[i].face != '' && this.data[i].face == 14){
-                    this.data[i].projectCategory = "面部 - 其他";
-              }else if(this.data[i].body != '' && this.data[i].body == 1){
-                    this.data[i].projectCategory = "身体 - 头部";
-              }else if(this.data[i].body != '' && this.data[i].body == 2){
-                    this.data[i].projectCategory = "身体 - 肩颈";
-              }else if(this.data[i].body != '' && this.data[i].body == 3){
-                    this.data[i].projectCategory = "身体 - 背部";
-              }else if(this.data[i].body != '' && this.data[i].body == 4){
-                    this.data[i].projectCategory = "身体 - 胸部";
-              }else if(this.data[i].body != '' && this.data[i].body == 5){
-                    this.data[i].projectCategory = "身体 - 腹部";
-              }else if(this.data[i].body != '' && this.data[i].body == 6){
-                    this.data[i].projectCategory = "身体 - 腰部";
-              }else if(this.data[i].body != '' && this.data[i].body == 7){
-                    this.data[i].projectCategory = "身体 - 臀部";
-              }else if(this.data[i].body != '' && this.data[i].body == 8){
-                    this.data[i].projectCategory = "身体 - 大腿";
-              }else if(this.data[i].body != '' && this.data[i].body == 9){
-                    this.data[i].projectCategory = "身体 - 小腿";
-              }else if(this.data[i].body != '' && this.data[i].body == 10){
-                    this.data[i].projectCategory = "身体 - 足部";
-              }else if(this.data[i].body != '' && this.data[i].body == 11){
-                    this.data[i].projectCategory = "身体 - 其他";
-              }
-              this.data[i].itemPrice = this.data[i].itemPrice + "元/次";
-              this.data[i].courseTimes = this.data[i].courseTimes + "次";
-              this.data[i].coursePrice = this.data[i].coursePrice + "元";
-              this.data[i].courseCharges = this.data[i].courseCharges + "元";
-              this.data[i].courseInterval = this.data[i].courseInterval + "天";
-              this.data[i].manualCost = this.data[i].manualCost + "元";
-              this.data[i].index = i+1;
-              if(this.data[i].actualOperation == '实际实操'){
-                this.data[i].realUseOperation = parseInt(this.data[i].courseCharges)/parseInt(this.data[i].courseTimes) + "元"; 
-              }else if(this.data[i].actualOperation == '固定实操'){
-                this.data[i].realUseOperation = this.data[i].fixedOperation + "元"; 
-              }
-            }
-            //console.log(JSON.parse(JSON.stringify(this.columns)));
-            this.projectFilterList = this.uniqueArray(this.data,"projectCategory");
-            for(var j=0;j<this.projectFilterList.length;j++){
-              var currentFitlerItem = {
-                        label: this.projectFilterList[j].projectCategory,
-                        value: parseInt((this.projectFilterList[j].face != '')?this.projectFilterList[j].face:"100"+this.projectFilterList[j].body)
+          var wholeData = res.data.itemManage;
+            for(var item in wholeData){ 
+                if(wholeData[item].length>0){
+                  var currentFitlerItem = {
+                        label: item,
+                        value: item
                     };
-              this.columns[0].filters.push(currentFitlerItem);
+                  this.columns[0].filters.push(currentFitlerItem);
+                  for (var i = 0; i < wholeData[item].length; i++) {
+                    wholeData[item][i].projectCategory = item;
+                    this.data.push(wholeData[item][i]);
+                  }
+                }
             }
-            this.columns[0].filters = this.uniqueArray(this.columns[0].filters,"label");
-            console.log(JSON.parse(JSON.stringify(this.columns[0].filters)));
-          }
+            for (var j = 0; j < this.data.length; j++) {
+              this.data[j].itemPrice = this.data[j].itemPrice + "元/次";
+              this.data[j].courseTimes = this.data[j].courseTimes + "次";
+              this.data[j].coursePrice = this.data[j].coursePrice + "元";
+              this.data[j].courseCharges = this.data[j].courseCharges + "元";
+              this.data[j].courseInterval = this.data[j].courseInterval + "天";
+              this.data[j].manualCost = this.data[j].manualCost + "元";
+            if(this.data[j].actualOperation == '实际实操'){
+                this.data[j].realUseOperation = parseInt(this.data[j].courseCharges)/parseInt(this.data[j].courseTimes) + "元"; 
+              }else if(this.data[j].actualOperation == '固定实操'){
+                this.data[j].realUseOperation = this.data[j].fixedOperation + "元"; 
+              }
+            }
         }).catch((error) => {
           this.$Message.error('获取失败');
-          console.log(error);
         });
       },
       transfer(b){

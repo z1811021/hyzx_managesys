@@ -229,6 +229,12 @@ export const findProjectList = function () {
   const API = host + URL;
   return API;
 };
+//分组获取项目列表
+export const findProjectListByGroup = function () {
+  const URL = '/item/manage/group';
+  const API = host + URL;
+  return API;
+};
 //方案管理
 export const projectPlansave = function () {
   const URL = '/program/manage/add';
