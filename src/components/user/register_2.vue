@@ -100,7 +100,7 @@
   export default{
     name: 'register_2',
     data(){
-      let temArr = [{lableName: '仅淋浴', count:''}, {lableName: '仅坐便', count:''}, {lableName: '仅泡浴', count:''}, {lableName: '淋浴+坐便', count:''}, {lableName: '泡浴+坐便', count:''}, {lableName: '淋浴+泡浴', count:''}, {lableName: '淋浴+坐便+泡浴', count:''}]
+      let temArr = [{lableName: '仅淋浴', count:''}, {lableName: '仅坐便', count:''}, {lableName: '仅泡浴', count:''}, {lableName: '淋浴+坐便', count:''}, {lableName: '泡浴+坐便', count:''}, {lableName: '淋浴+泡浴', count:''}, {lableName: '淋浴+坐便+泡浴', count:''},{lableName: '无配套设施', count:''}]
       //let [[...singleRoomArr], [...doubleRoomArr], [...tribleRoomArr], [...aboveTribleRoomArr]] = [temArr, temArr, temArr, temArr]
       let singleRoomArr = JSON.parse(JSON.stringify(temArr))
       let doubleRoomArr  = JSON.parse(JSON.stringify(temArr))
