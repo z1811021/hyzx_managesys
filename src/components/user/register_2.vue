@@ -242,7 +242,7 @@
     methods:{
       nextPage(name){
         const roomTypes = [];
-        const arrRule = ['onlyShower', 'onlyToilet', 'onlyBubble', 'showerAndToilet', 'bubbleAndToilet', 'showerAndBubble', 'showerAndToiletAndBubble']
+        const arrRule = ['onlyShower', 'onlyToilet', 'onlyBubble', 'showerAndToilet', 'bubbleAndToilet', 'showerAndBubble', 'showerAndToiletAndBubble', 'noFacilities']
         const room = ['singleRoom', 'doubleRoom', 'tribleRoom', 'aboveTribleRoom']
         let num =1;
         for (let val of room){
