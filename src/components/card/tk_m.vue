@@ -47,7 +47,9 @@
         <div v-for="(item,index) in tkProjectList" class="projectone" :key="index">
           <div class='com'>项目：
             <Select v-model="item.itemType" ref="setTKQuery" clearable style="width:180px" placeholder="请选择拓客赠送项目" :transfer=true @on-change="changeTLproject(index)">
-              <Option v-for="(item,index) in projectList" :value="item.itemName" :key="index">{{item.itemName}}</Option>
+              <OptionGroup v-for="item in projectCategoryList" :value="item.projectCategory" :label="item.projectCategory" :key="item.projectCategory">
+                <Option v-for="project in item.curProjectList" :value="project.id" :key="project.id">{{ project.itemName }} {{project.itemPrice}}</Option>
+              </OptionGroup>
 
             </Select>
             &nbsp;次数：<InputNumber :max="100" :min="0" v-model="item.itemTimes" style="width: 50px"></InputNumber>
@@ -57,25 +59,24 @@
       </div>
       <div class='group'>
         <h3>奖励政策</h3>
-        <div class='com'> 每周销售 <InputNumber :max="100" :min="0" v-model="addData.saleCardNum" size="small" style="width: 30px"/> 张，每张奖励<InputNumber :max="100000" :min="0" v-model="addData.rewardMoney" size="small" style="width: 50px"/> 元，超过每张奖励<InputNumber :max="100000" :min="0" v-model="addData.mRewardMoney" size="small" style="width: 50px"/> 元</div>
+        <div class='com'> 每周销售 <InputNumber :max="100" :min="0" v-model="addData.saleCardNum" size="small" style="width: 50px"/> 张，每张奖励<InputNumber :max="100000" :min="0" v-model="addData.rewardMoney" size="small" style="width: 50px"/> 元，超过每张奖励<InputNumber :max="100000" :min="0" v-model="addData.mRewardMoney" size="small" style="width: 70px"/> 元</div>
       </div>
       <div class='group'>
         <h3>奖励政策</h3>
-        <div class='com'> 首次进店微信预约转账 <InputNumber :max="100000" :min="0" v-model="addData.checkMoney" size="small" style="width: 30px"/> 元，体验抵 <InputNumber :max="100000" :min="0" v-model="addData.offsetMoney" size="small" style="width: 50px"/> 元，充值抵 <InputNumber :max="100000" :min="0" v-model="addData.rechargeMoney" size="small" style="width: 50px"/> 元，均按照<div style="margin-top:8px;">
-          <Select v-model="addData.cardType" size="small" style="width:180px;" :transfer=true>
+        <div class='com'> 首次进店微信预约转账 <InputNumber :max="100000" :min="0" v-model="addData.checkMoney" size="small" style="width: 50px"/> 元，体验抵 <InputNumber :max="100000" :min="0" v-model="addData.offsetMoney" size="small" style="width: 60px"/> 元，<div style="margin-top:10px;">充值抵 <InputNumber :max="100000" :min="0" v-model="addData.rechargeMoney" size="small" style="width: 60px"/> 元，均按照
+          <Select v-model="addData.cardType" size="small" style="width:120px;" :transfer=true>
               <Option v-for="project in memberShowData" :value="project.cardName" :key="project.id">{{project.cardName}}</Option>
-          </Select>会员最低抵扣体验护理。</div></div>
-      </div>
-      <div slot="footer">
-          <Button type="primary" @click="ok">添加</Button>
-          <Button type="ghost" @click="close">取消</Button>
-      </div>
+          </Select>会员最低抵扣体验护理。</div></div></div>
+        <div slot="footer">
+            <Button type="primary" @click="ok">添加</Button>
+            <Button type="ghost" @click="close">取消</Button>
+        </div>
     </Modal>
   </div>
 </template>
 
 <script>
-import {findMembership,findProjectList,findExtension,saveExtension,editExtension,deleteExtension,findAllProject} from '../../interface'
+import {findMembership,findProjectList,findExtension,saveExtension,editExtension,deleteExtension,findAllProject,findProjectListByGroup} from '../../interface'
     export default {
       name: "tk_m",
       data() {
@@ -143,6 +144,9 @@ import {findMembership,findProjectList,findExtension,saveExtension,editExtension
           projectList: [],
           memberData: [],
           memberShowData: [],
+          projectCategoryList: [],
+          projectCategory: [],
+          curProjectList: [],
           isPerformance: '',
           isOperation: '',
           isManual: '',
@@ -204,31 +208,36 @@ import {findMembership,findProjectList,findExtension,saveExtension,editExtension
       },
       methods: {
         getList() {
-          this.$ajax({
-            method: 'GET',
-            dataType: 'JSON',
-            contentType: 'application/json;charset=UTF-8',
-            headers: {
-              "authToken": sessionStorage.getItem('authToken')
-            },
-            url: findProjectList()+'/'+this.$route.params.id,
-          }).then((res) => {
-            this.projectList = res.data.itemManage;
-            for(var i=0;i<this.projectList.length;i++){
-              if(this.projectList[i].face != ''){
-                this.projectList[i].projectCategory = "面部";
-              }else{
-                this.projectList[i].projectCategory = "身体";
-              }
-              this.projectList[i].itemPrice = this.projectList[i].itemPrice + "元/次";
-              this.projectList[i].courseTimes = this.projectList[i].courseTimes + "次";
-              this.projectList[i].coursePrice = this.projectList[i].coursePrice + "元";
-              this.projectList[i].courseInterval = this.projectList[i].courseInterval + "天";
-            }
-          }).catch((error) => {
-            this.$Message.error('获取失败');
-          });
-        },
+            this.$ajax({
+              method: 'GET',
+              dataType: 'JSON',
+              contentType: 'application/json;charset=UTF-8',
+              headers: {
+                "authToken": sessionStorage.getItem('authToken')
+              },
+              url: findProjectListByGroup()+'/'+this.$route.params.id,
+            }).then((res) => {
+              var wholeData = res.data.itemManage;
+                for(var item in wholeData){ 
+                    if(wholeData[item].length>0){
+                        for (var i = 0; i < wholeData[item].length; i++) {
+                          //wholeData[item][i].itemPrice = wholeData[item][i].itemPrice + '元';
+                          this.projectList.push(wholeData[item][i]);
+                        }
+                        var curentProjectCategory = {"projectCategory":item,"curProjectList":wholeData[item]};
+                        this.projectCategoryList.push(curentProjectCategory);
+                    }
+                }
+                for(var j=0;j<this.projectList.length;j++){
+                  this.projectList[j].itemPrice = this.projectList[j].itemPrice + "元/次";
+                  this.projectList[j].courseTimes = this.projectList[j].courseTimes + "次";
+                  this.projectList[j].coursePrice = this.projectList[j].coursePrice + "元";
+                  this.projectList[j].itemInterval = this.projectList[j].courseInterval + "天";
+                }
+            }).catch((error) => {
+              this.$Message.error('获取失败');
+            });
+          },
         changeTLproject(index){
           for(var i = 0; i < index; i++){
             if(this.tkProjectList[i].itemType == this.tkProjectList[index].itemType){

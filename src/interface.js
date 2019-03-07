@@ -830,12 +830,12 @@ export const saveMembership = function () {
   const API = host + URL;
   return API;
 };
-/*//编辑会员卡
+//编辑会员卡
 export const editMembership = function () {
-  const URL = '/app/api/membership/edit';
+  const URL = '/memCard/manage/edit';
   const API = host + URL;
   return API;
-};*/
+};
 //删除会员卡
 export const deleteMembership = function () {
   const URL = '/memCard/manage/delete';

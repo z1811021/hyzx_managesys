@@ -2,16 +2,17 @@
     <!--会员卡-->
     <div class="list">
       <h2 style="margin: .6rem 0;">会员卡管理</h2>
-      <Button class="hy_btn" @click="Add">设计会员</Button>
+      <Button class="hy_btn" v-if="data.length == 0" @click="Add">设计会员</Button>
+      <Button class="hy_btn" v-if="data.length > 0" @click="reAdd">重新设计会员</Button>
       <br/>
       <br/>
-      <Table :columns="columns" :data="data"></Table>
+      <Table class="small-table" :rowClassName="rowClassName" :columns="columns" :data="data"></Table>
       <Modal v-model="addF" title="添加" :mask-closable="false" class="mod">
-        <div class='com'>会员级别名称：<Input v-model="addData.cardName" placeholder="会员级别名称" style="width: 252px"></Input></div>
+        <div class='com'>会员级别名称：<Input v-model="addData.cardName" placeholder="会员级别名称" style="width: 252px" disabled></Input></div>
         <div class='com' style="margin-top:20px;">
         会员价格：<InputNumber
             :min="0"
-            v-model="addData.memPrice" placeholder="元" style="width:270px" @on-change="changeThisPrice"></InputNumber>元
+            v-model="addData.memPrice" placeholder="元" style="width:270px" disabled></InputNumber>元
         </div>
         <div class='com' style="margin-top:20px;"><div class="disLeft">单次折扣：
             <Select size="small" v-model="addData.singleDiscount" style="width:90px" placeholder="单次折扣" filterable>
@@ -35,36 +36,32 @@
           <Select v-model="selectedRisCardRule" :multiple=true :transfer=true @on-change="changeStyle" style="width:275px">
             <Option value="累计现金">累计现金</Option>
             <Option value="累计充值">累计充值</Option>
-            <Option value="增量充值" v-if="data.length">补差充值</Option>
+            <Option value="补差充值">补差充值</Option>
             <Option value="单次充值">单次充值</Option>
           </Select>
         </div>
         <div v-show="addData.allowRecharge" style="margin-top:15px;">
-          
-        </div>
-        <!-- <div v-show="addData.allowRecharge" style="margin-top:15px;">
-         <div style="float:left;margin-left: 63px;padding-top:4px;">增量充值细节：</div>
-         <div style="margin-right:280px;"><Button type="success" size="small" @click="addUpgrade"><Icon type="plus-round"></Icon>项目</Button></div>
-           <div v-for="(item,index) in upgradeList">
-            <Input v-model="item.risingCardMoney" type="number" style="margin-left:23px;margin-top:4px;width: 280px;float:left;" placeholder="元" @on-blur="changeUpMoney(item.risingCardMoney,index)">
-                <Select v-model="item.risingCardName" @on-change="changeJumpUpgrade(item.risingCardName,index)" slot="prepend" style="width: 180px">
-                    <Option v-for="(project,index) in curData" :value="project.cardName" :key="project.id">升级到{{project.cardName}}</Option>
-                </Select>
-            </Input>
-            <Button style="float:left;margin-left:8px;margin-top:5px;" type="warning" @click="deleteUpgrade(index)">删除</Button>
-            <div v-show="showMoney && item.showChoose" style="float:right;margin-top:12px;margin-right:23px;">{{item.min}}元~{{item.max}}元</div>
+          <div class='com' style="float:left;margin-left:75px;">
+          补差金额：<InputNumber
+            :min="0" :max="20000"
+            v-model="addData.risCardMoney" placeholder="元" style="width:80px"></InputNumber> 元
           </div>
-        </div> -->
+          <div class='com' style="float:right;margin-right:65px;">
+          补差有效期：<InputNumber
+            :min="0" :max="24"
+            v-model="addData.risCardExpDate" placeholder="元" style="width:80px"></InputNumber> 个月
+          </div>
+        </div>
         <br/>
-        <div class='group' style="display:inline-block;margin-top:30px;">
+        <div class='group' style="display:inline-block;">
           <h3>会员尊享</h3> 
           <div style="margin-left:-320px;"><Button type="success" size="small" @click="addHonor"><Icon type="plus-round"></Icon>项目</Button></div>
             <div style="display:block;margin-bottom:20px;" v-for="(item,index) in honorList" :key="index"> 
-                  <Input type="number" v-model="item.itemTimes" class="enjoyInput" placeholder="次数：" style="width:300px;">
-                  <Select v-model="item.itemName" ref="setHouseQuery" clearable placeholder="请选择尊享项目" slot="prepend" style="width: 232px" @on-change="changeHonor(index)">
-                      <OptionGroup v-for="item in projectCategoryList" :value="item.projectCategory" :label="item.projectCategory" :key="item.projectCategory">
-                        <Option v-for="project in item.curProjectList" :value="project.itemName" :key="project.id">{{ project.itemName }} {{project.itemPrice}}</Option>
-                      </OptionGroup>
+                  <Input v-model="item.itemTimes" class="enjoyInput" placeholder="次数：" style="width:300px;">
+                  <Select v-model="item.itemName" placeholder="请选择尊享项目" slot="prepend" style="width: 232px" @on-change="changeHonor(index)">
+                  <OptionGroup v-for="item in projectCategoryList" :value="item.projectCategory" :label="item.projectCategory" :key="item.projectCategory">
+                   <Option v-for="project in item.curProjectList" :value="project.id" :key="project.id">{{ project.itemName }} {{project.itemPrice}}</Option>
+                  </OptionGroup>
                   </Select>
                 </Input>
                 <div style="float:left;margin-left:5px;margin-top:11px;">
@@ -152,7 +149,7 @@
         </div>
       </Modal>
       <Modal v-model="addCards" title="设计会员等级" :mask-closable="false" class="mod">
-        选择会员等级数量：<Select size="small" v-model="memberSize" style="width:70px" placeholder="会员等级">
+        选择会员等级总数：<Select size="small" v-model="memberSize" style="width:140px" placeholder="会员等级总数" @on-change="changeMemberSize">
             <Option value="1">1</Option>
             <Option value="2">2</Option>
             <Option value="3">3</Option>
@@ -164,7 +161,9 @@
             <Option value="9">9</Option>
             <Option value="10">10</Option>
         </Select> 
-        <Table :columns="columns1" :data="data1"></Table>
+        <br/>
+        <br/>
+        <Table border :columns="gradeColumns" :data="gradeData"></Table>
         <div slot="footer">
             <Button type="primary" @click="setMembers">添加</Button>
             <Button type="ghost" @click="closeMem">取消</Button>
@@ -174,33 +173,20 @@
 </template>
 
 <script>
-import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMembership,deleteMembership,findAllProject} from '../../interface'
+import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMembership,deleteMembership,findAllProject,findProjectListByGroup} from '../../interface'
     export default {
       name: "cr_m",
       data() {
+        let t = this
         return {
-          upgradeList: [
-            {
-              // 门店 id, 写错也没关系
-              storeId: this.$route.params.id, 
-              // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
-              memCardId: 0,
-              // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
-              risingCardName: '',
-              // 客户为升级卡花费金额
-              risingCardMoney: '',
-              min: '',
-              max: '',
-              showChoose: false,
-              upgradeTo: '',
-            }
-          ],
+          rowClass: '',
           selectedConsiderations: [],
           selectedMemDate: [],
           selectedRisCardRule: [],
           monthList: [],
           dayList: [],
           curData: [],
+          memberSize: '',
           memberList: [],
           removeItem: [],
           showMoney: false,
@@ -227,18 +213,22 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
             {
               title: '会员级别名称',
               key: 'cardName',
+              width: 120
             },
             {
               title: '会员价格(元)',
               key: 'memPrice',
+              width: 120
             },
             {
               title: '项目单次折扣',
               key: 'singleDiscount',
+              width: 120
             },
             {
               title: '产品折扣',
               key: 'productDiscount',
+              width: 120
             },
             {
               title: '升卡原则',
@@ -247,41 +237,82 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
             {
               title: '有效期(月)',
               key: 'expiryDate',
+              width: 120
+            },
+            {
+              title: '状态',
+              key: 'status',
+              width: 120
             },
             {
               title: '操作',
               key: 'action',
               render: (h, params) => {
-                return h('div', [
-                  h('Button', {
-                    props: {
-                      type: 'primary',
-                      size: 'small'
-                    },
-                    style: {
-                      marginRight: '5px'
-                    },
-                    on: {
-                      click: () => {
-                        this.mannger(params.row)
+                let status = params.row.cardStatus;
+                if (status==="-1"){ 
+                  return h('div', [
+                    h('Button', {
+                      props: {
+                        type: 'primary',
+                        size: 'small'
+                      },
+                      style: {
+                        marginRight: '5px'
+                      },
+                      on: {
+                        click: () => {
+                          this.complete(params.row)
+                        }
                       }
-                    }
-                  }, '修改'),
-                  h('Button', {
-                    props: {
-                      type: 'warning',
-                      size: 'small'
-                    },
-                    style: {
-                      marginRight: '5px'
-                    },
-                    on: {
-                      click: () => {
-                        this.del(params.row)
+                    }, '完成设置'),
+                    h('Button', {
+                      props: {
+                        type: 'warning',
+                        size: 'small'
+                      },
+                      style: {
+                        marginRight: '5px'
+                      },
+                      on: {
+                        click: () => {
+                          this.del(params.row)
+                        }
                       }
-                    }
-                  }, '删除'),
-                ]);
+                    }, '删除'),
+                  ]);
+                };
+                if (status==="1"){ 
+                  return h('div', [
+                    h('Button', {
+                      props: {
+                        type: 'primary',
+                        size: 'small'
+                      },
+                      style: {
+                        marginRight: '5px'
+                      },
+                      on: {
+                        click: () => {
+                          this.mannger(params.row)
+                        }
+                      }
+                    }, '修改设置'),
+                    h('Button', {
+                      props: {
+                        type: 'warning',
+                        size: 'small'
+                      },
+                      style: {
+                        marginRight: '5px'
+                      },
+                      on: {
+                        click: () => {
+                          this.del(params.row)
+                        }
+                      }
+                    }, '删除'),
+                  ]);
+                };
               }
             }
           ],
@@ -294,7 +325,7 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               // 会员级别名称
               cardName: '',
               // 会员价格
-              memPrice: '',
+              memPrice: 0,
               // 单次折扣
               singleDiscount: '',
               // 产品折扣
@@ -318,231 +349,221 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               // 会员返现, 第 ? 个项目
               rebateItems: '',
               // 会员返现, 返现 ? 元/次
-              rebateCash: '',
+              rebateCash: 0,
               // 会员返现, 有效期 ? 个月
               rebateExpire: '',
               // 注意事项, 分别从 1 到 6 对应 6 个选项
               considerations: ''
           },
           type: '',
-          columnsMem: [
+          gradeColumns: [
                     {
-                        title: '会员名称',
-                        key: 'cardName'
+                        title: '会员级别',
+                        key: 'memberGrade',
+                        width: 90,
+                        align: 'center',
                     },
                     {
-                        title: '会员价格',
-                        key: 'memPrice'
+                        title: '会员级别名称',
+                        key: 'cardName',
+                        width: 130,
+                        align: 'center',
+                        render:(h,params) => {
+                            return h('Input',{
+                                props: {
+                                    type: 'text',
+                                    value: t.gradeData[params.index].cardName,
+                                },
+                                on: {
+                                    'on-blur': (event) => {
+                                        t.gradeData[params.index].cardName = event.target.value;
+                                    }
+                                },
+                            })
+                        }
                     },
                     {
-                        title: 'Address',
-                        key: 'address'
-                    }
+                        title: '会员价格（元）',
+                        key: 'memPrice',
+                        width: 130,
+                        align: 'center',
+                        render:(h,params) => {
+                            return h('Input',{
+                                props: {
+                                    type: 'text',
+                                    value: t.gradeData[params.index].memPrice == ''? t.gradeData[params.index].memPrice : t.gradeData[params.index].memPrice+"元",
+                                },
+                                on: {
+                                    'on-blur': (event) => {
+                                        if(isNaN(event.target.value)){
+                                          event.target.value = '';
+                                        }
+                                        t.gradeData[params.index].memPrice = event.target.value;
+                                    },
+                                },
+                            })
+                        }
+                    },
+                    {
+                        title: '有效期（月）',
+                        key: 'expiryDate',
+                        width: 136,
+                        align: 'center',
+                        render:(h,params) => {
+                            return h('Input',{
+                                props: {
+                                    type: 'text',
+                                    value: t.gradeData[params.index].expiryDate == ''? t.gradeData[params.index].expiryDate : t.gradeData[params.index].expiryDate+"个月",
+                                },
+                                on: {
+                                    'on-blur': (event) => {
+                                        if(isNaN(event.target.value)){
+                                          event.target.value = '';
+                                        }
+                                        t.gradeData[params.index].expiryDate = event.target.value;
+                                    }
+                                },
+                            })
+                        }
+                    },
                 ],
+          gradeData:[],
           projectList:[],
           notice:[],
           selectedProject: '',
           projectCategoryList:[],
-          projectListFQJ:[],
-          projectListFBS:[],
-          projectListFMB:[],
-          projectListFXF:[],
-          projectListFKM:[],
-          projectListFDD:[],
-          projectListFJZ:[],
-          projectListFCZ:[],
-          projectListFQB:[],
-          projectListFMKGL:[],
-          projectListFVLSL:[],
-          projectListFYB:[],
-          projectListFZG:[],
-          projectListFQT:[],
-          projectListBTB:[],
-          projectListBJJ:[],
-          projectListBBB:[],
-          projectListBXB:[],
-          projectListBFB:[],
-          projectListBYB:[],
-          projectListBTUNB:[],
-          projectListBDT:[],
-          projectListBXT:[],
-          projectListBQT:[]
         }
       },
       methods: {
-        getList() {
+        rowClassName(row,index){
+              if(row.cardStatus === "-1"){
+                  return 'complete-table-info-row';
+                }else{
+                  return 'incomplete-table-info-row';
+                }
+            },
+        setMembers(){
+          var memCardManages = [];
+          for (var i = 0; i < this.gradeData.length; i++) {
+            var memCardManagesItem = {
+              // 门店 id
+              storeId: this.$route.params.id,
+              // 会员价格, ? 元/次
+              memPrice: this.gradeData[i].memPrice,
+              // 会员级别名称
+              cardName: this.gradeData[i].cardName,
+              // 单次折扣
+              singleDiscount: '',
+              // 产品折扣
+              productDiscount:'',
+              // 有效期
+              expiryDate: this.gradeData[i].expiryDate,
+              // 补差升卡有效期  ? 个月
+              risCardExpDate: '',
+              // 升卡原则
+              risCardRule: '',
+              // 补差金额
+              risCardMoney: '',
+              // 是否允许增量充值, 0 未选中, 1 选中
+              allowRecharge: '',
+              // 会员日, 每月 ? 日
+              memDate: '',
+              // 会员日, 或第 ? 次到店
+              memTimes: '',
+              // 会员日, 第 ? 个项目
+              memItems: '',
+              // 会员日, 折扣
+              memDiscount: '',
+              // 会员返现, 第 ? 次到店
+              rebateTimes: '',
+              // 会员返现, 第 ? 个项目
+              rebateItems: '',
+              // 会员返现, 返现 ? 元/次
+              rebateCash: 0,
+              // 会员返现, 有效期 ? 个月
+              rebateExpire: '',
+              // 注意事项, 分别从 1 到 6 对应 6 个选项
+              considerations: '',
+              // 卡状态, 默认 -1
+              cardStatus: -1,
+              // 建卡日期，后台自动生成，传空值即可
+              createDate: ''
+            }
+            memCardManages.push(memCardManagesItem);
+          }
+          var validateMessage = '';
+          for (var j = 0; j < memCardManages.length; j++) {
+            if(memCardManages[j].memPrice == '' || memCardManages[j].cardName == '' || memCardManages[j].expiryDate == ''){
+              validateMessage = validateMessage + "请完成所有卡项基本信息！<br/>";
+            }
+          }
+          let URL = saveMembership();
+          if(validateMessage != ''){
+            this.$Message.warning(validateMessage);
+            validateMessage = '';
+          }else{
             this.$ajax({
-              method: 'GET',
+              method: 'POST',
               dataType: 'JSON',
               contentType: 'application/json;charset=UTF-8',
               headers: {
                 "authToken": sessionStorage.getItem('authToken')
               },
-              url: findProjectList()+'/'+this.$route.params.id,
+              data: memCardManages,
+              url: URL,
             }).then((res) => {
-              this.projectList = res.data.itemManage;
-              for(var i=0;i<this.projectList.length;i++){
-                this.projectList[i].itemPrice = this.projectList[i].itemPrice + "元/次";
-                this.projectList[i].courseTimes = this.projectList[i].courseTimes + "次";
-                this.projectList[i].coursePrice = this.projectList[i].coursePrice + "元";
-                this.projectList[i].courseInterval = this.projectList[i].courseInterval + "天";
-                if(this.projectList[i].face != '' && this.projectList[i].face == 1){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "面部 - 清洁";
-                    this.projectListFQJ.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"面部 - 清洁","curProjectList":this.projectListFQJ};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].face != '' && this.projectList[i].face == 2){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "面部 - 补水";
-                    this.projectListFBS.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"面部 - 补水","curProjectList":this.projectListFBS};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].face != '' && this.projectList[i].face == 3){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "面部 - 美白";
-                    this.projectListFMB.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"面部 - 美白","curProjectList":this.projectListFMB};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].face != '' && this.projectList[i].face == 4){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "面部 - 修复";
-                    this.projectListFXF.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"面部 - 修复","curProjectList":this.projectListFXF};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].face != '' && this.projectList[i].face == 5){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "面部 - 抗敏";
-                    this.projectListFKM.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"面部 - 抗敏","curProjectList":this.projectListFKM};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].face != '' && this.projectList[i].face == 6){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "面部 - 痘痘";
-                    this.projectListFDD.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"面部 - 痘痘","curProjectList":this.projectListFDD};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].face != '' && this.projectList[i].face == 7){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "面部 - 紧致";
-                    this.projectListFJZ.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"面部 - 紧致","curProjectList":this.projectListFJZ};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].face != '' && this.projectList[i].face == 8){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "面部 - 除皱";
-                    this.projectListFCZ.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"面部 - 除皱","curProjectList":this.projectListFCZ};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].face != '' && this.projectList[i].face == 9){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "面部 - 祛斑";
-                    this.projectListFQB.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"面部 - 祛斑","curProjectList":this.projectListFQB};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].face != '' && this.projectList[i].face == 10){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "面部 - 毛孔管理";
-                    this.projectListFMKGL.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"面部 - 毛孔管理","curProjectList":this.projectListFMKGL};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].face != '' && this.projectList[i].face == 11){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "面部 - V脸瘦脸";
-                    this.projectListFVLSL.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"面部 - V脸瘦脸","curProjectList":this.projectListFVLSL};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].face != '' && this.projectList[i].face == 12){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "面部 - 眼部";
-                    this.projectListFYB.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"面部 - 眼部","curProjectList":this.projectListFYB};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].face != '' && this.projectList[i].face == 13){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "面部 - 整骨";
-                    this.projectListFZG.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"面部 - 整骨","curProjectList":this.projectListFZG};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].face != '' && this.projectList[i].face == 14){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "面部 - 其他";
-                    this.projectListFQT.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"面部 - 其他","curProjectList":this.projectListFQT};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].body != '' && this.projectList[i].body == 1){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "身体 - 头部";
-                    this.projectListBTB.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"身体 - 头部","curProjectList":this.projectListBTB};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].body != '' && this.projectList[i].body == 2){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "身体 - 肩颈";
-                    this.projectListBJJ.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"身体 - 肩颈","curProjectList":this.projectListBJJ};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].body != '' && this.projectList[i].body == 3){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "身体 - 背部";
-                    this.projectListBBB.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"身体 - 背部","curProjectList":this.projectListBBB};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].body != '' && this.projectList[i].body == 4){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "身体 - 胸部";
-                    this.projectListBXB.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"身体 - 胸部","curProjectList":this.projectListBXB};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].body != '' && this.projectList[i].body == 5){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "身体 - 腹部";
-                    this.projectListBFB.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"身体 - 腹部","curProjectList":this.projectListBFB};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].body != '' && this.projectList[i].body == 6){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "身体 - 腰部";
-                    this.projectListBYB.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"身体 - 腰部","curProjectList":this.projectListBYB};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].body != '' && this.projectList[i].body == 7){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "身体 - 臀部";
-                    this.projectListBTUNB.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"身体 - 臀部","curProjectList":this.projectListBTUNB};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].body != '' && this.projectList[i].body == 8){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "身体 - 大腿";
-                    this.projectListBDT.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"身体 - 大腿","curProjectList":this.projectListBDT};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].body != '' && this.projectList[i].body == 9){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "身体 - 小腿";
-                    this.projectListBXT.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"身体 - 小腿","curProjectList":this.projectListBXT};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].body != '' && this.projectList[i].body == 10){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "身体 - 足部";
-                    this.projectListBZB.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"身体 - 足部","curProjectList":this.projectListBZB};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }else if(this.projectList[i].body != '' && this.projectList[i].body == 11){
-                    var curentProjectCategory = {};
-                    this.projectList[i].projectCategory = "身体 - 其他";
-                    this.projectListBQT.push(this.projectList[i]);
-                    curentProjectCategory = {"projectCategory":"身体 - 其他","curProjectList":this.projectListBQT};
-                    this.projectCategoryList.push(curentProjectCategory);
-                  }
-              }
-              this.projectCategoryList = this.uniqueArray(this.projectCategoryList,"projectCategory");
+              this.$Message.success('操作成功');
+              this.getData();
+              this.addCards=false;
             }).catch((error) => {
-              this.$Message.error('获取失败');
-              console.log(error);
+              this.$Message.error('操作失败');
             });
+          }
+        },
+        changeMemberSize(){
+          this.gradeData = [];
+          if(this.memberSize != ''){
+            for (var i = 0; i < this.memberSize; i++) {
+              var gradeItem = {
+                memberGrade: (i+1)+"级",
+                cardName: '',
+                memPrice: 0,
+                expiryDate: ''
+              };
+              this.gradeData.push(gradeItem);
+            }
+          }
+        },
+        getList() {
+              this.$ajax({
+                method: 'GET',
+                dataType: 'JSON',
+                contentType: 'application/json;charset=UTF-8',
+                headers: {
+                  "authToken": sessionStorage.getItem('authToken')
+                },
+                url: findProjectListByGroup()+'/'+this.$route.params.id,
+              }).then((res) => {
+                var wholeData = res.data.itemManage;
+                  for(var item in wholeData){ 
+                      if(wholeData[item].length>0){
+                          for (var i = 0; i < wholeData[item].length; i++) {
+                            //wholeData[item][i].itemPrice = wholeData[item][i].itemPrice + '元';
+                            this.projectList.push(wholeData[item][i]);
+                          }
+                          var curentProjectCategory = {"projectCategory":item,"curProjectList":wholeData[item]};
+                          this.projectCategoryList.push(curentProjectCategory);
+                      }
+                  }
+                  for(var j=0;j<this.projectList.length;j++){
+                    this.projectList[j].itemPrice = this.projectList[j].itemPrice + "元/次";
+                    this.projectList[j].courseTimes = this.projectList[j].courseTimes + "次";
+                    this.projectList[j].coursePrice = this.projectList[j].coursePrice + "元";
+                    this.projectList[j].itemInterval = this.projectList[j].courseInterval + "天";
+                  }
+              }).catch((error) => {
+                this.$Message.error('获取失败');
+              });
           },
         insertDayList(){
           var currentItem = {};
@@ -595,8 +616,7 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
           for(var i = 0; i < index; i++){
             if(this.honorList[i].itemName == this.honorList[index].itemName){
               var errorMessageName = "请不要选择重复的尊享项目！";
-              this.honorList[index].itemName = '';
-              this.$refs.setHouseQuery.$data.query = '';
+              this.honorList.splice(index,1);
               this.$Message.warning(errorMessageName);
             }
           }
@@ -616,9 +636,11 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               var currentItem = {};
               for(var i=0;i<this.data.length;i++){
                 this.data[i].memPrice = this.data[i].memPrice + "元";
-                this.data[i].singleDiscount = this.data[i].singleDiscount + "%";
-                this.data[i].productDiscount = this.data[i].productDiscount + "%";
+                this.data[i].singleDiscount == '' ? this.data[i].singleDiscount = "未完成" : this.data[i].singleDiscount = this.data[i].singleDiscount + "%";
+                this.data[i].productDiscount == '' ? this.data[i].productDiscount = "未完成" : this.data[i].productDiscount = this.data[i].productDiscount + "%";
                 this.data[i].expiryDate = this.data[i].expiryDate + "个月";
+                this.data[i].risCardRule == '' ? this.data[i].risCardRule = "未完成" : this.data[i].risCardRule = this.data[i].risCardRule;
+                this.data[i].cardStatus == "-1" ? this.data[i].status = "未完成" : this.data[i].status = "已完成";
                 currentItem = {"cardName":this.data[i].cardName, "memPrice":this.data[i].memPrice,"id":''};
                 this.curData.push(currentItem);
               }
@@ -636,23 +658,6 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
             return -1;
           return 0;
         },
-        changeJumpUpgrade(a,index){
-          var minList = JSON.parse(JSON.stringify(this.removeItem));
-          var minNumber = JSON.parse(JSON.stringify(this.curData));
-          for(var i=0;i<minNumber.length;i++){
-            if(minNumber[i].cardName==a){
-              if(minNumber[i+1] != undefined){
-                this.upgradeList[index].min = minNumber[i+1].memPrice-this.addData.memPrice;
-              }else{
-                this.upgradeList[index].min = minList[0].memPrice-this.addData.memPrice;
-              }
-              this.upgradeList[index].max = minNumber[i].memPrice-this.addData.memPrice;
-              this.upgradeList[index].showChoose = true;
-              this.upgradeList[index].upgradeTo = index+1;
-            }
-          }
-          //this.upgradeList[index].risingCardMoney = '';
-        },
         ok() {
           var validateMessage = '';
           var selectedMemDateString = '';
@@ -660,24 +665,6 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
           var selectedRisCardRuleString = '';
           var tempList = [];
           var selectedCardRisings = [];
-          if(this.upgradeList[0].risingCardName == ''){
-              selectedCardRisings = [];
-          }else{
-            tempList = JSON.parse(JSON.stringify(this.upgradeList));
-              for(var l=0;l<tempList.length;l++){
-              var currentUpItem = {
-                // 门店 id, 写错也没关系
-                "storeId": this.$route.params.id,
-                // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
-                "memCardId": 0,
-                // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
-                "risingCardName": tempList[l].upgradeTo.toString(),
-                // 客户为升级卡花费金额
-                "risingCardMoney": tempList[l].risingCardMoney
-              };
-              selectedCardRisings.push(currentUpItem);
-            }
-          }
           for(var i=0;i<this.selectedMemDate.length;i++){
             selectedMemDateString = selectedMemDateString + this.selectedMemDate[i] + ',';
           }
@@ -693,18 +680,23 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
           this.addData.risCardRule = selectedRisCardRuleString.substring(0,selectedRisCardRuleString.length-1);
           this.addData.allowRecharge = this.transfer(this.addData.allowRecharge);
           var memCardManage = this.addData;
-          var memCardRisings = selectedCardRisings;
-          var memCardItems = this.honorList;
-          var params = {
-            // 门店 id, 此处的 storeId 一定不能错
-            storeId: this.$route.params.id,
-            memCardManage: memCardManage,
-            // 升级卡
-            memCardRisings: memCardRisings,
-            // 会员尊享项目
-            memCardItems: memCardItems
-        };
-        let URL = saveMembership();
+          var memCardItems = [];
+          //var memCardItems = this.honorList;
+          for (var j = 0; j < this.honorList.length; j++) {
+            var honorProject = {
+              storeId:this.$route.params.id,
+              memCardId: this.honorList[j].memCardId,
+              itemName: this.honorList[j].itemName,
+              itemTimes: this.honorList[j].itemTimes,
+              itemExpiry: this.honorList[j].itemExpiry
+            };
+            memCardItems.push(honorProject);
+          }
+          var memCardManageParam = {
+              memCardManage: memCardManage,
+              memCardItems: memCardItems
+          }
+        let URL = editMembership();
         if(this.addData.cardName == ''){
             validateMessage = validateMessage + "请输入会员级别名称！<br/>";
           }
@@ -712,7 +704,7 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
             validateMessage = validateMessage + "请输入会员价格！<br/>";
           }
           if(this.addData.singleDiscount == ''){
-            validateMessage = validateMessage + "请选择单次价格！<br/>";
+            validateMessage = validateMessage + "请选择单次折扣！<br/>";
           }
           if(this.addData.productDiscount == ''){
             validateMessage = validateMessage + "请选择产品折扣！<br/>";
@@ -733,7 +725,7 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
             validateMessage = validateMessage + "请选择会员日折扣！<br/>";
           }
           if(this.addData.memItems == ''){
-            validateMessage = validateMessage + "请选择会员日rebateTimes！<br/>";
+            validateMessage = validateMessage + "请选择会员日！<br/>";
           }
           if(this.addData.rebateTimes == ''){
             validateMessage = validateMessage + "请选择返现第几次到店！<br/>";
@@ -755,18 +747,16 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               validateMessage = validateMessage + "请先完善尊享项目信息！<br/>";
             }
           }
-          if(selectedRisCardRuleString.indexOf("增量充值")>-1){
-            for(var i = 0; i < this.upgradeList.length ; i++){
-              if(this.upgradeList[i].risingCardName == '' || this.upgradeList[i].risingCardMoney == ''){
-                //this.$Message.warning("请先完善已有尊享项目信息！");
-                validateMessage = validateMessage + "请先填写当前已有升级项目金额！"; 
-              }
+          if(selectedRisCardRuleString.indexOf("补差充值")>-1){
+            if(this.addData.risCardMoney == '' || this.addData.risCardExpDate == ''){
+              validateMessage = validateMessage + "请完善补差充值金额或期限！<br/>";
             }
           }
           if(validateMessage != ''){
             this.$Message.warning(validateMessage);
             validateMessage = '';
           }else{
+            //console.log(JSON.parse(JSON.stringify(memCardManageParam)));
             this.$ajax({
               method: 'POST',
               dataType: 'JSON',
@@ -774,7 +764,7 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               headers: {
                 "authToken": sessionStorage.getItem('authToken')
               },
-              data: params,
+              data: memCardManageParam,
               url: URL,
             }).then((res) => {
               this.$Message.success('操作成功');
@@ -785,15 +775,30 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
             });
           }
         },
+        reAdd(){
+          var c = confirm('确认删除？');
+            if(!c) {
+              return false;
+            }
+            this.$ajax({
+              method: 'get',
+              url: deleteMembership()+'/'+this.$route.params.id,
+            }).then( (res) =>{
+              this.$Message.success('删除成功');
+              this.getData();
+              this.Add();
+            }).catch( (res) =>{
+              this.$Message.error('删除失败');
+            })
+        },
         Add(){
-          this.addCards = true;
           this.addData={
               // 门店 id, 写错也没关系
               storeId: this.$route.params.id,
               // 会员级别名称
               cardName: '',
               // 会员价格
-              memPrice: '',
+              memPrice: 0,
               // 单次折扣
               singleDiscount: '',
               // 产品折扣
@@ -817,104 +822,18 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               // 会员返现, 第 ? 个项目
               rebateItems: '',
               // 会员返现, 返现 ? 元/次
-              rebateCash: '',
+              rebateCash: 0,
               // 会员返现, 有效期 ? 个月
               rebateExpire: '',
               // 注意事项, 分别从 1 到 6 对应 6 个选项
-              considerations: ''
+              considerations: '',
+              // 补差升卡有效期  ? 个月
+              risCardExpDate: '',
+              // 补差金额
+              risCardMoney: '',
           };
-          this.honorList = [
-            {
-              // 门店 id, 写错也没关系
-              storeId: this.$route.params.id, 
-              // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
-              memCardId: 0,
-              // 尊享项目名, 推荐使用数字, 1->超微气泡毛孔清理, 2->DC透肌去黑头管理, 3->毛孔深层净化清洁管理
-              itemName: '',
-              // 尊享项目次数
-              itemTimes: '',
-              // 尊享项目过期时间
-              itemExpiry: ''
-            }
-          ];
-          this.upgradeList = [
-            {
-              // 门店 id, 写错也没关系
-              storeId: this.$route.params.id, 
-              // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
-              memCardId: 0,
-              // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
-              risingCardName: '',
-              // 客户为升级卡花费金额
-              risingCardMoney: '',
-              min: '',
-              max: '',
-              showChoose: false,
-              upgradeTo: '',
-            }
-          ];
-          this.selectedConsiderations = [];
-          this.selectedMemDate = [];
-          this.selectedRisCardRule = [];
-        },
-        addUpgrade(){
-          var errorMessage = '';
-          var newItem = {
-              // 门店 id, 写错也没关系
-              storeId: this.$route.params.id, 
-              // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
-              memCardId: 0,
-              // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
-              risingCardName: '',
-              // 客户为升级卡花费金额
-              risingCardMoney: '',
-              min: '',
-              max: '',
-              showChoose: false,
-              upgradeTo: '',
-          }
-            for(var i = 0; i < this.upgradeList.length ; i++){
-              if(this.upgradeList[i].risingCardName == '' || this.upgradeList[i].risingCardMoney == ''){
-                //this.$Message.warning("请先完善已有尊享项目信息！");
-                errorMessage = "请先填写当前已有升级项目金额！"; 
-              }
-            }
-            if(errorMessage == ''){
-              this.upgradeList.push(newItem);
-            }else{
-              this.$Message.warning(errorMessage);
-            }
-        },
-        deleteUpgrade(index){
-          if(this.upgradeList.length>1){
-            this.upgradeList.splice(index,1);
-          }else{
-            this.upgradeList = [{storeId: this.$route.params.id, 
-                  // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
-                  memCardId: 0,
-                  // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
-                  risingCardName: '',
-                  // 客户为升级卡花费金额
-                  risingCardMoney: '',
-                  // 升级最小金额
-                  min: '',
-                  // 升级最大金额
-                  max: '',
-                  showChoose: false,
-                  upgradeTo: '',}
-            ];
-          }
-        },
-        changeUpMoney(a,index){
-          if(a != ''){
-            if( a < this.upgradeList[index].min){
-            this.$Message.warning("输入金额过低！");
-            this.upgradeList[index].risingCardMoney = '';
-            }else if(a > this.upgradeList[index].max){
-              this.$Message.warning("输入金额过高！");
-              this.upgradeList[index].risingCardMoney = ''; 
-            }
-          }
+          this.addCards = true;
+          this.$refs.setHonorQuery.$data.query = '';
         },
         addHonor(){
           var errorMessage = '';
@@ -947,58 +866,16 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               this.honorList.splice(index,index+1);
             }
         },
-        changeThisPrice(){
-            var currentItem;
-            var removeItem = [];
-            this.curData = [];
-            for(var i=0;i<this.data.length;i++){
-              currentItem = {"cardName":this.data[i].cardName, "memPrice":this.data[i].memPrice.replace("元",""),"id":''};
-              this.curData.push(currentItem);
-            }
-            for(var j = 0; j < this.curData.length; j++){
-                if(((parseInt(this.curData[j].memPrice)-this.addData.memPrice)) <= 0){
-                  removeItem.push(this.curData[j]);
-                  this.curData.splice(j);
-                }
-              }
-            this.curData.sort(this.compare);
-            removeItem.push(this.curData[this.curData.length-1]);
-            this.curData.splice(this.curData.length-1,1);
-            this.removeItem = removeItem;
-            this.removeItem.sort(this.compare);
-            if(this.curData == 0){
-              this.showMoney = false;
-              this.upgradeList = [
-                  {storeId: this.$route.params.id, 
-                  // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
-                  memCardId: 0,
-                  // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
-                  risingCardName: '',
-                  // 客户为升级卡花费金额
-                  risingCardMoney: '',
-                  // 升级最小金额
-                  min: '',
-                  // 升级最大金额
-                  max: '',
-                  showChoose: false,
-                  upgradeTo: '',}
-                ];
-            }else{
-              this.showMoney = true;
-            }
-            for(var j=0;j<this.upgradeList.length;j++){
-              this.changeJumpUpgrade(this.upgradeList[j].risingCardName,j);
-            }
-        },
         close(){
           this.addF = false;
           this.showMoney = false;
           this.getData();
         },
         mannger(data) {
-          this.addF = true;
+           this.addF = true;
            var tempCardRule = '';
             this.addData={
+              id: data.id,
               // 门店 id, 写错也没关系
               storeId: this.$route.params.id,
               // 会员级别名称
@@ -1006,9 +883,9 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               // 会员价格
               memPrice: data.memPrice.replace("元",""),
               // 单次折扣
-              singleDiscount: parseInt(data.singleDiscount.replace("%","")),
+              singleDiscount: data.singleDiscount == '' ? '' : parseInt(data.singleDiscount.replace("%","")),
               // 产品折扣
-              productDiscount: parseInt(data.productDiscount.replace("%","")),
+              productDiscount: data.productDiscount == '' ? '' : parseInt(data.productDiscount.replace("%","")),
               // 有效期
               expiryDate: parseInt(data.expiryDate.replace("个月","")),
               // 升卡原则
@@ -1032,9 +909,35 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
               // 会员返现, 有效期 ? 个月
               rebateExpire: parseInt(data.rebateExpire),
               // 注意事项, 分别从 1 到 6 对应 6 个选项
-              considerations: ''
+              considerations: '',
+              // 补差升卡有效期  ? 个月
+              risCardExpDate: data.risCardExpDate,
+              // 补差金额
+              risCardMoney: data.risCardMoney,
+              // 卡状态, 默认 -1
+              cardStatus: 1
           };
-          this.honorList = data.memCardItems;
+          if(data.memCardItems.length>0){
+            this.honorList = data.memCardItems;
+          }else{
+            this.honorList = [
+              {
+                // 门店 id, 写错也没关系
+                storeId: this.$route.params.id, 
+                // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
+                memCardId: data.id,
+                // 尊享项目名, 推荐使用数字, 1->超微气泡毛孔清理, 2->DC透肌去黑头管理, 3->毛孔深层净化清洁管理
+                itemName: '',
+                // 尊享项目次数
+                itemTimes: '',
+                // 尊享项目过期时间
+                itemExpiry: '',
+                min: '',
+                // 升级最大金额
+                max: ''
+              }
+            ];
+          }
           this.selectedConsiderations = data.considerations.split(",");
           this.selectedMemDate = data.memDate.split(",");
           this.selectedRisCardRule = data.risCardRule.split(",");
@@ -1046,72 +949,15 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
           }
           for(var k = 0; k < this.honorList.length; k++){
             this.honorList[k].itemExpiry = parseInt(this.honorList[k].itemExpiry);
-          }
-          if(data.memCardRisings.length == 0){
-            this.upgradeList = [
-              {storeId: this.$route.params.id, 
-              // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
-              memCardId: 0,
-              // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
-              risingCardName: '',
-              // 客户为升级卡花费金额
-              risingCardMoney: '',
-              // 升级最小金额
-              min: '',
-              // 升级最大金额
-              max: '',
-              showChoose: false,
-              upgradeTo: '',}
-            ];
-          }else{
-            this.upgradeList = [];
-            for(var l = 0; l < data.memCardRisings.length; l++){
-              var index = data.memCardRisings[l].risingCardName - 1;
-              var currentUpBackItem = {
-                storeId: this.$route.params.id, 
-                // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
-                memCardId: 0,
-                // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
-                risingCardName: this.curData[index].cardName,
-                // 客户为升级卡花费金额
-                risingCardMoney: data.memCardRisings[l].risingCardMoney,
-                // 升级最小金额
-                min: '',
-                // 升级最大金额
-                max: '',
-                showChoose: false,
-                upgradeTo: data.memCardRisings[l].risingCardName
-              }
-              this.upgradeList.push(currentUpBackItem);
-            }
+            this.honorList[k].itemName = parseInt(this.honorList[k].itemName);
           }
         },
         changeStyle(){
-          var index = this.selectedRisCardRule.indexOf("增量充值");
+          var index = this.selectedRisCardRule.indexOf("补差充值");
           if(index > -1){
-            if(this.addData.memPrice == ''){
-              this.$Message.warning("请先输入本会员卡价格！");
-              this.selectedRisCardRule = [];
-            }else{
-              this.addData.allowRecharge = true;
-              this.changeThisPrice();
-            }
+            this.addData.allowRecharge = true;
           }else{
             this.addData.allowRecharge = false;
-            this.upgradeList = [
-              {storeId: this.$route.params.id, 
-              // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
-              memCardId: 0,
-              // 升级到 xxx 卡, 传递数字(推荐),假如 1 -> 钻石卡, 2-> 白金卡, 3->白银卡 ...
-              risingCardName: '',
-              // 客户为升级卡花费金额
-              risingCardMoney: '',
-              // 升级最小金额
-              min: '',
-              // 升级最大金额
-              max: '',
-              showChoose: false}
-            ];
           }
         },
         transfer(b){
@@ -1128,7 +974,76 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
           return false;
         }
       },
-        del(data) {
+      complete(data){
+          this.addF = true;
+          this.selectedConsiderations = '';
+          this.selectedMemDate = '';
+          this.selectedRisCardRule = '';
+          this.honorList = [
+              {
+                // 门店 id, 写错也没关系
+                storeId: this.$route.params.id, 
+                // 关联会员卡记录id, 后台会自动设置, 直接写 0 就好
+                memCardId: data.id,
+                // 尊享项目名, 推荐使用数字, 1->超微气泡毛孔清理, 2->DC透肌去黑头管理, 3->毛孔深层净化清洁管理
+                itemName: '',
+                // 尊享项目次数
+                itemTimes: '',
+                // 尊享项目过期时间
+                itemExpiry: '',
+                min: '',
+                // 升级最大金额
+                max: ''
+              }
+            ]; 
+          this.addData = {
+              // 记录的 id
+              id: data.id,
+              // 门店 id
+              storeId: this.$route.params.id,
+              // 会员价格, ? 元/次
+              memPrice: data.memPrice.replace("元",""),
+              // 会员级别名称
+              cardName: data.cardName,
+              // 单次折扣
+              singleDiscount: '',
+              // 产品折扣
+              productDiscount: '',
+              // 有效期
+              expiryDate: parseInt(data.expiryDate.replace("个月","")),
+              // 补差升卡有效期  ? 个月
+              risCardExpDate: '',
+              // 补差金额
+              risCardMoney: '',
+              // 升卡原则
+              risCardRule: '',
+              // 是否允许补差充值, 0 未选中, 1 选中
+              allowRecharge: '',
+              // 会员日, 每月 ? 日
+              memDate: '',
+              // 会员日, 或第 ? 次到店
+              memTimes: '',
+              // 会员日, 第 ? 个项目
+              memItems: '',
+              // 会员日, 折扣
+              memDiscount: '',
+              // 会员返现, 第 ? 次到店
+              rebateTimes: '',
+              // 会员返现, 第 ? 个项目
+              rebateItems: '',
+              // 会员返现, 返现 ? 元/次
+              rebateCash: '',
+              // 会员返现, 有效期 ? 个月
+              rebateExpire: '',
+              // 注意事项, 分别从 1 到 6 对应 6 个选项
+              considerations: '',
+              // 卡状态, 默认 -1
+              cardStatus: 1,
+              // 建卡日期，传空的话，后台将保存为当前操作时间；不为空的话，日期格式为：2019-02-23 14:39:30
+              createDate: ''
+          };
+      },
+      del(data) {
           var c = confirm('确认删除？');
           if(!c) {
             return false;
@@ -1153,6 +1068,15 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
       }
     }
 </script>
+
+<style>
+  .small-table .complete-table-info-row td {
+    color: #FF0000;
+  }
+  .small-table .incomplete-table-info-row td {
+    color: #336666;
+  }
+</style>
 
 <style scoped>
   .list{

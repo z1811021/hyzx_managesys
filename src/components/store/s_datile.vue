@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="margin: 10px;font-size: 16px">门店 - {{name}}</div>
+    <div style="margin: 10px;font-size: 16px">门店 - {{name}}<Button style="width:10%;margin-left:25px;" size="small" @click="goManage" type="primary" long>进入门店系统</Button></div>
     <Row :gutter="24" class="option">
       <!--<Col span="3">-->
         <!--<Button class="hy_btn" @click="got('m_index_set')">会员权益设置</Button>-->
@@ -32,10 +32,10 @@
           <DropdownMenu slot="list">
             <DropdownItem name="p_project_category">项目功效类别</DropdownItem>
             <DropdownItem name="p_symptom">症状管理</DropdownItem>
-            <DropdownItem name="p_index">项目列表</DropdownItem>
-            <DropdownItem name="p_plan_index">项目方案</DropdownItem>
-            <DropdownItem name="p_meal_index">项目套餐</DropdownItem>
-            <DropdownItem name="p_program">解决方案管理</DropdownItem>
+            <DropdownItem name="p_index" :disabled="!(symptomData.length>0 && projectCategoryData.length>0)">项目列表</DropdownItem>
+            <DropdownItem name="p_plan_index" :disabled="!(symptomData.length>0 && projectCategoryData.length>0 && projectData.length>0)">项目方案</DropdownItem>
+            <DropdownItem name="p_meal_index" :disabled="!(symptomData.length>0 && projectCategoryData.length>0 && projectData.length>0)">项目套餐</DropdownItem>
+            <DropdownItem name="p_program" :disabled="!(symptomData.length>0 && projectCategoryData.length>0 && projectData.length>0)">解决方案管理</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </Col>
@@ -57,7 +57,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {findManagerOfTheMonthlyReport} from '../../interface';
+  import {findManagerOfTheMonthlyReport,findproblemList,getProjectCategory,findProjectListByGroup} from '../../interface';
 
   export default {
     name: 's_datile',
@@ -71,18 +71,73 @@
         isActive5: false,
         isActive6: false,
         isActive7: false,
+        projectData: [],
+        symptomData: [],
+        projectCategoryData: [],
       }
     },
     created() {
       const m_id = this.$route.params.id;
       this.getUrl();
       this.name = this.$route.query.storeName;
-      console.log(sessionStorage);
+      this.getSymptom();
+      this.getProjectCategory();
+      this.getProejcts();
     },
     methods: {
       got(path) {
         this.refactive(path);
         this.$router.push({name: path});
+      },
+      getSymptom(){
+        this.$ajax({
+          method: 'GET',
+          dataType: 'JSON',
+          contentType: 'application/json;charset=UTF-8',
+          headers: {
+            "authToken": sessionStorage.getItem('authToken')
+          },
+          url: findproblemList() + '/'+this.$route.params.id,
+        }).then((res) => {
+          this.symptomData = res.data.symptomManageInfo;
+        }).catch((error) => {
+        });
+      },
+      getProjectCategory(){
+        this.$ajax({
+          method: 'GET',
+          dataType: 'JSON',
+          contentType: 'application/json;charset=UTF-8',
+          headers: {
+            "authToken": sessionStorage.getItem('authToken')
+          },
+          url: getProjectCategory() + '/'+this.$route.params.id,
+        }).then((res) => {
+          this.projectCategoryData = res.data.itemTypeManageInfo;
+        }).catch((error) => {
+        });
+      },
+      getProejcts(){
+        this.$ajax({
+          method: 'GET',
+          dataType: 'JSON',
+          contentType: 'application/json;charset=UTF-8',
+          headers: {
+            "authToken": sessionStorage.getItem('authToken')
+          },
+          url: findProjectListByGroup() + '/'+this.$route.params.id,
+        }).then((res) => {
+          var wholeData = res.data.itemManage;
+            for(var item in wholeData){ 
+                if(wholeData[item].length>0){
+                  for (var i = 0; i < wholeData[item].length; i++) {
+                    wholeData[item][i].projectCategory = item;
+                    this.projectData.push(wholeData[item][i]);
+                  }
+                }
+            }
+        }).catch((error) => {
+        });
       },
       refactive(name){
         this.isActive1 = false;

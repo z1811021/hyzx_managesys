@@ -23,9 +23,9 @@
         每周完成<InputNumber :max="100" :min="0" v-model="ddAct.ddActNumber" size="small" style="width: 44px;margin-top: -1px;"></InputNumber>个项目（每周五、六、日），<InputNumber :max="100" :min="0" v-model="ddAct.ddDurTime" size="small" style="width: 44px;margin-top: -1px;"></InputNumber>周内全部耗完。</span>
         </div>
         <Select v-model="selectedActivityProjects" placeholder="请选择到店活动项目" :multiple=true style="width:360px;margin-top:5px;" filterable :transfer=true @on-change="changeActivityProjects()">
-            <Option v-for="item in projectList" :value="item.id" :key="item.id">
-              {{item.itemName}}{{item.itemPrice}}
-            </Option>
+            <OptionGroup v-for="item in projectCategoryList" :value="item.projectCategory" :label="item.projectCategory" :key="item.projectCategory">
+              <Option v-for="project in item.curProjectList" :value="project.id" :key="project.id">{{ project.itemName }} {{project.itemPrice}}</Option>
+            </OptionGroup>
         </Select>
         <br/>
         <div style="margin-top:10px;">
@@ -47,9 +47,9 @@
         <div v-for="project in hkProjects" style="margin-top:10px;" :key="project">
           <span >第{{project.hkNumber}}次</span>
           <Select v-model="project.hkProject" placeholder="请选择耗卡活动项目" style="width:260px;margin-left:50px;" :transfer=true>
-              <Option v-for="item in projectList" :value="item.id" :key="item.id">
-                {{item.itemName}}{{item.itemPrice}}
-              </Option>
+            <OptionGroup v-for="item in projectCategoryList" :value="item.projectCategory" :label="item.projectCategory" :key="item.projectCategory">
+              <Option v-for="project in item.curProjectList" :value="project.id" :key="project.id">{{ project.itemName }} {{project.itemPrice}}</Option>
+            </OptionGroup>
           </Select>
         </div>
       </div>
@@ -67,9 +67,9 @@
             <div v-for="(project,index) in czGiveProjectList" style="margin-top:4px;" :key="project">
               <span >充值 <InputNumber :max="100000" :min="0" v-model="project.presentMoney" size="small" style="width:64px"></InputNumber>元</span>
               <Select v-model="project.presentItem" placeholder="请选择活动充值赠送项目" style="width:240px;margin-left:20px;" :transfer=true>
-                  <Option v-for="item in projectList" :value="item.id" :key="item.id">
-                    {{item.itemName}}{{item.itemPrice}}
-                  </Option>
+                  <OptionGroup v-for="item in projectCategoryList" :value="item.projectCategory" :label="item.projectCategory" :key="item.projectCategory">
+                    <Option v-for="project in item.curProjectList" :value="project.id" :key="project.id">{{ project.itemName }} {{project.itemPrice}}</Option>
+                  </OptionGroup>
               </Select>
               <Button class="hy_btn" @click="deleteGiveProject(index)">删除</Button>
             </div>
@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,findAllProject,findTreatment} from '../../interface'
+import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,findAllProject,findTreatment,findProjectListByGroup} from '../../interface'
   export default {
     name: "hd_m",
     data() {
@@ -153,6 +153,9 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
         ],
         data: [],
         projectList: [],
+        projectCategoryList: [],
+        projectCategory: [],
+
         checkString: '',
         addF: false,
         showDD: false,
@@ -620,32 +623,36 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
           });
       },
       getList() {
-          this.$ajax({
-            method: 'GET',
-            dataType: 'JSON',
-            contentType: 'application/json;charset=UTF-8',
-            headers: {
-              "authToken": sessionStorage.getItem('authToken')
-            },
-            url: findProjectList()+'/'+this.$route.params.id,
-          }).then((res) => {
-            this.projectList = res.data.itemManage;
-            for(var i=0;i<this.projectList.length;i++){
-              if(this.projectList[i].face != ''){
-                this.projectList[i].projectCategory = "面部";
-              }else{
-                this.projectList[i].projectCategory = "身体";
-              }
-              this.projectList[i].label = this.projectList[i].itemName;
-              this.projectList[i].itemPrice = this.projectList[i].itemPrice + "元/次";
-              this.projectList[i].courseTimes = this.projectList[i].courseTimes + "次";
-              this.projectList[i].coursePrice = this.projectList[i].coursePrice + "元";
-              this.projectList[i].courseInterval = this.projectList[i].courseInterval + "天";
-            }
-          }).catch((error) => {
-            this.$Message.error('获取失败');
-          });
-        },
+            this.$ajax({
+              method: 'GET',
+              dataType: 'JSON',
+              contentType: 'application/json;charset=UTF-8',
+              headers: {
+                "authToken": sessionStorage.getItem('authToken')
+              },
+              url: findProjectListByGroup()+'/'+this.$route.params.id,
+            }).then((res) => {
+              var wholeData = res.data.itemManage;
+                for(var item in wholeData){ 
+                    if(wholeData[item].length>0){
+                        for (var i = 0; i < wholeData[item].length; i++) {
+                          //wholeData[item][i].itemPrice = wholeData[item][i].itemPrice + '元';
+                          this.projectList.push(wholeData[item][i]);
+                        }
+                        var curentProjectCategory = {"projectCategory":item,"curProjectList":wholeData[item]};
+                        this.projectCategoryList.push(curentProjectCategory);
+                    }
+                }
+                for(var j=0;j<this.projectList.length;j++){
+                  this.projectList[j].itemPrice = this.projectList[j].itemPrice + "元/次";
+                  this.projectList[j].courseTimes = this.projectList[j].courseTimes + "次";
+                  this.projectList[j].coursePrice = this.projectList[j].coursePrice + "元";
+                  this.projectList[j].itemInterval = this.projectList[j].courseInterval + "天";
+                }
+            }).catch((error) => {
+              this.$Message.error('获取失败');
+            });
+          },
         changeActivity(){
           var checkString = '';
           for(var i = 0; i < this.selectedActivities.length; i++){

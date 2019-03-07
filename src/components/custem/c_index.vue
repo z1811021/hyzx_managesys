@@ -29,17 +29,17 @@
           <Select v-show="showFromIn" style="width:100px;" v-model="RA" disabled>
             <Option v-for="item in ruleList" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
-          <Select v-show="!showFromIn" @click="showAgain" ref="setFirstRule" style="width:100px" v-model="RA" @on-change="selectFirst">
+          <Select v-show="!showFromIn" ref="setFirstRule" style="width:100px" v-model="RA" @on-change="selectFirst" @click.native="clearRule">
               <Option v-for="item in ruleList" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
-          <span style="margin-left:2%">第二规则：</span>
+          <span style="margin-left:1%">第二规则：</span>
           <Select v-show="showFromIn" style="width:100px;" v-model="RB" disabled>
             <Option v-for="item in ruleList" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
           <Select v-show="!showFromIn" ref="setSecondRule" style="width:100px" v-model="RB" @on-change="selectSecond" :disabled="!RA" >
               <Option v-for="item in ruleList" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
-          <span style="margin-left:2%">第三规则：</span>
+          <span style="margin-left:1%">第三规则：</span>
           <!-- <Select v-show="!enableThi" style="width:100px" disabled>
           </Select> -->
           <Select v-show="showFromIn" style="width:100px;" v-model="RC" disabled>
@@ -48,16 +48,25 @@
           <Select v-show="!showFromIn" ref="setThirdRule" :disabled="!RB" style="width:100px" v-model="RC" @on-change="selectThird">
               <Option v-for="item in ruleList" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
-          <span style="margin-left:2%">第四规则：</span>
+          <span style="margin-left:1%">第四规则：</span>
           <!-- <Select v-show="!enableFou" style="width:100px" disabled>
           </Select> -->
           <Select v-show="showFromIn" style="width:100px;" v-model="RD" disabled>
             <Option v-for="item in ruleList" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
-          <Select v-show="!showFromIn" ref="setFourthRule" :disabled="!RC" style="width:100px" v-model="RD" @on-change="selectFourth">
+          <Select v-show="!showFromIn" ref="setFourthRule" :disabled="!RC" style="width:100px;" v-model="RD" @on-change="selectFourth">
               <Option v-for="item in ruleList" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
-          <Button style="margin-left:10px;" class="hy_btn" @click="clearRule">重新排序</Button>
+          <span style="margin-left:1%">第五规则：</span>
+          <!-- <Select v-show="!enableThi" style="width:100px" disabled>
+          </Select> -->
+          <Select v-show="showFromIn" style="width:100px;" v-model="RE" disabled>
+            <Option v-for="item in ruleList" :value="item.value" :key="item.value">{{item.label}}</Option>
+          </Select>
+          <Select v-show="!showFromIn" ref="setFifthRule" :disabled="!RD" style="width:100px" v-model="RE">
+              <Option v-for="item in ruleList" :value="item.value" :key="item.value">{{item.label}}</Option>
+          </Select>
+          <Button style="margin-left:20px;" class="hy_btn" @click="clearRule">重新排序</Button>
         </Col>
       </Row>
     </div>
@@ -146,6 +155,7 @@
     inject: ['reload'],
     data(){
       return {
+        getRuleList: [],
         ruleList: [
             {
                 value: '1',
@@ -162,12 +172,17 @@
             {
                 value: '4',
                 label: '店长指定',
+            },
+            {
+                value: '5',
+                label: '顾客点单',
             }
         ],
         RA: '',
         RB: '',
         RC: '',
         RD: '',
+        RE: '',
         showFromIn: false,
         setFistRule: '',
         currentFirst : '',
@@ -280,7 +295,20 @@
           }
       },
       selectFourth(){
-        //this.ruleList = [];
+        for (var i = 0; i < this.ruleList.length; i++) {
+            if(this.ruleList[i].value == this.RA){
+              this.ruleList.splice(i,1);
+            }
+            if(this.ruleList[i].value == this.RB){
+              this.ruleList.splice(i,1);
+            }
+            if(this.ruleList[i].value == this.RC){
+              this.ruleList.splice(i,1);
+            }
+            if(this.ruleList[i].value == this.RD){
+              this.ruleList.splice(i,1);
+            }
+          }
       },
       clearRule(){
         this.showFromIn = false;
@@ -288,10 +316,12 @@
         this.RB = '';
         this.RC = '';
         this.RD = '';
+        this.RE = '';
         this.$refs.setFirstRule.$data.query = '';
         this.$refs.setSecondRule.$data.query = '';
         this.$refs.setThirdRule.$data.query = '';
         this.$refs.setFourthRule.$data.query = '';
+        this.$refs.setFifthRule.$data.query = '';
         this.ruleList = [
             {
                 value: '1',
@@ -308,9 +338,21 @@
             {
                 value: '4',
                 label: '店长指定',
+            },
+            {
+                value: '5',
+                label: '顾客点单',
             }
         ];
-        console.log(this.ruleList);
+      },
+      remove(arr, value) {
+          var i = arr.length;
+          while (i--) {
+              if (arr[i] === value) {
+                  return i;
+              }
+          }
+          return false;
       },
       clearShow(){
         this.enableSec = false;
@@ -341,6 +383,12 @@
             this.RB = res.data.clientManageInfo.clientRule.ruleTwo;
             this.RC = res.data.clientManageInfo.clientRule.ruleThree;
             this.RD = res.data.clientManageInfo.clientRule.ruleFour;
+            var test =['1','2','3','4','5'];
+            test.splice(this.remove(test,this.RA),1);
+            test.splice(this.remove(test,this.RB),1);
+            test.splice(this.remove(test,this.RC),1);
+            test.splice(this.remove(test,this.RD),1);
+            this.RE = test[0];
             this.data.clientClassify = res.data.clientManageInfo.clientClassify;
             this.data.clientClassify.active = this.transferBack(this.data.clientClassify.active);
             this.data.clientClassify.clientLevel = this.transferBack(this.data.clientClassify.clientLevel);
