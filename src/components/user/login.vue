@@ -57,7 +57,7 @@
 </template>
 
 <script>
-  import {userLogin, checkRegisterStatus, checkStoreUserName, edit, verifyCode, validatePhone, changeIp} from '../../interface'
+  import {userLogin, checkRegisterStatus, checkStoreUserName, edit, verifyCode, validatePhone, changeIp, sessionGetMen} from '../../interface'
   export default{
     name: 'login',
     data(){
@@ -153,7 +153,28 @@
         }
       }
     },
-    created(){},
+    created(){
+      if(document.location.toString().split('/#/')[1]) {
+       this.$ajax({
+              method: 'GET',
+              url: sessionGetMen()+'?key='+document.location.toString().split('/#/')[1] ,
+              withCredentials: true,
+            }).then((res)=>{
+              
+              const session = JSON.parse(res.data.value)
+              for (let val of Object.entries(session)) {
+                if (val[0] === 'reData') {
+                  sessionStorage.setItem(val[0], JSON.stringify(val[1]))
+                } else {
+                  sessionStorage.setItem(val[0], val[1])
+                }
+                
+              }
+              
+              this.$router.push({name: 'main'});
+            })
+      }
+    },
     methods:{
       checkLogin(){
         // if no need input valid code
@@ -241,6 +262,8 @@
             sessionStorage.setItem('customerId', customerId);
             sessionStorage.setItem('reData',JSON.stringify(res.data));
             this.$router.push({name: 'main'});
+            
+
           } else {
             // if don't equals 0 will push to the latest registered page
             this.$Modal.confirm({

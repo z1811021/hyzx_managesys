@@ -6,6 +6,9 @@
         <span slot="append" class="serc" @click="serc">查找</span>
         </Input>
       </Col>
+       <Col span="2">
+        <Button class="hy_btn" @click="goMen">进入门店系统</Button>
+      </Col>
       <Col span="2" v-if="searchActive">
       <Button class="hy_btn" @click="Return">返回列表</Button>
       </Col>
@@ -239,7 +242,7 @@
 </template>
 
 <script>
-  import { findStoreList,findStoreListById, newStore, editStore,deleteStore,getProvinces,getCities,checkStorePhone, infos, infoUpdate, findStoreListByCustomerId} from '../../interface';
+  import { findStoreList,findStoreListById, newStore, editStore,deleteStore,getProvinces,getCities,checkStorePhone, infos, infoUpdate, findStoreListByCustomerId,sessionSaveMen} from '../../interface';
 
   export default {
     name: 's_index',
@@ -585,6 +588,29 @@
         }else{
           this.getList(customerId,this.page,this.pagesize);
         }
+      },
+      goMen() {
+        const obj = {
+          authToken: "undefined",
+          storeId: JSON.parse(sessionStorage.getItem('reData')).storeId,
+          userInfo: `{id:${sessionStorage.getItem('customerId')}, role:${sessionStorage.getItem('role')}}`
+        }
+        let d = new Date();
+        const nowTime = d.getTime()
+        this.$ajax({
+                method: 'POST',
+                url: sessionSaveMen(),
+                withCredentials: true,
+                data: {
+                  key: nowTime,
+                  value: JSON.stringify(obj),
+                  expire: 60
+                }
+              }).then((res)=>{
+                //console.log(res)
+                //window.location.href= "http://localhost:9000/#/"+nowTime
+                window.location.href= "http://116.62.201.135:8080/mendian/index.html#/"+nowTime
+              })
       },
       getList(name,page,pagesize) {
         if(name=='' || name==null){

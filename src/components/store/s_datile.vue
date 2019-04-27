@@ -177,6 +177,9 @@
       wait() {
         this.$Message.error('暂未开放，敬请期待');
       },
+      goManage(){
+        console.log(sessionStorage)
+      }
     },
   };
 </script>

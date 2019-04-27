@@ -229,6 +229,16 @@ export const findProjectList = function () {
   const API = host + URL;
   return API;
 };
+export const sessionGetMen = function () {
+  const URL = '/common/get';
+  const API = host + URL;
+  return API;
+};
+export const sessionSaveMen = function () {
+  const URL = '/common/save';
+  const API = host + URL;
+  return API;
+};
 //分组获取项目列表
 export const findProjectListByGroup = function () {
   const URL = '/item/manage/group';

@@ -170,6 +170,10 @@ export default new Router({
       path:'/',
       name: 'login',
       component: login,
+    },{
+      path:'/:id',
+      name: 'login2',
+      component: login,
     },
     {
       path: '/register',
