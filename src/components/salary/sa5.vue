@@ -673,9 +673,11 @@
           method: 'get',
           url: findSalaryByStore() + '/'+this.$route.params.id,
         }).then( (res) =>{
-          this.data1 = res.data.salaryMangeInfo;
-          this.data1.rewardEvent = this.transferBack(this.data1.rewardEvent);
-          this.data1.rewardTeam = this.transferBack(this.data1.rewardTeam);
+          if(res.data.salaryMangeInfo != null){
+            this.data1 = res.data.salaryMangeInfo;
+            this.data1.rewardEvent = this.transferBack(this.data1.rewardEvent);
+            this.data1.rewardTeam = this.transferBack(this.data1.rewardTeam);
+          }
         }).catch( (error) =>{
           console.log(error);
         })

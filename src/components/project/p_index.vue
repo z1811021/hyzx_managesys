@@ -467,6 +467,7 @@
           },
           url: findProjectListByGroup()+'/'+this.$route.params.id,
         }).then((res) => {
+          this.data = [];
           var wholeData = res.data.itemManage;
             for(var item in wholeData){ 
                 if(wholeData[item].length>0){

@@ -337,14 +337,16 @@
           method: 'get',
           url: findSalaryByStore() + '/'+this.$route.params.id,
         }).then( (res) =>{
-          this.data = res.data.salaryMangeInfo;
-          this.data.forfeitLate = this.transferBack(this.data.forfeitLate);
-          this.data.forfeitComplaint = this.transferBack(this.data.forfeitComplaint);
-          this.data.forfeitAbsent = this.transferBack(this.data.forfeitAbsent);
-          this.data.forfeitPagerFlow = this.transferBack(this.data.forfeitPagerFlow);
-          this.data.forfeitConsume = this.transferBack(this.data.forfeitConsume);
-          this.data.forfeitOther = this.transferBack(this.data.forfeitOther);
-          this.data.enableFpleave = this.transferBack(this.data.enableFpleave);
+          if(res.data.salaryMangeInfo != null){
+            this.data = res.data.salaryMangeInfo;
+            this.data.forfeitLate = this.transferBack(this.data.forfeitLate);
+            this.data.forfeitComplaint = this.transferBack(this.data.forfeitComplaint);
+            this.data.forfeitAbsent = this.transferBack(this.data.forfeitAbsent);
+            this.data.forfeitPagerFlow = this.transferBack(this.data.forfeitPagerFlow);
+            this.data.forfeitConsume = this.transferBack(this.data.forfeitConsume);
+            this.data.forfeitOther = this.transferBack(this.data.forfeitOther);
+            this.data.enableFpleave = this.transferBack(this.data.enableFpleave);
+          }
         }).catch( (error) =>{
           console.log(error);
         })

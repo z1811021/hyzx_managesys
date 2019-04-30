@@ -314,9 +314,9 @@
           method: 'get',
           url: findSalaryByStore() + '/'+this.$route.params.id,
         }).then( (res) =>{
-          //this.practicalExercises = this.transferBack(res.data.salaryMangeInfo.poCommission);
-          this.manualFee = res.data.salaryMangeInfo.handworkPay;
-          //this.monthlyCashType = res.data.salaryMangeInfo.baseSalaryOption;
+          if(res.data.salaryMangeInfo != null){
+            this.manualFee = res.data.salaryMangeInfo.handworkPay;
+          }
         }).catch( (error) =>{
           console.log(error);
         })

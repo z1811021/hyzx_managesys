@@ -1,7 +1,7 @@
 <template>
   <div class="sa_index">
     <h2 style="margin: .6rem 0;">薪资管理</h2>
-    <h2> <Button class="hy_btn btn"  @click="save">保存规则</Button><Button class="hy_btn btn"  @click="more">具体规则</Button></h2>
+    <h2> <Button class="hy_btn btn"  @click="save">保存规则</Button><Button class="hy_btn btn"  @click="more" :disabled="disableDetailButton">具体规则</Button></h2>
     <br>
     <h3>底薪
       <Checkbox v-model="s1">启用</Checkbox>
@@ -100,6 +100,7 @@
     data(){
       return{
         s1: true,
+        disableDetailButton: true,
         data:{
           practicalExercises: false,
           performanceDrawinges: false,
@@ -210,40 +211,45 @@
           method: 'get',
           url:findSalaryByStore()+'/'+this.$route.params.id
         }).then( (res) =>{
-          this.data={
-            practicalExercises: this.transferBack(res.data.salaryMangeInfo.poCommission),
-            performanceDrawinges: this.transferBack(res.data.salaryMangeInfo.acCommission),
-            manualFee: this.transferBack(res.data.salaryMangeInfo.handworkPay),
-            teamBonuses: this.transferBack(res.data.salaryMangeInfo.rewardTeam),
-            activityBonuses: this.transferBack(res.data.salaryMangeInfo.rewardEvent),
-            complaintFines: this.transferBack(res.data.salaryMangeInfo.forfeitComplaint),
-            leaveEarlyFines: this.transferBack(res.data.salaryMangeInfo.forfeitLate),
-            leaveAfine: '',
-            absenteeismFine: this.transferBack(res.data.salaryMangeInfo.forfeitAbsent),
-            cashPerformancePpenalty: this.transferBack(res.data.salaryMangeInfo.forfeitAchievement),
-            passengerFines: this.transferBack(res.data.salaryMangeInfo.forfeitPagerFlow),
-            consumptionPenalty: this.transferBack(res.data.salaryMangeInfo.forfeitConsume),
-            otherFines: this.transferBack(res.data.salaryMangeInfo.forfeitOther),
-            typeOfBaseSalary: res.data.salaryMangeInfo.baseSalaryRule,
-            typeOfBonus: res.data.salaryMangeInfo.rewardRule,
-            storeId: this.$route.params.id,
-            storeName: '',
-            id: '',
-            absenteeismFineAmount:'',
-            accumulativePassengerFlow:'',
-            accumulativePassengerFlowAward: '',
-            baseSalary:'',
-            complaintFinesAmount: '',
-            oneDayPassengerFlowAward: '',
-            singleDayPassengerFlow: '',
-            monthlyCashType: res.data.salaryMangeInfo.baseSalaryOption,
-            cashType: res.data.salaryMangeInfo.rewardOption,
-            typeOfLeave: res.data.salaryMangeInfo.forfeitPleave,
-            leaveThePenaltyRules:'',
-            giveSC: res.data.salaryMangeInfo.praOperation,
-            giveSCpercent: res.data.salaryMangeInfo.manualCost,
-            achEnable: this.transferBack(res.data.salaryMangeInfo.achEnable),
-            enableFpleave: this.transferBack(res.data.salaryMangeInfo.enableFpleave)
+          if(res.data.salaryMangeInfo != null){
+              this.data={
+              practicalExercises: this.transferBack(res.data.salaryMangeInfo.poCommission),
+              performanceDrawinges: this.transferBack(res.data.salaryMangeInfo.acCommission),
+              manualFee: this.transferBack(res.data.salaryMangeInfo.handworkPay),
+              teamBonuses: this.transferBack(res.data.salaryMangeInfo.rewardTeam),
+              activityBonuses: this.transferBack(res.data.salaryMangeInfo.rewardEvent),
+              complaintFines: this.transferBack(res.data.salaryMangeInfo.forfeitComplaint),
+              leaveEarlyFines: this.transferBack(res.data.salaryMangeInfo.forfeitLate),
+              leaveAfine: '',
+              absenteeismFine: this.transferBack(res.data.salaryMangeInfo.forfeitAbsent),
+              cashPerformancePpenalty: this.transferBack(res.data.salaryMangeInfo.forfeitAchievement),
+              passengerFines: this.transferBack(res.data.salaryMangeInfo.forfeitPagerFlow),
+              consumptionPenalty: this.transferBack(res.data.salaryMangeInfo.forfeitConsume),
+              otherFines: this.transferBack(res.data.salaryMangeInfo.forfeitOther),
+              typeOfBaseSalary: res.data.salaryMangeInfo.baseSalaryRule,
+              typeOfBonus: res.data.salaryMangeInfo.rewardRule,
+              storeId: this.$route.params.id,
+              storeName: '',
+              id: '',
+              absenteeismFineAmount:'',
+              accumulativePassengerFlow:'',
+              accumulativePassengerFlowAward: '',
+              baseSalary:'',
+              complaintFinesAmount: '',
+              oneDayPassengerFlowAward: '',
+              singleDayPassengerFlow: '',
+              monthlyCashType: res.data.salaryMangeInfo.baseSalaryOption,
+              cashType: res.data.salaryMangeInfo.rewardOption,
+              typeOfLeave: res.data.salaryMangeInfo.forfeitPleave,
+              leaveThePenaltyRules:'',
+              giveSC: res.data.salaryMangeInfo.praOperation,
+              giveSCpercent: res.data.salaryMangeInfo.manualCost,
+              achEnable: this.transferBack(res.data.salaryMangeInfo.achEnable),
+              enableFpleave: this.transferBack(res.data.salaryMangeInfo.enableFpleave)
+            }
+            this.disableDetailButton = false;
+          }else{
+            this.disableDetailButton = true;
           }
           if(this.data.giveSC == '实操'){
             this.showSC = true;
@@ -251,6 +257,7 @@
             this.showSC = false;
           }
         }).catch( (error) =>{
+          console.log(error);
         });
 
       },

@@ -43,13 +43,14 @@
           method: 'get',
           url: getPerformance() + '/'+this.$route.params.id,
         }).then( (res) =>{
-          this.empPay = res.data.performanceInfo[0].empPay;
-          this.perOption = res.data.performanceInfo[0].perOption;
-          this.achMoney = res.data.performanceInfo[0].achMoney;
-          this.retMoney = res.data.performanceInfo[0].retMoney;
-          this.nAchMoney = res.data.performanceInfo[0].nAchMoney;
-          this.dedMoney = res.data.performanceInfo[0].dedMoney;
-          console.log(this.perOption);
+          if(res.data.performanceInfo.length != 0){
+            this.empPay = res.data.performanceInfo[0].empPay;
+            this.perOption = res.data.performanceInfo[0].perOption;
+            this.achMoney = res.data.performanceInfo[0].achMoney;
+            this.retMoney = res.data.performanceInfo[0].retMoney;
+            this.nAchMoney = res.data.performanceInfo[0].nAchMoney;
+            this.dedMoney = res.data.performanceInfo[0].dedMoney;
+          }
         }).catch( (error) =>{
           console.log(error);
         })
@@ -59,7 +60,9 @@
           method: 'get',
           url: findSalaryByStore() + '/'+this.$route.params.id,
         }).then( (res) =>{
-          this.achEnable = this.transferBack(res.data.salaryMangeInfo.achEnable);
+          if(res.data.salaryMangeInfo != null){
+            this.achEnable = this.transferBack(res.data.salaryMangeInfo.achEnable);
+          }
         }).catch( (error) =>{
           console.log(error);
         })

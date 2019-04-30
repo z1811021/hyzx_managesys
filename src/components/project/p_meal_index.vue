@@ -44,7 +44,7 @@
             <TimelineItem style="cursor:pointer;" v-for="(item,index) in planData" :key="index">
                 <p class="time">{{item.itemName}}</p>
                 <br/>
-                <p class="content">{{item.itemInterval}}天</p>
+                <p class="content">{{item.itemInterval}}</p>
             </TimelineItem>
           </draggable>
         </div>
@@ -252,7 +252,7 @@
               }
             }
             for(var i=oriIndex;i<indeLen;i++){
-          currentItem = {"itemName":this.projectList[cIndex].itemName,"itemPrice":this.projectList[cIndex].itemPrice,"showBlank":false,"itemInterval":this.projectList[cIndex].itemInterval,"sameProjectOrder": this.projectList[cIndex].itemName+(i)+"times","itemOrder":i+1};
+          currentItem = {"itemName":this.projectList[cIndex].itemName,"itemPrice":this.projectList[cIndex].itemPrice.replace('元/次',''),"showBlank":false,"itemInterval":this.projectList[cIndex].itemInterval,"sameProjectOrder": this.projectList[cIndex].itemName+(i)+"times","itemOrder":i+1};
               this.planData.push(currentItem);
             }  
             this.inputTimesFlag = false;
@@ -260,6 +260,7 @@
             this.selectedProjectTimes = '';
             this.selectedProject = '';
             this.$refs.setHouseQuery.$data.query = '';
+            console.log(JSON.parse(JSON.stringify(this.planData)));
           }
       },
       compare(property) {

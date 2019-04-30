@@ -296,7 +296,6 @@
           }
         }).catch( (error) =>{
           console.log(error);
-          this.$Message.error('获取失败！');
         })
       },
       transfer(b){

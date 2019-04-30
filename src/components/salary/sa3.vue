@@ -220,10 +220,11 @@
           method: 'get',
           url: findSalaryByStore() + '/'+this.$route.params.id,
         }).then( (res) =>{
-          //this.practicalExercises = this.transferBack(res.data.salaryMangeInfo.poCommission);
-          this.typeOfBaseSalary = res.data.salaryMangeInfo.baseSalaryRule;
-          //this.monthlyCashType = res.data.salaryMangeInfo.baseSalaryOption;
-          this.performanceDrawinges = this.transferBack(res.data.salaryMangeInfo.acCommission);
+          if(res.data.salaryMangeInfo != null){
+            this.typeOfBaseSalary = res.data.salaryMangeInfo.baseSalaryRule;
+            //this.monthlyCashType = res.data.salaryMangeInfo.baseSalaryOption;
+            this.performanceDrawinges = this.transferBack(res.data.salaryMangeInfo.acCommission);
+          }
         }).catch( (error) =>{
         })
       },
