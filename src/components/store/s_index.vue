@@ -608,9 +608,9 @@
                 }
               }).then((res)=>{
                 //console.log(res)
-                window.location.href= "http://9.112.58.202:9000/#/"+nowTime
+                //window.location.href= "http://9.112.58.202:9000/#/"+nowTime
                 //window.location.href= "http://localhost:9000/#/"+nowTime
-                //window.location.href= "http://116.62.201.135:8080/mendian/index.html#/"+nowTime
+                window.location.href= "http://116.62.201.135:8080/mendian/index.html#/"+nowTime
               })
       },
       getList(name,page,pagesize) {
