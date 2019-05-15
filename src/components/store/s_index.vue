@@ -593,7 +593,7 @@
         const obj = {
           authToken: "undefined",
           storeId: JSON.parse(sessionStorage.getItem('reData')).storeId,
-          userInfo: `{id:${sessionStorage.getItem('customerId')}, role:${sessionStorage.getItem('role')}}`
+          userInfo: `{"id": ${sessionStorage.getItem('customerId')}, "role": "${sessionStorage.getItem('role')}"}`
         }
         let d = new Date();
         const nowTime = d.getTime()
@@ -603,14 +603,13 @@
                 withCredentials: true,
                 data: {
                   key: nowTime,
-                  value: JSON.stringify(obj),
-                  expire: 60
+                  value: JSON.stringify(obj)
                 }
               }).then((res)=>{
                 //console.log(res)
                 //window.location.href= "http://9.112.58.202:9000/#/"+nowTime
-                //window.location.href= "http://localhost:9000/#/"+nowTime
-                window.location.href= "http://116.62.201.135:8080/mendian/index.html#/"+nowTime
+                //window.location.href= "http://localhost:9000/#/redirect/"+nowTime
+                window.location.href= "http://116.62.201.135:8080/mendian/index.html#/redirect/"+nowTime
               })
       },
       getList(name,page,pagesize) {

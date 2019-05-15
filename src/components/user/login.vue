@@ -154,14 +154,14 @@
       }
     },
     created(){
-      if(document.location.toString().split('/#/')[1]) {
+
+      if(document.location.toString().split('#/')[1]) {
        this.$ajax({
               method: 'GET',
-              url: sessionGetMen()+'?key='+document.location.toString().split('/#/')[1] ,
+              url: sessionGetMen()+'?key='+document.location.toString().split('#/')[1] ,
               withCredentials: true,
             }).then((res)=>{
-              
-              const session = JSON.parse(res.data.value)
+              const session = JSON.parse(res.data.value.value)
               for (let val of Object.entries(session)) {
                 if (val[0] === 'reData') {
                   sessionStorage.setItem(val[0], JSON.stringify(val[1]))
@@ -170,7 +170,6 @@
                 }
                 
               }
-              
               this.$router.push({name: 'main'});
             })
       }
