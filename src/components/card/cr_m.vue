@@ -945,7 +945,7 @@ import {findProjectList,findProjectPlanList,findMembership,saveMembership,editMe
             this.selectedConsiderations[i] = parseInt(this.selectedConsiderations[i]);
           }
           for(var j = 0; j < this.selectedMemDate.length; j++){
-            this.selectedMemDate[j] = parseInt(this.selectedConsiderations[j]);
+            this.selectedMemDate[j] = parseInt(this.selectedMemDate[j]);
           }
           for(var k = 0; k < this.honorList.length; k++){
             this.honorList[k].itemExpiry = parseInt(this.honorList[k].itemExpiry);
