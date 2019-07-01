@@ -19,6 +19,7 @@ import c_index from '@/components/custem/c_index';
 import e_index from '@/components/empty/e_index';
 import t_index from '@/components/table/t_index';
 import sa_index from '@/components/salary/sa_index';
+import fa_index from '@/components/fabric/fa_index';
 import sa_index2 from '@/components/salary/sa_index2';
 
 import cr_index from '@/components/card/cr_m';
@@ -125,6 +126,11 @@ export default new Router({
               path: 'sa_index',
               name: 'sa_index',
               component: sa_index,
+            },
+            {
+              path: 'fa_index',
+              name: 'fa_index',
+              component: fa_index,
             },
             {
               path: 'sa_index2',

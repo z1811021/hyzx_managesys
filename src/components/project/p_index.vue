@@ -47,12 +47,17 @@
       <br/>
       <br/>
       项目间隔：<Input placeholder="项目间隔 次" style="width: 300px" disabled/>
+      <br/>
+      <br/>
+      项目产品：<Select v-model="selectedProducts" placeholder="请选择项目产品" style="width:300px" disabled>
+      </Select>
       </div>
+      <br/>
+      <br/>
       <div v-show="pis.face || pis.body">
       项目名称：<Input v-model="pis.itemName" placeholder="名称" style="width: 300px"/>
       <br/>
       <br/>
-<!--       项目单价：<InputNumber v-model="pis.itemPrice" placeholder="项目单价 次/元" style="width: 300px" @on-blur="addPriceUnit"/></InputNumber> -->
       项目单价：<InputNumber
             :min="0"
             v-model="pis.itemPrice"
@@ -60,12 +65,16 @@
             :parser="value => value.replace('元/次', '')" placeholder="元/次" style="width: 300px"></InputNumber>
       <br/>
       <br/>
- <!--      项目间隔：<Input v-model="pis.courseInterval" placeholder="项目间隔" style="width: 300px" @on-blur="addPeriod"/> -->
       项目间隔：<InputNumber
             :min="0"
             v-model="pis.courseInterval"
             :formatter="value => `${value}天`"
             :parser="value => value.replace('天', '')" placeholder="天" style="width: 300px"></InputNumber>
+      <br/>
+      <br/>
+      项目产品：<Select v-model="selectedProducts" multiple filterable placeholder="请选择项目产品" style="width:300px" :transfer=true>
+        <Option v-for="item in productList" :value="item.id" :key="item.id">{{ item.brand }}（{{item.info}}）【单价：{{item.price}}】元</Option>
+      </Select>
       </div>
       <br/>
       <div style="float:left;margin-left: 63px;">是否设计疗程：</div>
@@ -99,7 +108,6 @@
           </div>
           <div v-show="showAgenda">
           <br/>
-          <!-- <div class="leftRadio">疗程次数：</div><Input v-model="pis.courseTimes" placeholder="疗程次数" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" @on-blur="addTimeUnit"/> -->
           <div class="leftRadio">疗程次数：</div><InputNumber
             :min="0"
             v-model="pis.courseTimes"
@@ -108,7 +116,6 @@
           </InputNumber>
           <br/>
           <br/>
-          <!-- <div class="leftRadio">疗程价：</div><Input v-model="pis.coursePrice" placeholder="疗程价：元" style="width: 270px;float:right;margin-top:-6px;margin-right:64px;" @on-blur="addCurePriceUnit"/> -->
           <div class="leftRadio">疗程价：</div><InputNumber
             :min="0"
             v-model="pis.coursePrice"
@@ -181,11 +188,12 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
-  import {findProjectList, projectedit, projectdelete, projectsave,findproblemList,findAllProject,getProjectCategory,findProjectListByGroup} from '../../interface';
+  import {findProjectList, projectedit, projectdelete, projectsave,findproblemList,findAllProject,getProjectCategory,findProjectListByGroup,getProduct} from '../../interface';
 
   export default {
     name: 'p_index',
     created() {
+      this.getProductList();
       this.getFaceCategory();
       this.getBodyCategory();
       this.getList();
@@ -206,7 +214,9 @@
         faceData: [],
         bodyData: [],
         projectFilterList: [],
+        productList: [],
         problemData: [],
+        selectedProducts: [],
         pis: {
               // 门店id，本地测试 24，服务器测试可用 22
               storeId: this.$route.params.id,
@@ -369,6 +379,7 @@
           this.showTc = false;
           this.showStable = false;
           this.projectChoose = '';
+          this.selectedProducts = [];
           this.pis = {
                 // 门店id，本地测试 24，服务器测试可用 22
                 storeId: this.$route.params.id,
@@ -418,6 +429,20 @@
           this.$refs.setFaceQuery.$data.query = '';
           this.$refs.setBodyQuery.$data.query = '';
         }
+      },
+      getProductList(){
+        this.$ajax({
+          method: 'GET',
+          dataType: 'JSON',
+          contentType: 'application/json;charset=UTF-8',
+          headers: {
+            "authToken": sessionStorage.getItem('authToken')
+          },
+          url: getProduct() + '/'+this.$route.params.id,
+        }).then((res) => {
+          this.productList = res.data.product;
+        }).catch((error) => {
+        });
       },
       getProblem(){
         this.$ajax({
@@ -484,13 +509,17 @@
             }
             for (var j = 0; j < this.data.length; j++) {
               this.data[j].itemPrice = this.data[j].itemPrice + "元/次";
-              this.data[j].courseTimes = this.data[j].courseTimes + "次";
-              this.data[j].coursePrice = this.data[j].coursePrice + "元";
-              this.data[j].courseCharges = this.data[j].courseCharges + "元";
-              this.data[j].courseInterval = this.data[j].courseInterval + "天";
+              this.data[j].courseTimes == '' ? this.data[j].courseTimes = '无':this.data[j].courseTimes =this.data[j].courseTimes + "次";
+              this.data[j].coursePrice == '' ? this.data[j].coursePrice = '无':this.data[j].coursePrice = this.data[j].coursePrice + "元";
+              this.data[j].courseCharges == '' ? this.data[j].courseCharges = '无':this.data[j].courseCharges = this.data[j].courseCharges + "元";
+              this.data[j].courseInterval == '' ? this.data[j].courseInterval = '无':this.data[j].courseInterval = this.data[j].courseInterval + "天";
               this.data[j].manualCost = this.data[j].manualCost + "元";
             if(this.data[j].actualOperation == '实际实操'){
-                this.data[j].realUseOperation = parseInt(this.data[j].courseCharges)/parseInt(this.data[j].courseTimes) + "元"; 
+                if(this.data[j].courseCharges == '无'){
+                  this.data[j].realUseOperation = this.data[j].itemPrice.replace('元/次','')+'元';
+                }else{
+                  this.data[j].realUseOperation = parseInt(this.data[j].courseCharges)/parseInt(this.data[j].courseTimes) + "元";
+                }
               }else if(this.data[j].actualOperation == '固定实操'){
                 this.data[j].realUseOperation = this.data[j].fixedOperation + "元"; 
               }
@@ -530,6 +559,9 @@
         if(this.pis.designCourse == ''){
           validateMessage = validateMessage + "请选择是否设计疗程！<br/>";
         }
+        if(this.selectedProducts.length == 0){
+          validateMessage = validateMessage + "请选择该项目使用产品！<br/>";
+        }
         if(this.pis.designCourse != '' && (this.pis.courseTimes == null || this.pis.coursePrice == null || this.pis.courseCharges == null)){
           validateMessage = validateMessage + "请输入疗程价格和次数！<br/>";
         }
@@ -557,13 +589,10 @@
           this.pis.superposition = this.transfer(this.pis.superposition);
           this.pis.strongEfficacy = this.transfer(this.pis.strongEfficacy);
           this.pis.generalProps = this.transfer(this.pis.generalProps);
-          //this.pis.itemPrice = this.pis.itemPrice.replace("元/次","");
-          //this.pis.courseTimes = this.pis.courseTimes.replace("次","");
-          //this.pis.coursePrice = this.pis.coursePrice.replace("元","");
-          //this.pis.courseInterval = this.pis.courseInterval.replace("天","");
           var params = {
               storeId:this.$route.params.id,
-              itemManage:this.pis
+              itemManage:this.pis,
+              productIds:this.selectedProducts
           }
           let URL = projectsave();
           this.$ajax({
@@ -615,6 +644,9 @@
       mannger(data) {
         this.storeFlag = true;
         this.store = '修改';
+        for (var i = 0; i < data.products.length; i++) {
+          this.selectedProducts.push(data.products[i].id);
+        }
         this.pis = JSON.parse(JSON.stringify(data));
         this.pis.itemPrice = this.pis.itemPrice.replace("元/次","");
         this.pis.courseInterval = this.pis.courseInterval.replace("天","");
@@ -627,6 +659,8 @@
         this.pis.superposition = this.transferBack(this.pis.superposition);
         this.pis.strongEfficacy = this.transferBack(this.pis.strongEfficacy);
         this.pis.generalProps = this.transferBack(this.pis.generalProps);
+        this.pis.face = parseInt(this.pis.face);
+        this.pis.body = parseInt(this.pis.body);
         if(this.pis.designCourse == "是"){
           this.showAgenda = true;
         }else{

@@ -46,7 +46,7 @@
       <Button class="hy_btn" :class="{active:isActive5}" @click="got('sa_index')">薪资管理</Button>
       </Col>
       <Col span="3">
-      <Button class="hy_btn" :class="{active:isActive6}" @click="wait">库存管理</Button>
+      <Button class="hy_btn" :class="{active:isActive6}" @click="got('fa_index')">产品管理</Button>
       </Col>
       <Col span="3">
       <Button class="hy_btn" :class="{active:isActive7}" @click="got('t_index')">报表管理</Button>
@@ -162,7 +162,7 @@
         if(name == 'sa_index'){
           this.isActive5 = true;
         }
-        if(name == ''){
+        if(name == 'fa_index'){
           this.isActive6 = true;
         }
         if(name == 't_index'){

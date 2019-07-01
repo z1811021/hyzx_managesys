@@ -918,3 +918,21 @@ export const editProjectCategory = function () {
   const API = host + URL;
   return API;
 };
+//添加产品
+export const addProduct = function () {
+  const URL = '/products/add';
+  const API = host + URL;
+  return API;
+};
+//获取产品
+export const getProduct = function () {
+  const URL = '/products/store';
+  const API = host + URL;
+  return API;
+};
+//删除产品
+export const deleteProduct = function () {
+  const URL = '/products/delete';
+  const API = host + URL;
+  return API;
+};

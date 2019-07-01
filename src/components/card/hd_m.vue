@@ -76,14 +76,10 @@
           </div>
           <div v-show="showGiveProduct">
             <div style="margin-top:30px;margin-left:-220px;">充值赠送产品：<Button style="margin-left:50px;" size="small" type="primary" @click="addGiveProduct">增加</Button></div>
-              <div v-for="item in czGiveProductList" style="margin-top:4px;" :key="item">
-                <Select v-model="item.presentGift" style="width:200px">
-                    <Option value="产品一">产品一</Option>
-                    <Option value="产品二">产品二</Option>
-                    <Option value="产品三">产品三</Option>
-                    <Option value="产品三">产品四</Option>
+              <div v-for="(index,item) in czGiveProductList" style="margin-top:4px;" :key="item">
+                <Select v-model="item.presentGift" style="width:200px" @on-change="changeProduct(index)">
+                    <Option v-for="item in productList" :value="item.id" :key="item.id">{{ item.brand }}（{{item.info}}）【价格：{{item.price}}】</Option>
                 </Select>
-                <span>价格：XXX元</span>
                 <Button class="hy_btn" @click="deleteGiveProduct(index)">删除</Button>
               </div>
           </div>
@@ -102,7 +98,7 @@
 </template>
 
 <script>
-import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,findAllProject,findTreatment,findProjectListByGroup} from '../../interface'
+import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,findAllProject,findTreatment,findProjectListByGroup,getProduct} from '../../interface'
   export default {
     name: "hd_m",
     data() {
@@ -155,7 +151,7 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
         projectList: [],
         projectCategoryList: [],
         projectCategory: [],
-
+        productList: [],
         checkString: '',
         addF: false,
         showDD: false,
@@ -413,6 +409,20 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
       close(){
         this.addF = false;
       },
+      getProductList(){
+        this.$ajax({
+          method: 'GET',
+          dataType: 'JSON',
+          contentType: 'application/json;charset=UTF-8',
+          headers: {
+            "authToken": sessionStorage.getItem('authToken')
+          },
+          url: getProduct() + '/'+this.$route.params.id,
+        }).then((res) => {
+          this.productList = res.data.product;
+        }).catch((error) => {
+        });
+      },
       mannger(data){
         this.actiName = data.actiName;
         this.ddAct = {
@@ -653,6 +663,9 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
               this.$Message.error('获取失败');
             });
           },
+        changeProduct(){
+          console.log(JSON.parse(JSON.stringify(this.presentGift)));
+        },
         changeActivity(){
           var checkString = '';
           for(var i = 0; i < this.selectedActivities.length; i++){
@@ -866,6 +879,7 @@ import {findProjectList,findactivity,saveactivity,editactivity,deleteactivity,fi
     created(){
       this.getList();
       this.getData();
+      this.getProductList();
     }
   }
 </script>
