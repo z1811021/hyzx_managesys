@@ -541,7 +541,7 @@ import {findMembership,findProjectList,findExtension,saveExtension,editExtension
           this.isManual=this.addData.isManual== 1 ? "是": "否";
           this.tkProjectList=JSON.parse(JSON.stringify(data.extCardItems));
           for(var i=0;i<this.tkProjectList.length;i++){
-
+            this.tkProjectList[i].itemType = parseInt(this.tkProjectList[i].itemType);
           }
         },
         del(data) {
