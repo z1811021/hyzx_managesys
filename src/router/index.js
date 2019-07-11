@@ -176,10 +176,6 @@ export default new Router({
       path:'/',
       name: 'login',
       component: login,
-    },{
-      path:'/:id',
-      name: 'login2',
-      component: login,
     },
     {
       path: '/register',
@@ -244,5 +240,10 @@ export default new Router({
       name: 'forget',
       component: forget,
     },
+    {
+      path:'/:id',
+      name: 'login2',
+      component: login,
+    }
   ]
 })
