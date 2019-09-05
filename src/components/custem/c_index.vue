@@ -369,8 +369,15 @@
           },
           url: findStoreById()+"/"+this.$route.params.id,
         }).then((res) => {
+          console.log(res,'res');
           if(res.data.clientManageInfo.clientRule != null && res.data.clientManageInfo.clientManage != null && res.data.clientManageInfo.clientClassify != null){
             this.data.clientManage = res.data.clientManageInfo.clientManage;
+            //将字符串变成整数
+            this.data.clientManage.clientConNocashMoth = parseInt(res.data.clientManageInfo.clientManage.clientConNocashMoth);
+            this.data.clientManage.clientConNostoreMoth = parseInt(res.data.clientManageInfo.clientManage.clientConNostoreMoth);
+            this.data.clientManage.continuousServeTimes = parseInt(res.data.clientManageInfo.clientManage.continuousServeTimes);
+            this.data.clientManage.technicianServeTimes = parseInt(res.data.clientManageInfo.clientManage.technicianServeTimes);
+            
             this.data.clientManage.exclusiveness = this.transferBack(this.data.clientManage.exclusiveness);
             this.data.clientManage.technicianServe = this.transferBack(this.data.clientManage.technicianServe);
             this.data.clientManage.designatedCliIntro = this.transferBack(this.data.clientManage.designatedCliIntro);
@@ -390,6 +397,14 @@
             test.splice(this.remove(test,this.RD),1);
             this.RE = test[0];
             this.data.clientClassify = res.data.clientManageInfo.clientClassify;
+            //转换整数
+            this.data.clientClassify.clientBigConsume = parseInt(res.data.clientManageInfo.clientClassify.clientBigConsume);
+            this.data.clientClassify.clientBigMoth = parseInt(res.data.clientManageInfo.clientClassify.clientBigMoth);
+            this.data.clientClassify.clientDormancyMoth = parseInt(res.data.clientManageInfo.clientClassify.clientDormancyMoth);
+            this.data.clientClassify.clientFrequentMoth = parseInt(res.data.clientManageInfo.clientClassify.clientFrequentMoth);
+            this.data.clientClassify.clientFrequentTimes = parseInt(res.data.clientManageInfo.clientClassify.clientFrequentTimes);
+            this.data.clientClassify.clientFrozenTimes = parseInt(res.data.clientManageInfo.clientClassify.clientFrozenTimes);
+
             this.data.clientClassify.active = this.transferBack(this.data.clientClassify.active);
             this.data.clientClassify.clientLevel = this.transferBack(this.data.clientClassify.clientLevel);
             this.data.clientClassify.clientBig = this.transferBack(this.data.clientClassify.clientBig);
@@ -539,6 +554,7 @@
           },
           url: editStoreCustomer(),
           }).then((res) => {
+            console.log(res);
             this.$Message.success('保存成功');
             this.reload();
           }).catch((error) => {
