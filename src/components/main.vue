@@ -124,8 +124,17 @@
             "authToken": sessionStorage.getItem('authToken')
           },
         })
-        sessionStorage.setItem('isLogin','0');
-        this.$router.push({name:'login'});
+        this.$Modal.confirm({
+          title: '提示',
+          content: '确认退出登陆？',
+          onOk: () => {
+            sessionStorage.setItem('isLogin','0');
+            this.$router.push({name:'login'});
+          },
+          onCancel: () => {
+            this.$Message.info('取消');
+          }
+        });
       }
     },
   }
