@@ -223,15 +223,15 @@
           },
           clientRule: {
               // 门店 id, 本地测试可以使用 24, 服务器可使用 22
-              storeId: this.$route.params.id, 
+              storeId: this.$route.params.id,
               ruleOne: '',
               ruleTwo: '',
               ruleThree: '',
               ruleFour: ''
           },
-          clientClassify: { 
+          clientClassify: {
               // 门店 id, 本地测试可以使用 24, 服务器可使用 22
-              storeId: this.$route.params.id, 
+              storeId: this.$route.params.id,
               // 激活顾客分类, 1 为选中, 0 为不选中
               active: 0,
               // 客户分级, 1 为选中, 0 为不选中
@@ -239,23 +239,23 @@
               // 消费实力 大客户, 1 为选中, 0 为不选中
               clientBig: 0,
               // 大客户连续几个月消费
-              clientBigMoth: '',
+              clientBigMoth: 0,
               // 大客户连续几个月消费金额
-              clientBigConsume: '',
+              clientBigConsume: 0,
               // 常到客户, 1 为选中, 0 为不选中
               clientFrequent: 0,
               // 常到客户连续几个月到店
-              clientFrequentMoth: '',
+              clientFrequentMoth: 0,
               // 常到客户连续几个月至少到店次数
-              clientFrequentTimes: '',
+              clientFrequentTimes: 0,
               // 睡眠客户, 1 为选中, 0 为不选中
               clientDormancy: 0,
               // 睡眠客户连续几个月以上未到店
-              clientDormancyMoth: '',
+              clientDormancyMoth: 0,
               // 冻结客户, 1 为选中, 0 为不选中
               clientFrozen: 0,
               // 冻结客户连续几个月以上未到店
-              clientFrozenTimes: ''
+              clientFrozenTimes: 0
           }
         }
       };
@@ -369,8 +369,15 @@
           },
           url: findStoreById()+"/"+this.$route.params.id,
         }).then((res) => {
+          console.log(res,'res');
           if(res.data.clientManageInfo.clientRule != null && res.data.clientManageInfo.clientManage != null && res.data.clientManageInfo.clientClassify != null){
             this.data.clientManage = res.data.clientManageInfo.clientManage;
+            //将字符串变成整数
+            this.data.clientManage.clientConNocashMoth = parseInt(res.data.clientManageInfo.clientManage.clientConNocashMoth);
+            this.data.clientManage.clientConNostoreMoth = parseInt(res.data.clientManageInfo.clientManage.clientConNostoreMoth);
+            this.data.clientManage.continuousServeTimes = parseInt(res.data.clientManageInfo.clientManage.continuousServeTimes);
+            this.data.clientManage.technicianServeTimes = parseInt(res.data.clientManageInfo.clientManage.technicianServeTimes);
+            
             this.data.clientManage.exclusiveness = this.transferBack(this.data.clientManage.exclusiveness);
             this.data.clientManage.technicianServe = this.transferBack(this.data.clientManage.technicianServe);
             this.data.clientManage.designatedCliIntro = this.transferBack(this.data.clientManage.designatedCliIntro);
@@ -390,6 +397,14 @@
             test.splice(this.remove(test,this.RD),1);
             this.RE = test[0];
             this.data.clientClassify = res.data.clientManageInfo.clientClassify;
+            //转换整数
+            this.data.clientClassify.clientBigConsume = parseInt(res.data.clientManageInfo.clientClassify.clientBigConsume);
+            this.data.clientClassify.clientBigMoth = parseInt(res.data.clientManageInfo.clientClassify.clientBigMoth);
+            this.data.clientClassify.clientDormancyMoth = parseInt(res.data.clientManageInfo.clientClassify.clientDormancyMoth);
+            this.data.clientClassify.clientFrequentMoth = parseInt(res.data.clientManageInfo.clientClassify.clientFrequentMoth);
+            this.data.clientClassify.clientFrequentTimes = parseInt(res.data.clientManageInfo.clientClassify.clientFrequentTimes);
+            this.data.clientClassify.clientFrozenTimes = parseInt(res.data.clientManageInfo.clientClassify.clientFrozenTimes);
+
             this.data.clientClassify.active = this.transferBack(this.data.clientClassify.active);
             this.data.clientClassify.clientLevel = this.transferBack(this.data.clientClassify.clientLevel);
             this.data.clientClassify.clientBig = this.transferBack(this.data.clientClassify.clientBig);
@@ -494,35 +509,35 @@
               clientRule: this.data.clientRule,
               clientClassify: this.data.clientClassify
           };
-        if(this.data.clientManage.technicianServe == 1 && this.data.clientManage.technicianServeTimes == '') { 
+        if(this.data.clientManage.technicianServe == 1 && this.data.clientManage.technicianServeTimes == '') {
           validateMessage = validateMessage + "请输入指定条件：某技师连续服务次数。<br/>";
         }
-        if(this.data.clientManage.continuousServe == 1 && this.data.clientManage.continuousServeTimes == '') { 
+        if(this.data.clientManage.continuousServe == 1 && this.data.clientManage.continuousServeTimes == '') {
           validateMessage = validateMessage + "请输入非指定条件：连续被他人服务次数。<br/>";
         }
-        if(this.data.clientManage.clientConNostore == 1 && this.data.clientManage.clientConNostoreMoth == '') { 
+        if(this.data.clientManage.clientConNostore == 1 && this.data.clientManage.clientConNostoreMoth == '') {
           validateMessage = validateMessage + "请输入非指定条件：顾客连续不到店次数。<br/>";
         }
-        if(this.data.clientManage.clientConNocash == 1 && this.data.clientManage.clientConNocashMoth == '') { 
+        if(this.data.clientManage.clientConNocash == 1 && this.data.clientManage.clientConNocashMoth == '') {
           validateMessage = validateMessage + "请输入非指定条件：顾客连续无现金月数。<br/>";
         }
-        if(this.data.clientClassify.clientBig == 1) { 
+        if(this.data.clientClassify.clientBig == 1) {
           if(this.data.clientClassify.clientBigMoth == '' || this.data.clientClassify.clientBigConsume == ''){
             validateMessage = validateMessage + "请输入大客户消费实力连续消费月份，金额。<br/>";
           }
         }
-        if(this.data.clientClassify.clientFrequent == 1) { 
+        if(this.data.clientClassify.clientFrequent == 1) {
           if(this.data.clientClassify.clientFrequentMoth == '' || this.data.clientClassify.clientFrequentTimes == ''){
             validateMessage = validateMessage + "请输入客户活跃度常到店月份次数。<br/>";
           }
         }
-        if(this.data.clientClassify.clientDormancy == 1 && this.data.clientClassify.clientDormancyMoth == '') { 
+        if(this.data.clientClassify.clientDormancy == 1 && this.data.clientClassify.clientDormancyMoth == '') {
           validateMessage = validateMessage + "请输入睡眠客户月数。<br/>";
         }
-        if(this.data.clientClassify.clientFrozen == 1 && this.data.clientClassify.clientFrozenTimes == '') { 
+        if(this.data.clientClassify.clientFrozen == 1 && this.data.clientClassify.clientFrozenTimes == '') {
           validateMessage = validateMessage + "请输入冻结客户月数。<br/>";
         }
-        if(this.data.clientClassify.clientFrozen == 1 && this.data.clientClassify.clientFrozenTimes == '') { 
+        if(this.data.clientClassify.clientFrozen == 1 && this.data.clientClassify.clientFrozenTimes == '') {
           validateMessage = validateMessage + "请输入常到店客户连续到店月份次数<br/>";
         }
         if(validateMessage != ''){
@@ -539,6 +554,7 @@
           },
           url: editStoreCustomer(),
           }).then((res) => {
+            console.log(res);
             this.$Message.success('保存成功');
             this.reload();
           }).catch((error) => {

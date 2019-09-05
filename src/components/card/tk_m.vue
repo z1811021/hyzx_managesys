@@ -47,10 +47,9 @@
         <div v-for="(item,index) in tkProjectList" class="projectone" :key="index">
           <div class='com'>项目：
             <Select v-model="item.itemType" ref="setTKQuery" clearable style="width:180px" placeholder="请选择拓客赠送项目" :transfer=true @on-change="changeTLproject(index)">
-              <OptionGroup v-for="item in projectCategoryList" :value="item.projectCategory" :label="item.projectCategory" :key="item.projectCategory">
-                <Option v-for="project in item.curProjectList" :value="project.id" :key="project.id">{{ project.itemName }} {{project.itemPrice}}</Option>
+              <OptionGroup v-for="(item,index) in projectCategoryList" :value="item.projectCategory" :label="item.projectCategory" :key="index">
+                <Option v-for="(project,index) in item.curProjectList" :value="project.id" :key="index">{{ project.itemName }} {{project.itemPrice}}</Option>
               </OptionGroup>
-
             </Select>
             &nbsp;次数：<InputNumber :max="100" :min="0" v-model="item.itemTimes" style="width: 50px"></InputNumber>
             <Button class="hy_btn" @click="deleteProject(index)">删除</Button>
@@ -65,7 +64,7 @@
         <h3>奖励政策</h3>
         <div class='com'> 首次进店微信预约转账 <InputNumber :max="100000" :min="0" v-model="addData.checkMoney" size="small" style="width: 50px"/> 元，体验抵 <InputNumber :max="100000" :min="0" v-model="addData.offsetMoney" size="small" style="width: 60px"/> 元，<div style="margin-top:10px;">充值抵 <InputNumber :max="100000" :min="0" v-model="addData.rechargeMoney" size="small" style="width: 60px"/> 元，均按照
           <Select v-model="addData.cardType" size="small" style="width:120px;" :transfer=true>
-              <Option v-for="project in memberShowData" :value="project.cardName" :key="project.id">{{project.cardName}}</Option>
+              <Option v-for="(project,index) in memberShowData" :value="project.cardName" :key="index">{{project.cardName}}</Option>
           </Select>会员最低抵扣体验护理。</div></div></div>
         <div slot="footer">
             <Button type="primary" @click="ok">添加</Button>
@@ -188,7 +187,7 @@ import {findMembership,findProjectList,findExtension,saveExtension,editExtension
               // 充值抵 ? 元
               rechargeMoney: '',
               // 卡片类型, 推荐数字, 字符串也可以, 1 超白金卡, 2 钻石卡  ...
-              cardType: '' 
+              cardType: ''
           },
           tkProjectList: [
             {
@@ -217,8 +216,9 @@ import {findMembership,findProjectList,findExtension,saveExtension,editExtension
               },
               url: findProjectListByGroup()+'/'+this.$route.params.id,
             }).then((res) => {
+              console.log(res,'getlist');
               var wholeData = res.data.itemManage;
-                for(var item in wholeData){ 
+                for(var item in wholeData){
                     if(wholeData[item].length>0){
                         for (var i = 0; i < wholeData[item].length; i++) {
                           //wholeData[item][i].itemPrice = wholeData[item][i].itemPrice + '元';
@@ -470,7 +470,7 @@ import {findMembership,findProjectList,findExtension,saveExtension,editExtension
               // 充值抵 ? 元
               rechargeMoney: '',
               // 卡片类型, 推荐数字, 字符串也可以, 1 超白金卡, 2 钻石卡  ...
-              cardType: '' 
+              cardType: ''
           };
           this.tkProjectList = [
             {
@@ -499,7 +499,7 @@ import {findMembership,findProjectList,findExtension,saveExtension,editExtension
             for(var i = 0; i < this.tkProjectList.length ; i++){
               if(this.tkProjectList[i].itemType == '' || this.tkProjectList[i].itemTimes == '' || this.tkProjectList[i].itemTimes == null){
                 //this.$Message.warning("请先完善已有尊享项目信息！");
-                errorMessage = "请先完善已有拓客项目信息！"; 
+                errorMessage = "请先完善已有拓客项目信息！";
               }
             }
             if(errorMessage == ''){
@@ -530,9 +530,19 @@ import {findMembership,findProjectList,findExtension,saveExtension,editExtension
           this.type = 0;
           this.addF =true;
           this.addData = JSON.parse(JSON.stringify(data));
-          this.addData.deductPrice = this.addData.deductPrice.replace("元","");
-          this.addData.cashPrice = this.addData.cashPrice.replace("元","");
-          this.addData.expiredDay = this.addData.expiredDay.replace("天","");
+          console.log(this.addData,'addData');
+          //转换整数
+          this.addData.checkMoney = parseInt(this.addData.checkMoney);
+          this.addData.manualMoney = parseInt(this.addData.manualMoney);
+          this.addData.saleCardNum = parseInt(this.addData.saleCardNum);
+          this.addData.operationMoney = parseInt(this.addData.operationMoney);
+          this.addData.rechargeMoney = parseInt(this.addData.rechargeMoney);
+          this.addData.rewardMoney = parseInt(this.addData.rewardMoney);
+          this.addData.performanceMoney = parseInt(this.addData.performanceMoney);
+          this.addData.offsetMoney = parseInt(this.addData.offsetMoney);
+          this.addData.deductPrice = parseInt(this.addData.deductPrice);
+          this.addData.cashPrice = parseInt(this.addData.cashPrice);
+          this.addData.expiredDay = parseInt(this.addData.expiredDay);
           this.showPerformance=this.addData.isPerformance == 1 ? true: false;
           this.showOperation=this.addData.isOperation== 1 ? true: false;
           this.showManual=this.addData.isManual== 1 ? true: false;
@@ -542,13 +552,14 @@ import {findMembership,findProjectList,findExtension,saveExtension,editExtension
           this.tkProjectList=JSON.parse(JSON.stringify(data.extCardItems));
           for(var i=0;i<this.tkProjectList.length;i++){
             this.tkProjectList[i].itemType = parseInt(this.tkProjectList[i].itemType);
+            this.tkProjectList[i].itemTimes = parseInt(this.tkProjectList[i].itemTimes);
           }
         },
         del(data) {
           this.$ajax({
             method: 'get',
             url: deleteExtension()+'/'+this.$route.params.id+'?cardName='+data.cardName,
-          }).then( (res) =>{ 
+          }).then( (res) =>{
             this.$Message.success('删除成功');
             this.getData();
           }).catch( (res) =>{
@@ -578,8 +589,8 @@ import {findMembership,findProjectList,findExtension,saveExtension,editExtension
     padding: 10px;
   }
   .modalProjects {
-    margin: 0 auto;            
-    text-align: center;    
+    margin: 0 auto;
+    text-align: center;
   }
 
 </style>
