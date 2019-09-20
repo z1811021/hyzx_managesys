@@ -136,7 +136,7 @@
               // 级别类型， 0 数字， 1 字母
               levelType: '',
               // 级别数量
-              levelNum: '',
+              levelNum: 0,
               // 员工排名， 0 年，1 半年，2 季度，3 两个月， 4 单月
               memRank: '',
               // 现金, 0 未选中， 1 选中
@@ -145,25 +145,25 @@
               memRankPflow: false,
               // 实操，0 未选中， 1 选中
               memRankPexer: false,
-              // 产品，0 未选中， 1 选中 
+              // 产品，0 未选中， 1 选中
               memRankProd: false,
-              // 消耗，0 未选中， 1 选中 
+              // 消耗，0 未选中， 1 选中
               memRankCons: false,
               // 分红管理， 0 年，1 半年，2 季度，3 月
               dvidendMange: '',
-              // 原始股， 0 未选中， 1 选中 
+              // 原始股， 0 未选中， 1 选中
               primStock: false,
               // 原始股每股金额
               primStockMoney: '',
-              // 实股，0 未选中， 1 选中 
+              // 实股，0 未选中， 1 选中
               realStock: false,
               // 实股每股金额
               realStockMoney: '',
-              // 干股， 0 未选中， 1 选中 
+              // 干股， 0 未选中， 1 选中
               dryStock: false,
               // 干股每股金额
               dryStockMoney: '',
-              // 分红股， 0 未选中， 1 选中 
+              // 分红股， 0 未选中， 1 选中
               bonStock: false,
               bonStockMoney: ''
         },
@@ -339,7 +339,7 @@
             // 级别类型， 0 数字， 1 字母
             levelType: '',
             // 级别数量
-            levelNum: '',
+            levelNum: 0,
             // 员工排名， 0 年，1 半年，2 季度，3 两个月， 4 单月
             memRank: '',
             // 现金, 0 未选中， 1 选中
@@ -348,25 +348,25 @@
             memRankPflow: false,
             // 实操，0 未选中， 1 选中
             memRankPexer: false,
-            // 产品，0 未选中， 1 选中 
+            // 产品，0 未选中， 1 选中
             memRankProd: false,
-            // 消耗，0 未选中， 1 选中 
+            // 消耗，0 未选中， 1 选中
             memRankCons: false,
             // 分红管理， 0 年，1 半年，2 季度，3 月
             dvidendMange: '',
-            // 原始股， 0 未选中， 1 选中 
+            // 原始股， 0 未选中， 1 选中
             primStock: false,
             // 原始股每股金额
             primStockMoney: '',
-            // 实股，0 未选中， 1 选中 
+            // 实股，0 未选中， 1 选中
             realStock: false,
             // 实股每股金额
             realStockMoney: '',
-            // 干股， 0 未选中， 1 选中 
+            // 干股， 0 未选中， 1 选中
             dryStock: false,
             // 干股每股金额
             dryStockMoney: '',
-            // 分红股， 0 未选中， 1 选中 
+            // 分红股， 0 未选中， 1 选中
             bonStock: false,
             bonStockMoney: ''
         };
@@ -403,7 +403,7 @@
         if(this.job.primStock == true){this.showOriginal = true;}
       },
       Delete(data){
-        this.$ajax({  
+        this.$ajax({
           method: 'GET',
           dataType: 'JSON',
           contentType: 'application/json;charset=UTF-8',
@@ -469,7 +469,7 @@
             this.showStyle= false;
             this.showNumber= false;
             this.job.levelType= "";
-            this.job.levelNum= "";
+            this.job.levelNum= 0;
         }
       }
     }
@@ -481,8 +481,8 @@
     margin: 10px 0;
   }
   .modalEmployee{
-    margin: 0 auto;            
-    text-align: center;      
+    margin: 0 auto;
+    text-align: center;
   }
   .ivu-checkbox-group-item{
     margin: 3% 0 1% 2%;
