@@ -48,9 +48,9 @@
       <Col span="3">
       <Button class="hy_btn" :class="{active:isActive6}" @click="got('fa_index')">产品管理</Button>
       </Col>
-      <Col span="3">
-      <Button class="hy_btn" :class="{active:isActive7}" @click="got('t_index')">报表管理</Button>
-      </Col>
+      <!--<Col span="3">-->
+      <!--<Button class="hy_btn" :class="{active:isActive7}" @click="got('t_index')">报表管理</Button>-->
+      <!--</Col>-->
     </Row>
     <router-view></router-view>
   </div>
@@ -128,7 +128,7 @@
           url: findProjectListByGroup() + '/'+this.$route.params.id,
         }).then((res) => {
           var wholeData = res.data.itemManage;
-            for(var item in wholeData){ 
+            for(var item in wholeData){
                 if(wholeData[item].length>0){
                   for (var i = 0; i < wholeData[item].length; i++) {
                     wholeData[item][i].projectCategory = item;
