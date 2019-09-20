@@ -228,18 +228,18 @@
               symptom: '',
               //项目名
               itemName: '',
-              //项目单价 
-              itemPrice:'',
+              //项目单价
+              itemPrice:0,
               //是否设计疗程, 0:否, 1:是
               designCourse:'',
               //疗程次数
-              courseTimes:'',
+              courseTimes:0,
               //疗程单价
-              coursePrice:'',
+              coursePrice:0,
               //疗程卡扣价
-              courseCharges:'',
+              courseCharges:0,
               //疗程间隔
-              courseInterval:'',
+              courseInterval:0,
               //高频到店, 0:未选中, 1:选中
               highFreq:'0',
               //赠送属性, 0:未选中, 1:选中
@@ -259,9 +259,9 @@
               //实操类型
               actualOperation:'',
               //固定实操额
-              fixedOperation:'',
+              fixedOperation:0,
               //手工费
-              manualCost:''
+              manualCost:0
         },
         columns: [
           {
@@ -391,18 +391,18 @@
                 d: '',
                 //项目名
                 itemName: '',
-                //项目单价 
-                itemPrice:'',
+                //项目单价
+                itemPrice:0,
                 //是否设计疗程, 0:否, 1:是
-                designCourse:'',
+                designCourse:0,
                 //疗程次数
-                courseTimes:'',
+                courseTimes:0,
                 //疗程单价
-                coursePrice:'',
+                coursePrice:0,
                 //疗程卡扣价
-                courseCharges:'',
+                courseCharges:0,
                 //疗程间隔
-                courseInterval:'',
+                courseInterval:0,
                 //高频到店, 0:未选中, 1:选中
                 highFreq:false,
                 //赠送属性, 0:未选中, 1:选中
@@ -422,9 +422,9 @@
                 //实操类型
                 actualOperation:'',
                 //固定实操额
-                fixedOperation:'',
+                fixedOperation:0,
                 //手工费
-                manualCost:''
+                manualCost:0
           };
           this.$refs.setFaceQuery.$data.query = '';
           this.$refs.setBodyQuery.$data.query = '';
@@ -477,9 +477,9 @@
       },
       changeOperation(){
         if(this.pis.actualOperation == "实际实操"){
-            this.showStable = false; 
+            this.showStable = false;
           }else if(this.pis.actualOperation == "固定实操"){
-            this.showStable = true; 
+            this.showStable = true;
           }
       },
       getList() {
@@ -494,7 +494,7 @@
         }).then((res) => {
           this.data = [];
           var wholeData = res.data.itemManage;
-            for(var item in wholeData){ 
+            for(var item in wholeData){
                 if(wholeData[item].length>0){
                   var currentFitlerItem = {
                         label: item,
@@ -521,7 +521,7 @@
                   this.data[j].realUseOperation = parseInt(this.data[j].courseCharges)/parseInt(this.data[j].courseTimes) + "元";
                 }
               }else if(this.data[j].actualOperation == '固定实操'){
-                this.data[j].realUseOperation = this.data[j].fixedOperation + "元"; 
+                this.data[j].realUseOperation = this.data[j].fixedOperation + "元";
               }
             }
         }).catch((error) => {
@@ -724,8 +724,8 @@
 
 <style scoped>
   .modalProjects {
-    margin: 0 auto;            
-    text-align: center;    
+    margin: 0 auto;
+    text-align: center;
   }
   .leftRadio{
     float:left;
