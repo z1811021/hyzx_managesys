@@ -136,7 +136,7 @@
               // 级别类型， 0 数字， 1 字母
               levelType: '',
               // 级别数量
-              levelNum: 0,
+              levelNum: '',
               // 员工排名， 0 年，1 半年，2 季度，3 两个月， 4 单月
               memRank: '',
               // 现金, 0 未选中， 1 选中
@@ -339,7 +339,7 @@
             // 级别类型， 0 数字， 1 字母
             levelType: '',
             // 级别数量
-            levelNum: 0,
+            levelNum: '',
             // 员工排名， 0 年，1 半年，2 季度，3 两个月， 4 单月
             memRank: '',
             // 现金, 0 未选中， 1 选中
@@ -469,7 +469,7 @@
             this.showStyle= false;
             this.showNumber= false;
             this.job.levelType= "";
-            this.job.levelNum= 0;
+            this.job.levelNum= "";
         }
       }
     }
