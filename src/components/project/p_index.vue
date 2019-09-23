@@ -34,7 +34,7 @@
           <Select v-show="!showBody" style="float:right;width:300px;margin-top:-6px;" disabled>
           </Select>
           <Select v-model="pis.body" ref="setBodyQuery" v-show="showBody" style="float:right;width:300px;margin-top:-6px;" filterable>
-            <Option v-for="item in bodyData" :value="item.typeName" :key="item.typeName">{{ item.typeName }}</Option>
+            <Option v-for="item in bodyData" :value="item.id" :key="item.id">{{ item.typeName }}</Option>
           </Select>
       </RadioGroup>
       <br/>
@@ -492,6 +492,7 @@
           },
           url: findProjectListByGroup()+'/'+this.$route.params.id,
         }).then((res) => {
+          console.log(res.data.itemManage,'list');
           this.data = [];
           var wholeData = res.data.itemManage;
             for(var item in wholeData){
@@ -710,9 +711,9 @@
           this.showAgenda = true;
         }else{
           this.showAgenda = false;
-          this.pis.coursePrice = '';
-          this.pis.courseTimes = '';
-          this.pis.courseCharges = '';
+          this.pis.coursePrice = 0;
+          this.pis.courseTimes = 0;
+          this.pis.courseCharges = 0;
         }
       },
       close(){
