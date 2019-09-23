@@ -10,7 +10,7 @@
 
     <Modal class="modalProgram" v-model="storeFlag" :mask-closable="false" :title="store">
       症状：<Select v-model="selectProblem" placeholder="症状" style="width:323px" :transfer=true>
-      <Option v-for="item in problemData" :value="item.symName" :key="item.symName">{{ item.symName }}</Option>
+      <Option v-for="(item,index) in problemData" :value="item.symName" :key="index+item">{{ item.symName }}</Option>
     </Select>
       <br><br>
       方案名称：<Input v-model="solutionName" placeholder="方案名称" style="width: 300px"/>
@@ -18,30 +18,30 @@
       <br/>
       基础解决方案：<Select v-model="selectBasePrograms" placeholder="基础解决方案" :multiple=true style="width:275px" :transfer=true>
         <OptionGroup label="项目方案">
-            <Option v-for="project in planList" :value="project.programName" :key="project.programName">{{project.programName}} 元</Option>
+            <Option v-for="(project,index) in planList" :value="project.programName" :key="index+project">{{project.programName}} 元</Option>
             <!-- <Option>abc</Option> -->
         </OptionGroup>
         <OptionGroup label="项目套餐">
-            <Option v-for="project in mealList" :value="project.programName" :key="project.programName">{{project.programName}} 元</Option>
+            <Option v-for="(project,index) in mealList" :value="project.programName" :key="index+project">{{project.programName}} 元</Option>
             <!-- <Option>abc</Option> -->
         </OptionGroup>
-        <OptionGroup v-for="item in projectCategoryList" :value="item.projectCategory" :label="item.projectCategory" :key="item.projectCategory">
-            <Option v-for="project in item.projectInList" :value="project.itemName" :key="project.itemName">{{ project.itemName }}元</Option>
+        <OptionGroup v-for="(item,index) in projectCategoryList" :value="item.projectCategory" :label="item.projectCategory" :key="index+item">
+            <Option v-for="(project,index) in item.projectInList" :value="project.itemName" :key="index+project">{{ project.itemName }}元</Option>
         </OptionGroup>
     </Select>
       <br/>
       <br/>
       最优解决方案：<Select v-model="selectBestPrograms" placeholder="最优解决方案" :multiple=true style="width:275px" :transfer=true>
         <OptionGroup label="项目方案">
-            <Option v-for="project in planList" :value="project.programName" :key="project.programName">{{project.programName}} 元</Option>
+            <Option v-for="(project,index) in planList" :value="project.programName" :key="index+project">{{project.programName}} 元</Option>
             <!-- <Option>abc</Option> -->
         </OptionGroup>
         <OptionGroup label="项目套餐">
-            <Option v-for="project in mealList" :value="project.programName" :key="project.programName">{{project.programName}} 元</Option>
+            <Option v-for="(project,index) in mealList" :value="project.programName" :key="index+project">{{project.programName}} 元</Option>
             <!-- <Option>abc</Option> -->
         </OptionGroup>
-        <OptionGroup v-for="item in projectCategoryList" :value="item.projectCategory" :label="item.projectCategory" :key="item.projectCategory">
-            <Option v-for="project in item.projectInList" :value="project.itemName" :key="project.itemName">{{ project.itemName }}元</Option>
+        <OptionGroup v-for="(item,index) in projectCategoryList" :value="item.projectCategory" :label="item.projectCategory" :key="index+item">
+            <Option v-for="(project,index2) in item.projectInList" :value="project.itemName" :key="index2+project">{{ project.itemName }}元</Option>
         </OptionGroup>
     </Select>
       <br/>
@@ -178,7 +178,7 @@
               this.data[i].basicLabel = '';
               this.data[i].bestLable = '';
               var basicPriceList = this.data[i].basicSolution.split(",");
-              var bestPriceList = this.data[i].bestSolution.split(","); 
+              var bestPriceList = this.data[i].bestSolution.split(",");
               for (var j = 0; j < basicPriceList.length; j++) {
                 this.data[i].basicPrice = this.data[i].basicPrice + parseInt(basicPriceList[j].substring(basicPriceList[j].indexOf("-")+2,basicPriceList[j].length));
                 this.data[i].basicLabel = this.data[i].basicLabel + basicPriceList[j].substring(0,basicPriceList[j].indexOf("-"))+',';
@@ -250,7 +250,7 @@
           url: findProjectListByGroup()+'/'+this.$route.params.id,
         }).then((res) => {
           var wholeData = res.data.itemManage;
-            for(var item in wholeData){ 
+            for(var item in wholeData){
                 if(wholeData[item].length>0){
                   for (var i = 0; i < wholeData[item].length; i++) {
                     wholeData[item][i].itemName = wholeData[item][i].itemName +' - ' + wholeData[item][i].itemPrice;
@@ -393,8 +393,8 @@
 
 <style scoped>
   .modalProgram {
-    margin: 0 auto;            
-    text-align: center;    
+    margin: 0 auto;
+    text-align: center;
   }
 
 </style>
