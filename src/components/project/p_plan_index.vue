@@ -12,7 +12,7 @@
         <br/>
         <br/>
         症状：<Select v-model="symptom" placeholder="症状" style="width:323px" :transfer=true>
-          <Option v-for="item in problemData" :value="item.symName" :key="item.symName">{{ item.symName }}</Option>
+          <Option v-for="(item,index) in problemData" :value="item.symName" :key="index+item">{{ item.symName }}</Option>
         </Select>
         <br/>
         <br/>
@@ -25,8 +25,8 @@
         <div style="float:left;margin-left: 63px;">选择项目：</div>
         <br/>
         <Select v-model="selectedProjects" placeholder="请选择方案包含项目" :multiple=true style="width:360px;margin-top:2%;" :transfer=true @on-change="changeProjects()" filterable draggable=true>
-          <OptionGroup v-for="item in projectCategoryList" :value="item.projectCategory" :label="item.projectCategory" :key="item.projectCategory">
-            <Option v-for="project in item.curProjectList" :value="project.id" :key="project.id">{{ project.itemName }} {{project.itemPrice}}</Option>
+          <OptionGroup v-for="(item,index) in projectCategoryList" :value="item.projectCategory" :label="item.projectCategory" :key="index+item">
+            <Option v-for="(project,index2) in item.curProjectList" :value="project.id" :key="index2+item">{{ project.itemName }} {{project.itemPrice}}</Option>
           </OptionGroup>
         </Select>
         <br/>
@@ -39,12 +39,12 @@
             <li v-for="(item,index) in planData" class="specialLi" :key="index"><div class="liOrderLeft">{{index+1}}</div><div class="liLeft">{{item.itemName}}</div><div class="liCenter">{{item.itemPrice}}</div><Input v-show="!item.showBlank" v-model="item.courseInterval" class="liRight" disabled/><Input v-show="item.showBlank" v-model="item.courseInterval" class="liRight" @on-blur="disableModify(item,index)"/><div class="liMostRight"><Button :size="buttonSize" type="primary" @click="mannger(item)">修改</Button><Button :size="buttonSize" type="warning" @click="Delete(item.itemName)">删除</Button></div><br/></li>
           </draggable>
           <li v-show="showBlank" class="specialLi"></li>
-        </div> 
+        </div>
         <br/>
         <br/>
         <div class="timeLineDiv">
           <draggable element="Timeline" v-model="planData">
-            <TimelineItem style="cursor:pointer;" v-for="item in planData" :key="key">
+            <TimelineItem style="cursor:pointer;" v-for="(item,index) in planData" :key="index+item">
                 <p class="time">{{item.itemName}}</p>
                 <br/>
                 <p class="content">{{item.courseInterval}}</p>
@@ -212,7 +212,7 @@
           if(item.courseInterval !='' && item.courseInterval.indexOf("天")<0){
           item.courseInterval = item.courseInterval + "天";
           }
-          item.showBlank = false; 
+          item.showBlank = false;
         }
       },
       Delete(itemName){
@@ -341,7 +341,7 @@
         for(var k = 0; k < this.planData.length; k++){
           if(value.itemName == this.planData[k].itemName){
             this.planData[k].courseInterval = value.itemInterval+"天";
-          } 
+          }
         }
       },
       manngerPlan(data){
@@ -399,7 +399,7 @@
           url: findProjectListByGroup()+'/'+this.$route.params.id,
         }).then((res) => {
           var wholeData = res.data.itemManage;
-            for(var item in wholeData){ 
+            for(var item in wholeData){
                 if(wholeData[item].length>0){
                     for (var i = 0; i < wholeData[item].length; i++) {
                       wholeData[item][i].itemPrice = wholeData[item][i].itemPrice + '元';
@@ -419,8 +419,8 @@
 
 <style scoped>
   .modalProjects {
-    margin: 0 auto;            
-    text-align: center;    
+    margin: 0 auto;
+    text-align: center;
   }
   .leftRadio{
     float:left;
@@ -428,8 +428,8 @@
   }
   .dataTableDiv{
     margin: 0 auto;
-    margin-top:2%;            
-    text-align: center;    
+    margin-top:2%;
+    text-align: center;
     width:88%;
     background-color: #F8F8F8;
     border: 1px solid #dddee1;
@@ -512,8 +512,8 @@
   }
   .timeLineDiv{
     margin: 0 auto;
-    margin-top:2%;            
-    text-align: center;    
+    margin-top:2%;
+    text-align: center;
     width:40%;
   }
 </style>
