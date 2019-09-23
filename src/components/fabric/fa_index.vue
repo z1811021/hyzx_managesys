@@ -148,7 +148,7 @@
         this.currentModifyId = row.id;
         this.productItems = {
           name:row.info,
-          price:row.price,
+          price:parseInt(row.price),
           type:row.type,
           brand:row.brand
         }
@@ -255,8 +255,8 @@
 
 <style scoped>
   .modalProjects {
-    margin: 0 auto;            
-    text-align: center;    
+    margin: 0 auto;
+    text-align: center;
   }
   .leftRadio{
     float:left;
