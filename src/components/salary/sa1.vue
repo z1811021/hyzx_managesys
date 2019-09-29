@@ -6,13 +6,13 @@
      <br>
      <Table  :columns="columns1" :data="salarydata1" ></Table>
      <Modal class="modalProjects" v-model="salaryFlag" :mask-closable="false" :title="title">
-       低限：<InputNumber :min="0" max="100000" v-model="add.lowLimit" placeholder="低限" style="width: 300px"></InputNumber>
+       低限：<InputNumber :min="0" :max="100000" v-model="add.lowLimit" placeholder="低限" style="width: 300px"></InputNumber>
        <br/>
        <br/>
-       高限：<InputNumber :min="0" max="100000" v-model="add.highLimit" placeholder="高限" style="width: 300px"></InputNumber>
+       高限：<InputNumber :min="0" :max="100000" v-model="add.highLimit" placeholder="高限" style="width: 300px"></InputNumber>
        <br/>
        <br/>
-       金额：<InputNumber :min="0" max="100000" v-model="add.money" placeholder="金额" style="width: 300px"></InputNumber>
+       金额：<InputNumber :min="0" :max="100000" v-model="add.money" placeholder="金额" style="width: 300px"></InputNumber>
        <br/>
        <br/>
        <div slot="footer">
@@ -25,7 +25,7 @@
       <Input style="width:300px;" v-model="add.basePay" placeholder="元">
         <span slot="prepend">固定底薪：</span>
         <Button slot="append" icon="archive" @click="save">保存</Button>
-      </Input>   
+      </Input>
     </div>
     <div v-if="typeOfBaseSalary==6">
 
@@ -216,14 +216,14 @@
         title1:'',
         modifyId: '',
         add:{
-          // 门店 id (不能为空)           
+          // 门店 id (不能为空)
           storeId: this.$route.params.id,
           // 低限
-          lowLimit: "",
+          lowLimit: 0,
           // 高限
-          highLimit: "",
+          highLimit: 0,
           // 金额
-          money: "",
+          money: 0,
           // 底薪
           basePay: "",
           // 员工类别(可以传递中文或者数字，推荐数字较好)
@@ -231,11 +231,11 @@
           // 员工级别
           empLevel: "",
           // 员工工资
-          empSalary: "",
+          empSalary: 0,
           // 与上一页的薪资管理对应的基本薪资一样
           baseSalaryRule: "",
           // 与上一页的薪资管理对应的底薪方式后的单选框一样，可为空，推荐使用数字，1 个人，2 全店
-          baseSalaryOption: "" 
+          baseSalaryOption: ""
         },
         ut:{},
         data:[],
@@ -332,7 +332,7 @@
             url: saveBaseSalary(),
             data: specificRules,
           }).then( (res) =>{
-            this.$Message.success('保存成功')            
+            this.$Message.success('保存成功')
             this.getData();
             this.getData2();
           }).catch( (error) =>{
@@ -395,7 +395,7 @@
           for (var i = Num.length - 1; i >= 0; i--) {
               Num = Num.replace(",", "")//替换Num中的“,”
               Num = Num.replace(" ", "")//替换Num中的空格
-          }    
+          }
           if (isNaN(Num)) { //验证输入的字符是否为数字
               //alert("请检查小写金额是否正确");
               return;
@@ -436,13 +436,13 @@
                   case 9: tmpnewchar = tmpnewchar + "十"; break;
               }
               newchar = tmpnewchar + newchar;
-          }   
+          }
           //替换所有无用汉字，直到没有此类无用的数字为止
           while (newchar.search("零零") != -1 || newchar.search("零亿") != -1 || newchar.search("亿万") != -1 || newchar.search("零万") != -1) {
               newchar = newchar.replace("零亿", "亿");
               newchar = newchar.replace("亿万", "亿");
               newchar = newchar.replace("零万", "万");
-              newchar = newchar.replace("零零", "零");      
+              newchar = newchar.replace("零零", "零");
           }
           //替换以“一十”开头的，为“十”
           if (newchar.indexOf("一十") == 0) {
@@ -507,14 +507,14 @@
               this.salaryFlag2 = true;
             };
         this.add={
-          // 门店 id (不能为空)           
+          // 门店 id (不能为空)
           storeId: this.$route.params.id,
           // 低限
-          lowLimit: "",
+          lowLimit: 0,
           // 高限
-          highLimit: "",
+          highLimit: 0,
           // 金额
-          money: "",
+          money: 0,
           // 底薪
           basePay: "",
           // 员工类别(可以传递中文或者数字，推荐数字较好)
@@ -522,12 +522,12 @@
           // 员工级别
           empLevel: "",
           // 员工工资
-          empSalary: "",
+          empSalary: 0,
           // 与上一页的薪资管理对应的基本薪资一样
           baseSalaryRule: "",
           // 与上一页的薪资管理对应的底薪方式后的单选框一样，可为空，推荐使用数字，1 个人，2 全店
-          baseSalaryOption: "" 
-        };    
+          baseSalaryOption: ""
+        };
       },
       takeMonitor(){
         this.getData();
@@ -547,8 +547,8 @@
 
 <style scoped>
   .modalProjects {
-    margin: 0 auto;            
-    text-align: center;    
+    margin: 0 auto;
+    text-align: center;
   }
   .sa1{
     padding-left: .6rem;
