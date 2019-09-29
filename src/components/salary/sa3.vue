@@ -13,34 +13,34 @@
         </Select>
         <br/>
         <br/>
-        <span class="text">低限：</span><InputNumber :min="0" max="100000" v-model="ut.lowLimit" placeholder="低限" style="width: 300px"/></InputNumber>
+        <span class="text">低限：</span><InputNumber :min="0" :max="100000" v-model="ut.lowLimit" placeholder="低限" style="width: 300px"/></InputNumber>
         <br/>
         <br/>
-        <span class="text">高限：</span><InputNumber :min="0" max="100000" v-model="ut.highLimit" placeholder="高限" style="width: 300px"/></InputNumber>
+        <span class="text">高限：</span><InputNumber :min="0" :max="100000" v-model="ut.highLimit" placeholder="高限" style="width: 300px"/></InputNumber>
         <br/>
         <br/>
-        <span class="text">储值：</span><InputNumber :min="0" max="200" v-model="ut.storedValue" placeholder="储值" style="width: 150px"/>%</InputNumber>
+        <span class="text">储值：</span><InputNumber :min="0" :max="200" v-model="ut.storedValue" placeholder="储值" style="width: 150px"/>%</InputNumber>
         <br/>
         <br/>
-        <span class="text">现金疗程：</span><InputNumber :min="0" max="200" v-model="ut.cashTreatment" placeholder="现金疗程" style="width: 150px"/>%</InputNumber>
+        <span class="text">现金疗程：</span><InputNumber :min="0" :max="200" v-model="ut.cashTreatment" placeholder="现金疗程" style="width: 150px"/>%</InputNumber>
         <br/>
         <br/>
-        <span class="text">现金产品：</span><InputNumber :min="0" max="200" v-model="ut.cashProducts" placeholder="现金产品" style="width: 150px"/>%</InputNumber>
+        <span class="text">现金产品：</span><InputNumber :min="0" :max="200" v-model="ut.cashProducts" placeholder="现金产品" style="width: 150px"/>%</InputNumber>
         <br/>
         <br/>
-        <span class="text">卡扣疗程：</span><InputNumber :min="0" max="200" v-model="ut.cardTreatment" placeholder="卡扣疗程" style="width: 150px"/>%</InputNumber>
+        <span class="text">卡扣疗程：</span><InputNumber :min="0" :max="200" v-model="ut.cardTreatment" placeholder="卡扣疗程" style="width: 150px"/>%</InputNumber>
         <br/>
         <br/>
-        <span class="text">卡扣产品：</span><InputNumber :min="0" max="200" v-model="ut.cardProducts" placeholder="卡扣产品" style="width: 150px"/>%</InputNumber>
+        <span class="text">卡扣产品：</span><InputNumber :min="0" :max="200" v-model="ut.cardProducts" placeholder="卡扣产品" style="width: 150px"/>%</InputNumber>
         <br/>
         <br/>
-        <span class="text">超折产品：</span><InputNumber :min="0" max="200" v-model="ut.discountProducts" placeholder="超折产品" style="width: 150px"/>%</InputNumber>
+        <span class="text">超折产品：</span><InputNumber :min="0" :max="200" v-model="ut.discountProducts" placeholder="超折产品" style="width: 150px"/>%</InputNumber>
         <br/>
         <br/>
-        <span class="text">高端项目：</span><InputNumber :min="0" max="200" v-model="ut.highEndProducts" placeholder="高端项目" style="width: 150px"/>%</InputNumber>
+        <span class="text">高端项目：</span><InputNumber :min="0" :max="200" v-model="ut.highEndProducts" placeholder="高端项目" style="width: 150px"/>%</InputNumber>
         <br/>
         <br/>
-        <span class="text">其他：</span><InputNumber :min="0" max="200" v-model="ut.other" placeholder="其他" style="width: 150px"/>%</InputNumber>
+        <span class="text">其他：</span><InputNumber :min="0" :max="200" v-model="ut.other" placeholder="其他" style="width: 150px"/>%</InputNumber>
         <br/>
         <br/>
         <div slot="footer">
@@ -179,25 +179,25 @@
           // 门店id
           storeId:this.$route.params.id,
           // 低限
-          lowLimit:"",
+          lowLimit:0,
           // 高限
-          highLimit:"",
+          highLimit:0,
           // 储值
-          storedValue:"",
+          storedValue:0,
           // 现金疗程
-          cashTreatment:"",
+          cashTreatment:0,
           // 现金产品
-          cashProducts:"",
+          cashProducts:0,
           // 卡扣疗程
-          cardTreatment:"",
+          cardTreatment:0,
           // 卡扣产品
-          cardProducts:"",
+          cardProducts:0,
           // 折扣产品
-          discountProducts:"",
+          discountProducts:0,
           // 高端产品
-          highEndProducts:"",
+          highEndProducts:0,
           // 其他
-          other:"",
+          other:0,
           //业绩提点方式
           perComType:""
         },
@@ -250,25 +250,25 @@
           // 门店id
           storeId:this.$route.params.id,
           // 低限
-          lowLimit:"",
+          lowLimit:0,
           // 高限
-          highLimit:"",
+          highLimit:0,
           // 储值
-          storedValue:"",
+          storedValue:0,
           // 现金疗程
-          cashTreatment:"",
+          cashTreatment:0,
           // 现金产品
-          cashProducts:"",
+          cashProducts:0,
           // 卡扣疗程
-          cardTreatment:"",
+          cardTreatment:0,
           // 卡扣产品
-          cardProducts:"",
+          cardProducts:0,
           // 折扣产品
-          discountProducts:"",
+          discountProducts:0,
           // 高端产品
-          highEndProducts:"",
+          highEndProducts:0,
           // 其他
-          other:"",
+          other:0,
           //业绩提点方式
           perComType:""
         };
@@ -376,8 +376,8 @@
 </script>
 <style scoped>
   .modalProjects {
-    margin: 0 auto;            
-    text-align: center;    
+    margin: 0 auto;
+    text-align: center;
   }
   .text{
     display: inline-block;

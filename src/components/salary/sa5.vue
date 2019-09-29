@@ -6,12 +6,12 @@
       <div>
       <br>
         <h4>1.单日客流奖励</h4>
-        单日客流：<InputNumber :min="0" max="100000" v-model="singleRewardFlow" placeholder="单日客流/人" size="small" class="Input"></InputNumber>
-        奖励金额：<InputNumber :min="0" max="100000" v-model="singleRewardMoney" placeholder="奖励金额/元" size="small" class="Input"></InputNumber>
+        单日客流：<InputNumber :min="0" :max="100000" v-model="singleRewardFlow" placeholder="单日客流/人" size="small" class="Input"></InputNumber>
+        奖励金额：<InputNumber :min="0" :max="100000" v-model="singleRewardMoney" placeholder="奖励金额/元" size="small" class="Input"></InputNumber>
         <Button class="btn" size="small" type="success" @click="saveSingleComplaint">保存</Button>
         <h4>2.累计客流奖励</h4>
-        累计客流：<InputNumber :min="0" max="100000" v-model="totalRewardFlow" placeholder="累计客流" size="small" class="Input"></InputNumber>
-        奖励金额：<InputNumber :min="0" max="100000" v-model="totalRewardMoney" placeholder="奖励金额" size="small" class="Input"></InputNumber>
+        累计客流：<InputNumber :min="0" :max="100000" v-model="totalRewardFlow" placeholder="累计客流" size="small" class="Input"></InputNumber>
+        奖励金额：<InputNumber :min="0" :max="100000" v-model="totalRewardMoney" placeholder="奖励金额" size="small" class="Input"></InputNumber>
         <Button class="btn" size="small" type="success" @click="saveTotalComplaint">保存</Button>
 
         <h4>3.累计客流区间
@@ -22,15 +22,15 @@
     </div>
     <Modal class="modalProjects" v-model="accumulativeFlag" :title="accumulativeType">
       <span class="text">低限：</span>
-      <InputNumber :min="0" max="100000" v-model="accumulativeadd.lowLimit" placeholder="奖金总额" style="width: 300px"></InputNumber>
+      <InputNumber :min="0" :max="100000" v-model="accumulativeadd.lowLimit" placeholder="奖金总额" style="width: 300px"></InputNumber>
       <br>
       <br>
       <span class="text">高限：</span>
-      <InputNumber :min="0" max="100000" v-model="accumulativeadd.highLimit" placeholder="奖金总额" style="width: 300px"></InputNumber>
+      <InputNumber :min="0" :max="100000" v-model="accumulativeadd.highLimit" placeholder="奖金总额" style="width: 300px"></InputNumber>
       <br>
       <br>
       <span class="text">金额：</span>
-      <InputNumber :min="0" max="100000" v-model="accumulativeadd.rewardMoney" placeholder="奖金总额" style="width: 300px"></InputNumber>
+      <InputNumber :min="0" :max="100000" v-model="accumulativeadd.rewardMoney" placeholder="奖金总额" style="width: 300px"></InputNumber>
       <br/>
       <br/>
       <div slot="footer">
@@ -46,15 +46,15 @@
     </div>
     <Modal  class="modalProjects" v-model="cashRewarFlag" :title="accumulativeType">
       <span class="text">低限：</span>
-      <InputNumber :min="0" max="100000" v-model="accumulativeadd.lowLimit" placeholder="低限" style="width: 300px"></InputNumber>
+      <InputNumber :min="0" :max="100000" v-model="accumulativeadd.lowLimit" placeholder="低限" style="width: 300px"></InputNumber>
       <br>
       <br>
       <span class="text">高限：</span>
-      <InputNumber :min="0" max="100000" v-model="accumulativeadd.highLimit" placeholder="高限" style="width: 300px"></InputNumber>
+      <InputNumber :min="0" :max="100000" v-model="accumulativeadd.highLimit" placeholder="高限" style="width: 300px"></InputNumber>
       <br>
       <br>
       <span class="text">金额：</span>
-      <InputNumber :min="0" max="100000" v-model="accumulativeadd.rewardMoney" placeholder="奖金总额" style="width: 300px"></InputNumber>
+      <InputNumber :min="0" :max="100000" v-model="accumulativeadd.rewardMoney" placeholder="奖金总额" style="width: 300px"></InputNumber>
       <br/>
       <br/>
       <div slot="footer">
@@ -70,15 +70,15 @@
     </div>
     <Modal  class="modalProjects" v-model="practiceRewardFlag" title="新增">
       <span class="text">低限：</span>
-      <InputNumber :min="0" max="100000" v-model="accumulativeadd.lowLimit" placeholder="低限" style="width: 300px"></InputNumber>
+      <InputNumber :min="0" :max="100000" v-model="accumulativeadd.lowLimit" placeholder="低限" style="width: 300px"></InputNumber>
       <br>
       <br>
       <span class="text">高限：</span>
-      <InputNumber :min="0" max="100000" v-model="accumulativeadd.highLimit" placeholder="高限" style="width: 300px"></InputNumber>
+      <InputNumber :min="0" :max="100000" v-model="accumulativeadd.highLimit" placeholder="高限" style="width: 300px"></InputNumber>
       <br>
       <br>
       <span class="text">金额：</span>
-      <InputNumber :min="0" max="100000" v-model="accumulativeadd.rewardMoney" placeholder="奖金总额" style="width: 300px"></InputNumber>
+      <InputNumber :min="0" :max="100000" v-model="accumulativeadd.rewardMoney" placeholder="奖金总额" style="width: 300px"></InputNumber>
       <br/>
       <br/>
       <div slot="footer">
@@ -122,16 +122,16 @@
         <br>
         <br>
         <span class="text">奖金总额：</span>
-        <InputNumber :min="0" max="100000" v-model="teamadd.rewardCount" placeholder="奖金总额" style="width: 300px"></InputNumber>
+        <InputNumber :min="0" :max="100000" v-model="teamadd.rewardCount" placeholder="奖金总额" style="width: 300px"></InputNumber>
 
         <br>
         <br>
         <span class="text">低限：</span>
-        <InputNumber :min="0" max="100000" v-model="teamadd.lowLimit" placeholder="低限" style="width: 300px"></InputNumber>
+        <InputNumber :min="0" :max="100000" v-model="teamadd.lowLimit" placeholder="低限" style="width: 300px"></InputNumber>
         <br>
         <br>
         <span class="text">高限：</span>
-        <InputNumber :min="0" max="100000" v-model="teamadd.highLimit" placeholder="高限" style="width: 300px"></InputNumber>
+        <InputNumber :min="0" :max="100000" v-model="teamadd.highLimit" placeholder="高限" style="width: 300px"></InputNumber>
         <br>
         <br>
         <span class="text">分配类型：</span>
@@ -145,7 +145,7 @@
       <div slot="footer">
           <Button type="primary" @click="saveTeamBonus">添加</Button>
           <Button type="ghost" @click="closeTeamBonus">取消</Button>
-        </div> 
+        </div>
     </Modal>
 
     <div class="content">
@@ -172,15 +172,15 @@
         <br>
         <br>
         <span class="text">奖金总额：</span>
-        <InputNumber :min="0" max="100000" v-model="activityadd.rewardCount" placeholder="奖金总额" style="width: 300px"></InputNumber>
+        <InputNumber :min="0" :max="100000" v-model="activityadd.rewardCount" placeholder="奖金总额" style="width: 300px"></InputNumber>
         <br>
         <br>
         <span class="text">低限：</span>
-        <InputNumber :min="0" max="100000" v-model="activityadd.lowLimit" placeholder="奖金总额" style="width: 300px"></InputNumber>
+        <InputNumber :min="0" :max="100000" v-model="activityadd.lowLimit" placeholder="奖金总额" style="width: 300px"></InputNumber>
         <br>
         <br>
         <span class="text">高限：</span>
-        <InputNumber :min="0" max="100000" v-model="activityadd.highLimit" placeholder="奖金总额" style="width: 300px"></InputNumber>
+        <InputNumber :min="0" :max="100000" v-model="activityadd.highLimit" placeholder="奖金总额" style="width: 300px"></InputNumber>
         <br>
         <br>
         <span class="text">分配类型：</span>
@@ -232,10 +232,10 @@
         ],
         salarydata:[],
         data1:[],
-        singleRewardFlow: '',
-        singleRewardMoney: '',
-        totalRewardFlow: '',
-        totalRewardMoney: '',
+        singleRewardFlow: 0,
+        singleRewardMoney: 0,
+        totalRewardFlow: 0,
+        totalRewardMoney: 0,
         accumulativeType: '',
         temComplaint: [],
         teamBonus:[],
@@ -249,9 +249,9 @@
           assignmentType: "",
           calculateTheType: "",
           endTime: "",
-          highLimit: "",
+          highLimit: 0,
           id: '',
-          lowLimit: "",
+          lowLimit: 0,
           periodType: "",
           startingTime: "",
           storeName: "",
@@ -263,23 +263,23 @@
           assignmentType: "",
           calculateTheType: "",
           endTime: "",
-          highLimit: "",
+          highLimit: 0,
           id: '',
-          lowLimit: "",
+          lowLimit: 0,
           startingTime: "",
           storeName: "",
           totalBonus: 0,
           storeId: this.$route.params.id,
         },
         accumulativeadd:{
-          // 门店 id            
+          // 门店 id
           storeId: this.$route.params.id,
           // 低限
-          lowLimit: "",
+          lowLimit: 0,
           // 高限
-          highLimit: "",
+          highLimit: 0,
           // 奖励金额
-          rewardMoney: ""
+          rewardMoney: 0
         },
         cashRewardadd:{
           storeId: this.$route.params.id,
@@ -598,45 +598,45 @@
         this.accumulativeFlag = true;
         this.accumulativeType = "新建";
         this.accumulativeadd = {
-          // 门店 id            
+          // 门店 id
           storeId: this.$route.params.id,
           // 低限
-          lowLimit: "",
+          lowLimit: 0,
           // 高限
-          highLimit: "",
+          highLimit: 0,
           // 奖励金额
-          rewardMoney: "",
-          rewardRule: ""
+          rewardMoney: 0,
+          rewardRule: 0
         };
       },
       addcashType(){
         this.cashRewarFlag = true;
         this.accumulativeType = "新建";
         this.accumulativeadd = {
-          // 门店 id            
+          // 门店 id
           storeId: this.$route.params.id,
           // 低限
-          lowLimit: "",
+          lowLimit: 0,
           // 高限
-          highLimit: "",
+          highLimit: 0,
           // 奖励金额
-          rewardMoney: "",
-          rewardRule: ""
+          rewardMoney: 0,
+          rewardRule: 0
         };
       },
       addpracticeReward(){
         this.practiceRewardFlag = true;
         this.accumulativeType = "新建";
         this.accumulativeadd = {
-          // 门店 id            
+          // 门店 id
           storeId: this.$route.params.id,
           // 低限
-          lowLimit: "",
+          lowLimit: 0,
           // 高限
-          highLimit: "",
+          highLimit: 0,
           // 奖励金额
-          rewardMoney: "",
-          rewardRule: ""
+          rewardMoney: 0,
+          rewardRule: 0
         };
       },
       close(){
@@ -690,11 +690,11 @@
           this.temComplaint = res.data.passgerRewardInfo;
           for(var i = 0; i < this.temComplaint.length; i++){
             if(this.temComplaint[i].rewardType == '1'){
-              this.singleRewardFlow = this.temComplaint[i].passgerFlow;
-              this.singleRewardMoney = this.temComplaint[i].rewardMoney;
+              this.singleRewardFlow = parseInt(this.temComplaint[i].passgerFlow)
+              this.singleRewardMoney = parseInt(this.temComplaint[i].rewardMoney)
             }else if(this.temComplaint[i].rewardType == '2'){
-              this.totalRewardFlow = this.temComplaint[i].passgerFlow;
-              this.totalRewardMoney = this.temComplaint[i].rewardMoney;
+              this.totalRewardFlow = parseInt(this.temComplaint[i].passgerFlow);
+              this.totalRewardMoney = parseInt(this.temComplaint[i].rewardMoney);
             }
           }
         }).catch( (error) =>{
@@ -709,7 +709,7 @@
               // 单日客流 / 累计客流
               passgerFlow: this.singleRewardFlow,
               // 奖励金额
-              rewardMoney: this.singleRewardMoney 
+              rewardMoney: this.singleRewardMoney
           }
         this.$ajax({
           method: 'post',
@@ -731,7 +731,7 @@
               // 单日客流 / 累计客流
               passgerFlow: this.totalRewardFlow,
               // 奖励金额
-              rewardMoney: this.totalRewardMoney 
+              rewardMoney: this.totalRewardMoney
           }
         this.$ajax({
           method: 'post',
@@ -780,7 +780,7 @@
       saveAccumulativePassengerFlow(){
         if(this.accumulativeType == "新建"){
           var cumPassRange = {
-            // 门店 id            
+            // 门店 id
             storeId: this.$route.params.id,
             // 低限
             lowLimit: this.accumulativeadd.lowLimit,
@@ -806,7 +806,7 @@
         }else if(this.accumulativeType == "修改"){
           var cumPassRange = {
             id: this.currentAccumulativePassengerId,
-            // 门店 id            
+            // 门店 id
             storeId: this.$route.params.id,
             // 低限
             lowLimit: this.accumulativeadd.lowLimit,
@@ -836,22 +836,22 @@
           this.accumulativeType = "修改";
           this.currentAccumulativePassengerId = data.id;
           this.accumulativeadd = {
-          // 门店 id            
+          // 门店 id
           storeId: this.$route.params.id,
           // 低限
-          lowLimit: data.lowLimit,
+          lowLimit: parseInt(data.lowLimit),
           // 高限
-          highLimit: data.highLimit,
+          highLimit: parseInt(data.highLimit),
           // 奖励金额
-          rewardMoney: data.rewardMoney,
-          rewardRule: data.rewardRule
+          rewardMoney: parseInt(data.rewardMoney),
+          rewardRule: parseInt(data.rewardRule)
         };
       },
       Addteam(){
         this.teamFlag=true;
         this.teamBonusFlag='新建';
         this.teamadd={
-          // 门店 id              
+          // 门店 id
           storeId: this.$route.params.id,
           // 周期类型，推荐使用数字，1 单月，2 季度，3 全年
           cycleType: "",
@@ -862,11 +862,11 @@
           // 计算类型，推荐使用数字，1 现金，2 实操，3 客流
           calcuType: "",
           // 奖金总额
-          rewardCount: "",
+          rewardCount: 0,
           // 低限
-          lowLimit: "",
-          // 高限 
-          highLimit: "",
+          lowLimit: 0,
+          // 高限
+          highLimit: 0,
           // 分配类型，推荐使用数字 1 平均，2 比例
           distrType: ""
         };
@@ -940,7 +940,7 @@
           var teamReward = {
             // 记录 id，非常重要
             id:this.currentTeamBonusId,
-            // 门店 id              
+            // 门店 id
             storeId: this.$route.params.id,
             // 周期类型，推荐使用数字，1 单月，2 季度，3 全年
             cycleType: this.teamadd.cycleType,
@@ -954,7 +954,7 @@
             rewardCount: this.teamadd.rewardCount,
             // 低限
             lowLimit: this.teamadd.lowLimit,
-            // 高限 
+            // 高限
             highLimit: this.teamadd.highLimit,
             // 分配类型，推荐使用数字 1 平均，2 比例
             distrType: this.teamadd.distrType
@@ -1025,13 +1025,13 @@
           // 结束时间
           endDate: "",
           // 计算类型,推荐数字，1 现金
-          calcuType: "",
+          calcuType: 0,
           // 奖金总额
           rewardCount: "",
           // 低限
-          lowLimit: "",
+          lowLimit: 0,
           // 高限
-          highLimit: "",
+          highLimit: 0,
           // 分配类型,推荐数字，1 平均 2 比例
           distrType: ""
         };
@@ -1138,8 +1138,8 @@
 
 <style scoped>
   .modalProjects {
-    margin: 0 auto;            
-    text-align: center;    
+    margin: 0 auto;
+    text-align: center;
   }
  .sa5{
    padding-left: .6rem;

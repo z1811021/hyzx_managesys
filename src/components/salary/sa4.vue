@@ -17,19 +17,24 @@
         <br/>
         <br/>
         <div v-show="showManualSetting">
-        <span class="text">面部手工费：</span><InputNumber :min="0" max="100000" placeholder="面部手工费" style="width: 100px" v-model="faceFee" />%</InputNumber>
+        <span class="text">面部手工费：</span>
+          <InputNumber :min="0" :max="100000" placeholder="面部手工费" style="width: 100px" v-model="faceFee" />%</InputNumber>
         <br/>
         <br/>
-        <span class="text">身体局部手工费：</span><InputNumber :min="0" max="100000" placeholder="身体局部手工费" style="width: 100px" v-model="bodyPartFee"/>%</InputNumber>
+        <span class="text">身体局部手工费：</span>
+          <InputNumber :min="0" :max="100000" placeholder="身体局部手工费" style="width: 100px" v-model="bodyPartFee"/>%</InputNumber>
         <br/>
         <br/>
-        <span class="text">全身手工费：</span><InputNumber :min="0" max="200" placeholder="全身手工费" style="width: 100px" v-model="bodyWholeFee"/>%</InputNumber>
+        <span class="text">全身手工费：</span>
+          <InputNumber :min="0" :max="200" placeholder="全身手工费" style="width: 100px" v-model="bodyWholeFee"/>%</InputNumber>
         <br/>
         <br/>
-        <span class="text">光电手工费：</span><InputNumber :min="0" max="200" placeholder="光电手工费" style="width: 100px" v-model="photodiodeFee"/>%</InputNumber>
+        <span class="text">光电手工费：</span>
+          <InputNumber :min="0" :max="200" placeholder="光电手工费" style="width: 100px" v-model="photodiodeFee"/>%</InputNumber>
         <br/>
         <br/>
-        <span class="text">纹绣手工费：</span><InputNumber :min="0" max="200" placeholder="纹绣手工费" style="width: 100px" v-model="embroideryFee"/>%</InputNumber>
+        <span class="text">纹绣手工费：</span>
+          <InputNumber :min="0" :max="200" placeholder="纹绣手工费" style="width: 100px" v-model="embroideryFee"/>%</InputNumber>
         <br/>
         <br/>
         </div>
@@ -59,49 +64,49 @@
         // 分类手工费
         classifyFee:"",
         // 面部手工费
-        faceFee:"",
+        faceFee:0,
         // 身体局部手工费
-        bodyPartFee:"",
+        bodyPartFee:0,
         // 全身手工费
-        bodyWholeFee:"",
+        bodyWholeFee:0,
         // 光电手工费
-        photodiodeFee:"",
+        photodiodeFee:0,
         // 纹绣手工费
-        embroideryFee:"",  
+        embroideryFee:0,
         columns: [
           {
             title: '面部手工费',
             key: 'cashProducts',
             render: (h, params) => {
-              return h('span', params.row.faceFee == ''? '使用固定手工费' : params.row.faceFee + '%')
+              return h('span', params.row.faceFee == 0? '使用固定手工费' : params.row.faceFee + '%')
             }
           },
           {
             title: '身体局部手工费',
             key: 'cardTreatment',
             render: (h, params) => {
-              return h('span', params.row.bodyPartFee == ''? '使用固定手工费' : params.row.bodyPartFee+'%')
+              return h('span', params.row.bodyPartFee == 0? '使用固定手工费' : params.row.bodyPartFee+'%')
             }
           },
           {
             title: '全身手工费',
             key: 'cardProducts',
             render: (h, params) => {
-              return h('span', params.row.bodyWholeFee == ''? '使用固定手工费' : params.row.bodyWholeFee+'%')
+              return h('span', params.row.bodyWholeFee == 0? '使用固定手工费' : params.row.bodyWholeFee+'%')
             }
           },
           {
             title: '光电手工费',
             key: 'discountProducts',
             render: (h, params) => {
-              return h('span', params.row.photodiodeFee == ''? '使用固定手工费' : params.row.photodiodeFee+'%')
+              return h('span', params.row.photodiodeFee == 0? '使用固定手工费' : params.row.photodiodeFee+'%')
             }
           },
           {
             title: '纹绣手工费',
             key: 'highEndProducts',
             render: (h, params) => {
-              return h('span', params.row.embroideryFee == ''? '使用固定手工费' : params.row.embroideryFee+'%')
+              return h('span', params.row.embroideryFee == 0? '使用固定手工费' : params.row.embroideryFee+'%')
             }
           },
           {
@@ -192,7 +197,7 @@
         // 光电手工费
         this.photodiodeFee = data.photodiodeFee;
         // 纹绣手工费
-        this.embroideryFee = data.embroideryFee; 
+        this.embroideryFee = data.embroideryFee;
         this.currentId = data.id;
       },
       getList(){
@@ -222,20 +227,20 @@
         // 分类手工费
         this.classifyFee = false;
         // 面部手工费
-        this.faceFee = '';
+        this.faceFee = 0;
         // 身体局部手工费
-        this.bodyPartFee = '';
+        this.bodyPartFee = 0;
         // 全身手工费
-        this.bodyWholeFee = '';
+        this.bodyWholeFee = 0;
         // 光电手工费
-        this.photodiodeFee = '';
+        this.photodiodeFee = 0;
         // 纹绣手工费
-        this.embroideryFee = '';
+        this.embroideryFee = 0;
       },
       ok(){
           if(this.modifyFlag == "新建"){
               var manualFee = {
-                // 门店id             
+                // 门店id
                 storeId:this.$route.params.id,
                 // 项目自带手工费
                 projectFee:this.transfer(this.projectFee),
@@ -250,7 +255,7 @@
                 // 光电手工费
                 photodiodeFee:this.photodiodeFee,
                 // 纹绣手工费
-                embroideryFee:this.embroideryFee  
+                embroideryFee:this.embroideryFee
             };
             this.$ajax({
                 method: 'POST',
@@ -271,7 +276,7 @@
               });
           }else if(this.modifyFlag == "修改"){
               var manualFee = {
-                // 门店id             
+                // 门店id
                 storeId:this.$route.params.id,
                 // 项目自带手工费
                 projectFee:this.transfer(this.projectFee),
@@ -331,8 +336,8 @@
 </script>
 <style scoped>
   .modalProjects {
-    margin: 0 auto;            
-    text-align: center;    
+    margin: 0 auto;
+    text-align: center;
   }
   .btn{
     margin: 10px 0 20px 0;
