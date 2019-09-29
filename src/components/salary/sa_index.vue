@@ -53,7 +53,14 @@
               <span>手工费</span>
           </Radio>
         </RadioGroup>
-        <div style="float:right;margin-top:5px;margin-right:40px;" v-show="showSC">赠送项目实操比例： <InputNumber :max="100" :min="0" :transfer=true style="width: 40px;margin-left:-8px;" size="small" v-model="data.giveSCpercent"></InputNumber> %</div>
+        <div style="float:right;margin-top:5px;margin-right:40px;" v-show="showSC">
+          赠送项目实操比例：
+          <InputNumber
+            :max="100" :min="0"
+            :transfer=true
+            style="width: 40px;margin-left:-8px;"
+            size="small" v-model="data.giveSCpercent">
+          </InputNumber> %</div>
       </Col>
     </Row>
     <br>
@@ -132,7 +139,7 @@
           typeOfLeave: '',
           leaveThePenaltyRules:'',
           giveSC: '',
-          giveSCpercent: '',
+          giveSCpercent: 0,
           achEnable: '',
           enableFpleave: ''
         },
@@ -243,7 +250,7 @@
               typeOfLeave: res.data.salaryMangeInfo.forfeitPleave,
               leaveThePenaltyRules:'',
               giveSC: res.data.salaryMangeInfo.praOperation,
-              giveSCpercent: res.data.salaryMangeInfo.manualCost,
+              giveSCpercent: parseInt(res.data.salaryMangeInfo.manualCost),
               achEnable: this.transferBack(res.data.salaryMangeInfo.achEnable),
               enableFpleave: this.transferBack(res.data.salaryMangeInfo.enableFpleave)
             }
@@ -288,18 +295,18 @@
             // 奖金 奖励方式，推荐使用数字，1 按客流奖励 ...
             rewardRule: this.data.typeOfBonus,
             // 奖金 奖励方式 后的单选框，可为空，推荐使用数字，1 个人，2 全店
-            rewardOption: this.data.cashType,            
+            rewardOption: this.data.cashType,
             // 团队奖金，1 选中， 0 不选中
             rewardTeam: this.transfer(this.data.teamBonuses),
             // 活动奖金， 1 选中， 0 不选中
             rewardEvent: this.transfer(this.data.activityBonuses),
             // 事假罚金，推荐使用数字，1 固定罚金，2 按计算规则
             forfeitPleave: this.data.typeOfLeave,
-            // 投诉罚金，1 选中， 0 不选中 
+            // 投诉罚金，1 选中， 0 不选中
             forfeitComplaint: this.transfer(this.data.complaintFines),
-            // 迟到早退罚金，1 选中， 0 不选中 
+            // 迟到早退罚金，1 选中， 0 不选中
             forfeitLate: this.transfer(this.data.leaveEarlyFines),
-            // 旷工罚金，1 选中， 0 不选中  
+            // 旷工罚金，1 选中， 0 不选中
             forfeitAbsent: this.transfer(this.data.absenteeismFine),
             // 现金业绩罚金，1 选中， 0 不选中
             forfeitAchievement: this.transfer(this.data.cashPerformancePpenalty),
