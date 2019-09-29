@@ -12,22 +12,22 @@
         </Select>
         <br/>
         <br/>
-        <span class="text">低限：</span><InputNumber :min="0" max="100000" v-model="ut.lowLimit"  placeholder="低限" style="width: 300px"/></InputNumber>
+        <span class="text">低限：</span><InputNumber :min="0" :max="100000" v-model="ut.lowLimit"  placeholder="低限" style="width: 300px"/></InputNumber>
         <br/>
         <br/>
-        <span class="text">高限：</span><InputNumber :min="0" max="100000" v-model="ut.highLimit" placeholder="高限" style="width: 300px"/></InputNumber>
+        <span class="text">高限：</span><InputNumber :min="0" :max="100000" v-model="ut.highLimit" placeholder="高限" style="width: 300px"/></InputNumber>
         <br/>
         <br/>
-        <span class="text">面部指定：</span><InputNumber :min="0" max="200" v-model="ut.faceDesignated" placeholder="面部指定" style="width: 150px"/>%</InputNumber>
+        <span class="text">面部指定：</span><InputNumber :min="0" :max="200" v-model="ut.faceDesignated" placeholder="面部指定" style="width: 150px"/>%</InputNumber>
         <br/>
         <br/>
-        <span class="text">面部非指定：</span><InputNumber :min="0" max="200" v-model="ut.nFaceDesignated" placeholder="面部非指定" style="width: 150px"/>%</InputNumber>
+        <span class="text">面部非指定：</span><InputNumber :min="0" :max="200" v-model="ut.nfaceDesignated" placeholder="面部非指定" style="width: 150px"/>%</InputNumber>
         <br/>
         <br/>
-        <span class="text">身体指定：</span><InputNumber :min="0" max="200" v-model="ut.bodyDesignated" placeholder="身体指定" style="width: 150px"/>%</InputNumber>
+        <span class="text">身体指定：</span><InputNumber :min="0" :max="200" v-model="ut.bodyDesignated" placeholder="身体指定" style="width: 150px"/>%</InputNumber>
         <br/>
         <br/>
-        <span class="text">身体非指定：</span><InputNumber :min="0" max="200" v-model="ut.nBodyDesignated" placeholder="身体非指定" style="width: 150px"/>%</InputNumber>
+        <span class="text">身体非指定：</span><InputNumber :min="0" :max="200" v-model="ut.nbodyDesignated" placeholder="身体非指定" style="width: 150px"/>%</InputNumber>
         <br/>
         <br/>
         <div slot="footer">
@@ -64,9 +64,9 @@
         },
         {
           title: '面部非指定',
-          key: 'nFaceDesignated',
+          key: 'nfaceDesignated',
           render: (h, params) => {
-            return h('span', params.row.nFaceDesignated+'%')
+            return h('span', params.row.nfaceDesignated+'%')
           }
         },
         {
@@ -78,9 +78,9 @@
         },
         {
           title: '身体非指定',
-          key: 'nBodyDesignated',
+          key: 'nbodyDesignated',
           render: (h, params) => {
-            return h('span', params.row.nBodyDesignated+'%')
+            return h('span', params.row.nbodyDesignated+'%')
           }
         },
         {
@@ -127,19 +127,19 @@
           // 门店id
               storeId:this.$route.params.id,
               // 低限
-              lowLimit:"",
+              lowLimit:0,
               // 高限
-              highLimit:"",
+              highLimit:0,
               // 面部指向
-              faceDesignated:"",
+              faceDesignated:0,
               // 面部非指向
-              nFaceDesignated:"",
+              nfaceDesignated:0,
               // 身体指向
-              bodyDesignated:"",
+              bodyDesignated:0,
               // 身体非指向
-              nBodyDesignated:"",
+              nbodyDesignated:0,
               // 实操提成规则
-              practicalRange:""
+              practicalRange:0
         },
         salaryFlag: false,
       }
@@ -151,6 +151,7 @@
           url: getPracticalExercise()+'/'+this.$route.params.id,
         }).then( (res) =>{
           this.data=res.data.practicalCommissionInfo;
+          console.log(this.data,'data');
         }).catch( (error) =>{
         })
       },
@@ -170,7 +171,11 @@
       update(data){
         this.title = '修改';
         this.salaryFlag = true;
-        this.ut = data;
+        this.ut = new Object()
+        for(var i in data){
+          this.ut[i] = parseInt(data[i])
+        }
+        console.log(this.ut,'updateData');
         this.modifyId = data.id;
       },
       transfer(b){
@@ -198,23 +203,23 @@
           // 门店id
               storeId:this.$route.params.id,
               // 低限
-              lowLimit:"",
+              lowLimit:0,
               // 高限
-              highLimit:"",
+              highLimit:0,
               // 面部指向
-              faceDesignated:"",
+              faceDesignated:0,
               // 面部非指向
-              nFaceDesignated:"",
+              nfaceDesignated:0,
               // 身体指向
-              bodyDesignated:"",
+              bodyDesignated:0,
               // 身体非指向
-              nBodyDesignated:"",
+              nbodyDesignated:0,
               // 实操提成规则
-              practicalRange:""
+              practicalRange:0
         };
       },
       ok(){
-        if(this.ut.lowLimit==""&& this.ut.highLimit=="" && this.ut.faceDesignated=="" && this.ut.nFaceDesignated=="" &&this.ut.bodyDesignated=="" && this.ut.nBodyDesignated==""){
+        if(this.ut.lowLimit==""&& this.ut.highLimit=="" && this.ut.faceDesignated=="" && this.ut.nfaceDesignated=="" &&this.ut.bodyDesignated=="" && this.ut.nbodyDesignated==""){
           this.$Message.warning('实操提成选项不能全为空！');
           return;
         }
@@ -275,8 +280,8 @@
 </script>
 <style scoped>
   .modalProjects {
-    margin: 0 auto;            
-    text-align: center;    
+    margin: 0 auto;
+    text-align: center;
   }
   .text{
     display: inline-block;
