@@ -18,23 +18,23 @@
         <br/>
         <div v-show="showManualSetting">
         <span class="text">面部手工费：</span>
-          <InputNumber :min="0" :max="100000" placeholder="面部手工费" style="width: 100px" v-model="faceFee" />%</InputNumber>
+          <InputNumber :min="0" :max="100000" placeholder="面部手工费" style="width: 100px" v-model="faceFee" >%</InputNumber>
         <br/>
         <br/>
         <span class="text">身体局部手工费：</span>
-          <InputNumber :min="0" :max="100000" placeholder="身体局部手工费" style="width: 100px" v-model="bodyPartFee"/>%</InputNumber>
+          <InputNumber :min="0" :max="100000" placeholder="身体局部手工费" style="width: 100px" v-model="bodyPartFee">%</InputNumber>
         <br/>
         <br/>
         <span class="text">全身手工费：</span>
-          <InputNumber :min="0" :max="200" placeholder="全身手工费" style="width: 100px" v-model="bodyWholeFee"/>%</InputNumber>
+          <InputNumber :min="0" :max="200" placeholder="全身手工费" style="width: 100px" v-model="bodyWholeFee">%</InputNumber>
         <br/>
         <br/>
         <span class="text">光电手工费：</span>
-          <InputNumber :min="0" :max="200" placeholder="光电手工费" style="width: 100px" v-model="photodiodeFee"/>%</InputNumber>
+          <InputNumber :min="0" :max="200" placeholder="光电手工费" style="width: 100px" v-model="photodiodeFee">%</InputNumber>
         <br/>
         <br/>
         <span class="text">纹绣手工费：</span>
-          <InputNumber :min="0" :max="200" placeholder="纹绣手工费" style="width: 100px" v-model="embroideryFee"/>%</InputNumber>
+          <InputNumber :min="0" :max="200" placeholder="纹绣手工费" style="width: 100px" v-model="embroideryFee">%</InputNumber>
         <br/>
         <br/>
         </div>

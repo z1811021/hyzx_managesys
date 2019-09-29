@@ -12,22 +12,28 @@
         </Select>
         <br/>
         <br/>
-        <span class="text">低限：</span><InputNumber :min="0" :max="100000" v-model="ut.lowLimit"  placeholder="低限" style="width: 300px"/></InputNumber>
+        <span class="text">低限：</span>
+        <InputNumber :min="0" :max="100000" v-model="ut.lowLimit"  placeholder="低限" style="width: 300px"></InputNumber>
         <br/>
         <br/>
-        <span class="text">高限：</span><InputNumber :min="0" :max="100000" v-model="ut.highLimit" placeholder="高限" style="width: 300px"/></InputNumber>
+        <span class="text">高限：</span>
+        <InputNumber :min="0" :max="100000" v-model="ut.highLimit" placeholder="高限" style="width: 300px"></InputNumber>
         <br/>
         <br/>
-        <span class="text">面部指定：</span><InputNumber :min="0" :max="200" v-model="ut.faceDesignated" placeholder="面部指定" style="width: 150px"/>%</InputNumber>
+        <span class="text">面部指定：</span>
+        <InputNumber :min="0" :max="200" v-model="ut.faceDesignated" placeholder="面部指定" style="width: 150px">%</InputNumber>
         <br/>
         <br/>
-        <span class="text">面部非指定：</span><InputNumber :min="0" :max="200" v-model="ut.nfaceDesignated" placeholder="面部非指定" style="width: 150px"/>%</InputNumber>
+        <span class="text">面部非指定：</span>
+        <InputNumber :min="0" :max="200" v-model="ut.nfaceDesignated" placeholder="面部非指定" style="width: 150px">%</InputNumber>
         <br/>
         <br/>
-        <span class="text">身体指定：</span><InputNumber :min="0" :max="200" v-model="ut.bodyDesignated" placeholder="身体指定" style="width: 150px"/>%</InputNumber>
+        <span class="text">身体指定：</span>
+        <InputNumber :min="0" :max="200" v-model="ut.bodyDesignated" placeholder="身体指定" style="width: 150px">%</InputNumber>
         <br/>
         <br/>
-        <span class="text">身体非指定：</span><InputNumber :min="0" :max="200" v-model="ut.nbodyDesignated" placeholder="身体非指定" style="width: 150px"/>%</InputNumber>
+        <span class="text">身体非指定：</span>
+        <InputNumber :min="0" :max="200" v-model="ut.nbodyDesignated" placeholder="身体非指定" style="width: 150px">%</InputNumber>
         <br/>
         <br/>
         <div slot="footer">
