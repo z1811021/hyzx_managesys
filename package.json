@@ -10,7 +10,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "axios": "^0.16.2",
+    "axios": "^0.21.1",
     "compression-webpack-plugin": "^1.1.9",
     "html2canvas": "^1.0.0-alpha.12",
     "iview": "^2.14.1",
